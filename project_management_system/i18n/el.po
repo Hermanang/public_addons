@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * project_enterprise
+# * project_management_system
 # 
 # Translators:
 # Alex Yo <omikr0n@hotmail.com>, 2019
@@ -21,66 +21,66 @@ msgstr ""
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_view_kanban_inherit
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_view_kanban_inherit
 msgid "<span class=\"o_label\">Planning</span>"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_project__allow_planning
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__allow_planning
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_project__allow_planning
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__allow_planning
 msgid "Allow Planning"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_search_planning
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_search_planning
 msgid "Assigned To"
 msgstr "Ανατέθηκε σε"
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__planned_date_end
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__planned_date_end
 msgid "End date"
 msgstr "Ημερ. λήξης"
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_search_planning
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_search_planning
 msgid "Group By"
 msgstr "Ομαδοποίηση κατά"
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_search_planning
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_search_planning
 msgid "My Project"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.actions.act_window,name:project_enterprise.project_task_action_planning
-#: model:ir.actions.act_window,name:project_enterprise.project_task_action_planning_by_project
-#: model:ir.ui.menu,name:project_enterprise.project_task_menu_planning
+#. module: project_management_system
+#: model:ir.actions.act_window,name:project_management_system.project_task_action_planning
+#: model:ir.actions.act_window,name:project_management_system.project_task_action_planning_by_project
+#: model:ir.ui.menu,name:project_management_system.project_task_menu_planning
 msgid "Planning"
 msgstr "Σχεδιασμός"
 
-#. module: project_enterprise
-#: model:ir.model,name:project_enterprise.model_project_project
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_search_planning
+#. module: project_management_system
+#: model:ir.model,name:project_management_system.model_project_project
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_search_planning
 msgid "Project"
 msgstr "Έργο"
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__planned_date_begin
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__planned_date_begin
 msgid "Start date"
 msgstr "Ημερομηνία έναρξης"
 
-#. module: project_enterprise
-#: model:ir.model,name:project_enterprise.model_project_task
+#. module: project_management_system
+#: model:ir.model,name:project_management_system.model_project_task
 msgid "Task"
 msgstr "Εργασία"
 
-#. module: project_enterprise
-#: model:ir.ui.menu,name:project_enterprise.project_task_menu
+#. module: project_management_system
+#: model:ir.ui.menu,name:project_management_system.project_task_menu
 msgid "Tasks"
 msgstr "Εργασίες"
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.res_config_settings_view_form
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.res_config_settings_view_form
 msgid "Timesheets"
 msgstr "Κάρτες Χρόνου"

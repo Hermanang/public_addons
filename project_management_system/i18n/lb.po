@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* project_enterprise
+# 	* project_management_system
 # 
 msgid ""
 msgstr ""
@@ -15,126 +15,126 @@ msgstr ""
 "Language: lb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_gantt
 msgid "<strong>Customer: </strong>"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_gantt
 msgid "<strong>Start Date: </strong>"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_gantt
 msgid "<strong>Stop Date: </strong>"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_map_view
 msgid "Address"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_map_view
 msgid "Customer"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_email
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__partner_email
 msgid "Customer Email"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__planned_date_end
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__planned_date_end
 msgid "End date"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_form
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_form
 msgid "Gantt"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task_type__is_closed
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task_type__is_closed
 msgid "Is a close stage"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_mobile
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__partner_mobile
 msgid "Mobile"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_phone
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__partner_phone
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_map_view
 msgid "Phone"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.view_task_project_user_search_with_planned_dates
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.view_task_project_user_search_with_planned_dates
 msgid "Planned Date"
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_view_gantt
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_view_gantt
 msgid "Planning"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__project_color
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__project_color
 msgid "Project color"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__planned_date_begin
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__planned_date_begin
 msgid "Start date"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_street
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__partner_street
 msgid "Street"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model,name:project_enterprise.model_project_task
-#: model_terms:ir.ui.view,arch_db:project_enterprise.project_task_map_view
+#. module: project_management_system
+#: model:ir.model,name:project_management_system.model_project_task
+#: model_terms:ir.ui.view,arch_db:project_management_system.project_task_map_view
 msgid "Task"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model,name:project_enterprise.model_project_task_type
+#. module: project_management_system
+#: model:ir.model,name:project_management_system.model_project_task_type
 msgid "Task Stage"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model,name:project_enterprise.model_report_project_task_user
+#. module: project_management_system
+#: model:ir.model,name:project_management_system.model_report_project_task_user
 msgid "Tasks Analysis"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,help:project_enterprise.field_project_task_type__is_closed
+#. module: project_management_system
+#: model:ir.model.fields,help:project_management_system.field_project_task_type__is_closed
 msgid "Tasks in this stage are considered as closed."
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.constraint,message:project_enterprise.constraint_project_task_planned_dates_check
+#. module: project_management_system
+#: model:ir.model.constraint,message:project_management_system.constraint_project_task_planned_dates_check
 msgid "The planned start date must be prior to the planned end date."
 msgstr ""
 
-#. module: project_enterprise
-#: model_terms:ir.ui.view,arch_db:project_enterprise.res_config_settings_view_form
+#. module: project_management_system
+#: model_terms:ir.ui.view,arch_db:project_management_system.res_config_settings_view_form
 msgid "Timesheets"
 msgstr ""
 
-#. module: project_enterprise
+#. module: project_management_system
 #. openerp-web
-#: code:addons/project_enterprise/static/src/js/task_gantt_model.js:0
+#: code:addons/project_management_system/static/src/js/task_gantt_model.js:0
 #, python-format
 msgid "Unassigned Tasks"
 msgstr ""
 
-#. module: project_enterprise
-#: model:ir.model.fields,field_description:project_enterprise.field_project_task__partner_zip
+#. module: project_management_system
+#: model:ir.model.fields,field_description:project_management_system.field_project_task__partner_zip
 msgid "Zip"
 msgstr ""
