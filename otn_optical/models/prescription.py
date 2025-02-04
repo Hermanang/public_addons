@@ -8,21 +8,25 @@ class Prescription(models.Model):
     _name = "optical.prescription"
     _inherit = 'mail.thread'
 
+    def _prescriber_id_domain(self):
+        category_id = self.env.ref('otn_optical.partner_category_clinical').id
+        return [('category_id', '=', category_id)]
+
     name = fields.Char(
         string="Reference",
         required=True, copy=False, readonly=False,
         index='trigram',
         default=lambda self: _('New'))
-    optometrist_id = fields.Many2one(
-        comodel_name='res.partner', string='Optometrist',
-        domain="[('is_optometrist','=', True), ('is_company','=',False)]")
+    prescriber_id = fields.Many2one(
+        comodel_name='res.partner', string='Prescripteur',
+        domain=_prescriber_id_domain)
 
     patient_id = fields.Many2one(
         comodel_name='res.partner', string='Patient',
         domain="[('is_company','=',False)]")
 
     prescription_date = fields.Date(string="Prescription date", required=True)
-    expiry_date = fields.Date(string="Expiration")
+    measure_date = fields.Date(string="Date de la mesure", required=True)
     measure_type = fields.Selection([
         ('glasses', 'Lunettes'),
         ('contact_lenses', 'Lentilles'),
@@ -47,10 +51,10 @@ class Prescription(models.Model):
     od_prism = fields.Char(string="OD Prisme")
     og_prism = fields.Char(string="OG Prisme")
     od_base = fields.Selection([
-        ('up', 'Haut'),
-        ('down', 'Bas'),
-        ('in', 'Intérieur'),
-        ('out', 'Extérieur')
+        ('inferior', 'Inférieur'),
+        ('superior', 'Supérieur'),
+        ('nasal', 'Nasale'),
+        ('temporal', 'Temporale')
     ], string="OD Base")
     og_base = fields.Selection([
         ('up', 'Haut'),

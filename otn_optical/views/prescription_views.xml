@@ -16,13 +16,12 @@
                                 <field name="name" readonly="1"/>
                             </h1>
                         </div>
-                        <!-- Section Informations Générales -->
                         <group>
                             <field name="prescription_date" required="1"/>
-                            <field name="expiry_date"/>
+                            <field name="measure_date"/>
                         </group>
                         <group>
-                            <field name="optometrist_id" domain="[('is_optometrist','=', True)]"/>
+                            <field name="prescriber_id"/>
                             <field name="patient_id"/>
                         </group>
                         <group>
@@ -71,16 +70,6 @@
                             </group>
                         </page>
 
-                        <!-- Onglet Mesures Pupillaires -->
-                        <page string="Mesures Pupillaires">
-                            <group>
-                                <group>
-                                    <field name="ep_od"/>
-                                    <field name="ep_og"/>
-                                </group>
-                            </group>
-                        </page>
-
                         <!-- Onglet Notes -->
                         <page string="Notes">
                             <group>
@@ -101,7 +90,7 @@
         <field name="arch" type="xml">
             <list string="Tags">
                 <field name="name"/>
-                <field name="optometrist_id"/>
+                <field name="prescriber_id"/>
                 <field name="patient_id"/>
                 <field name="prescription_date"/>
             </list>
@@ -115,6 +104,11 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <menuitem id="contacts.res_partner_menu_config"
+        name="Configuration"
+        parent="contacts.menu_contacts"
+        groups="base.group_system"
+        sequence="3"/>
     <menuitem id="menu_optical_prescription" name="Prescriptions" sequence="2"
               parent="contacts.menu_contacts" action="action_optical_prescription"/>
 </odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="partner_category_health_provident" model="res.partner.category">
+        <field name="name">IPM/Assurance</field>
+    </record>
+    <record id="partner_category_clinical" model="res.partner.category">
+        <field name="name">Clinique</field>
+    </record>
+</odoo>

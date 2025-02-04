@@ -8,3 +8,4 @@ class Partner(models.Model):
     _inherit = "res.partner"
 
     is_optometrist = fields.Boolean()
+    is_health_provident = fields.Boolean()
