@@ -53,7 +53,7 @@
         </xpath>
     </template>
 
-    <template id="report_saleorder_receipt">
+    <template id="report_saleorder_document_optical">
         <t t-call="web.html_container">
             <t t-set="docs" t-value="docs.with_context(proforma=True)"/>
             <t t-foreach="docs" t-as="doc">
