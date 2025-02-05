@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_with_measures" inherit_id="sale.report_saleorder_document" primary="True">
+        <xpath expr="//div[@id='informations']" position="after">
+            <div class="row">
+                <div class="col-5">
+                    <div class="row mb-4" id="informations-2">
+                        <div t-if="doc.vision_type" class="col" name="informations_reference">
+                            <strong>Type de vision</strong>
+                            <div t-field="doc.vision_type">Vision de loin</div>
+                        </div>
+                    </div>
+                    <div class="oe_structure">
+                        <table class="table o_table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th/>
+                                    <th>Sph</th>
+                                    <th>Cyl</th>
+                                    <th>Axe</th>
+                                    <th>Add</th>
+                                    <th>Prisme</th>
+                                    <th>Base</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>OD</strong></td>
+                                    <td><span t-field="doc.od_sphere"/></td>
+                                    <td><span t-field="doc.od_cylinder"/></td>
+                                    <td><span t-field="doc.od_axis"/></td>
+                                    <td><span t-field="doc.od_addition"/></td>
+                                    <td><span t-field="doc.od_prism"/></td>
+                                    <td><span t-field="doc.od_base"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>OG</strong></td>
+                                    <td><span t-field="doc.og_sphere"/></td>
+                                    <td><span t-field="doc.og_cylinder"/></td>
+                                    <td><span t-field="doc.og_axis"/></td>
+                                    <td><span t-field="doc.og_addition"/></td>
+                                    <td><span t-field="doc.og_prism"/></td>
+                                    <td><span t-field="doc.og_base"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-5 offset-2"/>
+            </div>
+            <hr/>
+
+        </xpath>
+    </template>
+
+    <template id="report_saleorder_receipt">
+        <t t-call="web.html_container">
+            <t t-set="docs" t-value="docs.with_context(proforma=True)"/>
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="otn_optical.report_saleorder_document_with_measures" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

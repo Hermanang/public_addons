@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    License LGPL-3 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <page name="order_lines" position="after">
+                <page string="Mesures" name="measure">
+                    <group>
+                        <group>
+                            <field name="prescription_id" readonly="state in ['cancel', 'sale']"/>
+                            <field name="vision_type"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <group>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Sphère</th>
+                                    <th>Cylindre</th>
+                                    <th>Axe</th>
+                                    <th>Addition</th>
+                                    <th>Prisme</th>
+                                    <th>Base</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>OD</strong>
+                                    </td>
+                                    <td>
+                                        <field name="od_sphere" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="od_cylinder" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="od_axis"/>
+                                    </td>
+                                    <td>
+                                        <field name="od_addition" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="od_prism" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="od_base"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>OG</strong>
+                                    </td>
+                                    <td>
+                                        <field name="og_sphere" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="og_cylinder" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="og_axis"/>
+                                    </td>
+                                    <td>
+                                        <field name="og_addition" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="og_prism" widget="char"/>
+                                    </td>
+                                    <td>
+                                        <field name="og_base"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

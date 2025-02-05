@@ -3,3 +3,4 @@
 
 from . import res_partner
 from . import prescription
+from . import sale_order
