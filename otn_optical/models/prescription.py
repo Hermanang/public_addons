@@ -57,11 +57,11 @@ class Prescription(models.Model):
         ('temporal', 'Temporale')
     ], string="OD Base")
     og_base = fields.Selection([
-        ('inferior', 'Inférieur'),
-        ('superior', 'Supérieur'),
-        ('nasal', 'Nasale'),
-        ('temporal', 'Temporale')
-    ], string="OD Base")
+        ('up', 'Haut'),
+        ('down', 'Bas'),
+        ('in', 'Intérieur'),
+        ('out', 'Extérieur')
+    ], string="OG Base")
 
     ep_od = fields.Char(string="Écart Pupillaire OD (mm)")
     ep_og = fields.Char(string="Écart Pupillaire OG (mm)")

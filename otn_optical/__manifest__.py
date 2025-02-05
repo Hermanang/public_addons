@@ -17,13 +17,7 @@
         "security/ir.model.access.csv",
         "data/ir_sequence_data.xml",
         "data/partner_category_data.xml",
-
-        "report/ir_actions_report_templates.xml",
-        "report/ir_actions_report.xml",
-
-        "views/prescription_views.xml",
-        "views/res_partner.xml",
-        "views/sale_order.xml",
+        "views/prescription_views.xml"
     ],
     "images": ["static/description/icon.png"],
 }
