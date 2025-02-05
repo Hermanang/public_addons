@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    License LGPL-3 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <record id="view_optical_prescription_form" model="ir.ui.view">
+        <field name="name">optical.prescription.form</field>
+        <field name="model">optical.prescription</field>
+        <field name="arch" type="xml">
+            <form string="Prescription Optique" create="1" edit="1">
+                <sheet>
+                    <group>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="prescription_date" required="1"/>
+                            <field name="measure_date"/>
+                        </group>
+                        <group>
+                            <field name="prescriber_id"/>
+                            <field name="patient_id"/>
+                        </group>
+                        <group>
+                            <field name="measure_type"/>
+                            <field name="vision_type"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Onglet Mesures -->
+                        <page string="Mesures">
+                            <group>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Sphère</th>
+                                            <th>Cylindre</th>
+                                            <th>Axe</th>
+                                            <th>Addition</th>
+                                            <th>Prisme</th>
+                                            <th>Base</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>OD</strong></td>
+                                            <td><field name="od_sphere" widget="char"/></td>
+                                            <td><field name="od_cylinder" widget="char"/></td>
+                                            <td><field name="od_axis"/></td>
+                                            <td><field name="od_addition" widget="char"/></td>
+                                            <td><field name="od_prism" widget="char"/></td>
+                                            <td><field name="od_base"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>OG</strong></td>
+                                            <td><field name="og_sphere" widget="char"/></td>
+                                            <td><field name="og_cylinder" widget="char"/></td>
+                                            <td><field name="og_axis"/></td>
+                                            <td><field name="og_addition" widget="char"/></td>
+                                            <td><field name="og_prism" widget="char"/></td>
+                                            <td><field name="og_base"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </group>
+                        </page>
+
+                        <!-- Onglet Notes -->
+                        <page string="Notes">
+                            <group>
+                                <field name="notes" widget="text"/>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_optical_prescription_tree" model="ir.ui.view">
+        <field name="name">Prescriptions List</field>
+        <field name="model">optical.prescription</field>
+        <field name="arch" type="xml">
+            <list string="Tags">
+                <field name="name"/>
+                <field name="prescriber_id"/>
+                <field name="patient_id"/>
+                <field name="prescription_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Menu et Action -->
+    <record id="action_optical_prescription" model="ir.actions.act_window">
+        <field name="name">Prescriptions</field>
+        <field name="res_model">optical.prescription</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="contacts.res_partner_menu_config"
+        name="Configuration"
+        parent="contacts.menu_contacts"
+        groups="base.group_system"
+        sequence="3"/>
+    <menuitem id="menu_optical_prescription" name="Prescriptions" sequence="2"
+              parent="contacts.menu_contacts" action="action_optical_prescription"/>
+</odoo>
+
