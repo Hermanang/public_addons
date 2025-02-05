@@ -6,6 +6,7 @@ from odoo import _, fields, models, api
 
 class Prescription(models.Model):
     _name = "optical.prescription"
+    _description = "Prescription / Ordonnance"
     _inherit = 'mail.thread'
 
     def _prescriber_id_domain(self):

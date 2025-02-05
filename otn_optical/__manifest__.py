@@ -15,6 +15,10 @@
     "data": [
         # "security/security.xml",
         "security/ir.model.access.csv",
+
+        "report/ir_actions_report_templates.xml",
+        "report/ir_actions_report.xml",
+
         "data/ir_sequence_data.xml",
         "data/partner_category_data.xml",
         "views/prescription_views.xml"
