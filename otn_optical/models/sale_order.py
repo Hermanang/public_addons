@@ -7,7 +7,7 @@ from odoo import fields, models, api
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    prescription_id = fields.Many2one('optical.prescription')
+    prescription_id = fields.Many2one('optical.prescription', domain="[('patient_id', '=', partner_id)]")
     measure_type = fields.Selection([
         ('glasses', 'Lunettes'),
         ('contact_lenses', 'Lentilles'),

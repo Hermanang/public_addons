@@ -24,6 +24,7 @@
         "views/prescription_views.xml",
         "views/res_partner.xml",
         "views/sale_order.xml",
+        "views/product_product.xml",
     ],
     "images": ["static/description/icon.png"],
 }
