@@ -13,7 +13,8 @@
                 <page string="Mesures" name="measure">
                     <group>
                         <group>
-                            <field name="prescription_id" readonly="state in ['cancel', 'sale']"/>
+                            <field name="prescription_id" options="{'no_create': True}"
+                                   readonly="state in ['cancel', 'sale']"/>
                             <field name="vision_type"/>
                         </group>
                         <group/>

@@ -11,7 +11,7 @@ class Prescription(models.Model):
 
     def _prescriber_id_domain(self):
         category_id = self.env.ref('otn_optical.partner_category_clinical').id
-        return [('category_id', '=', category_id)]
+        return ['|', ('category_id', '=', category_id), ('is_clinical', '=', True)]
 
     name = fields.Char(
         string="Reference",
@@ -58,10 +58,10 @@ class Prescription(models.Model):
         ('temporal', 'Temporale')
     ], string="OD Base")
     og_base = fields.Selection([
-        ('up', 'Haut'),
-        ('down', 'Bas'),
-        ('in', 'Intérieur'),
-        ('out', 'Extérieur')
+        ('inferior', 'Inférieur'),
+        ('superior', 'Supérieur'),
+        ('nasal', 'Nasale'),
+        ('temporal', 'Temporale')
     ], string="OG Base")
 
     ep_od = fields.Char(string="Écart Pupillaire OD (mm)")

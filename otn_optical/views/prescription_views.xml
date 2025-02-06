@@ -21,7 +21,7 @@
                             <field name="measure_date"/>
                         </group>
                         <group>
-                            <field name="prescriber_id"/>
+                            <field name="prescriber_id" context="{'default_is_clinical': True}"/>
                             <field name="patient_id"/>
                         </group>
                         <group>

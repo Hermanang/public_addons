@@ -42,7 +42,7 @@ class SaleOrder(models.Model):
         ('superior', 'Supérieur'),
         ('nasal', 'Nasale'),
         ('temporal', 'Temporale')
-    ], string="OD Base", compute='_compute_measures_values')
+    ], string="OG Base", compute='_compute_measures_values')
 
     ep_od = fields.Char(string="Écart Pupillaire OD (mm)", compute='_compute_measures_values')
     ep_og = fields.Char(string="Écart Pupillaire OG (mm)", compute='_compute_measures_values')
@@ -50,20 +50,20 @@ class SaleOrder(models.Model):
     @api.depends('prescription_id')
     def _compute_measures_values(self):
         for order in self:
-            if order.prescription_id:
-                prescription = order.prescription_id
-                order.vision_type = prescription.vision_type
-                order.od_sphere = prescription.od_sphere
-                order.og_sphere = prescription.og_sphere
-                order.od_cylinder = prescription.od_cylinder
-                order.og_cylinder = prescription.og_cylinder
-                order.od_axis = prescription.od_axis
-                order.og_axis = prescription.og_axis
-                order.od_addition = prescription.od_addition
-                order.og_addition = prescription.og_addition
-                order.od_prism = prescription.od_prism
-                order.og_prism = prescription.og_prism
-                order.od_base = prescription.od_base
-                order.og_base = prescription.og_base
-                order.ep_od = prescription.ep_od
-                order.ep_og = prescription.ep_og
+            prescription = order.prescription_id
+
+            order.vision_type = prescription.vision_type
+            order.od_sphere = prescription.od_sphere
+            order.og_sphere = prescription.og_sphere
+            order.od_cylinder = prescription.od_cylinder
+            order.og_cylinder = prescription.og_cylinder
+            order.od_axis = prescription.od_axis
+            order.og_axis = prescription.og_axis
+            order.od_addition = prescription.od_addition
+            order.og_addition = prescription.og_addition
+            order.od_prism = prescription.od_prism
+            order.og_prism = prescription.og_prism
+            order.od_base = prescription.od_base
+            order.og_base = prescription.og_base
+            order.ep_od = prescription.ep_od
+            order.ep_og = prescription.ep_og

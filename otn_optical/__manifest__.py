@@ -21,7 +21,9 @@
 
         "data/ir_sequence_data.xml",
         "data/partner_category_data.xml",
-        "views/prescription_views.xml"
+        "views/prescription_views.xml",
+        "views/res_partner.xml",
+        "views/sale_order.xml",
     ],
     "images": ["static/description/icon.png"],
 }

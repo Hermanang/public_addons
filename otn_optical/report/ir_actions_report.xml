@@ -5,8 +5,8 @@
         <field name="name">Devis / Commande avec mesures</field>
         <field name="model">sale.order</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">otn_optical.report_saleorder_receipt</field>
-        <field name="report_file">otn_optical.report_saleorder_receipt</field>
+        <field name="report_name">otn_optical.report_saleorder_document_optical</field>
+        <field name="report_file">otn_optical.report_saleorder_document_optical</field>
         <field name="print_report_name">'Commande / Mesures - %s' % (object.name)</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
