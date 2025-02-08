@@ -25,6 +25,7 @@
         "views/res_partner.xml",
         "views/sale_order.xml",
         "views/product_product.xml",
+        "views/account_move_line.xml",
     ],
     "images": ["static/description/icon.png"],
 }

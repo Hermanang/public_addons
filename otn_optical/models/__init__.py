@@ -5,3 +5,4 @@ from . import res_partner
 from . import prescription
 from . import product_product
 from . import sale_order
+from . import account_move_line
