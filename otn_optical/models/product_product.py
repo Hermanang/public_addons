@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     optical_product_type = fields.Selection([
-        ("glasses", "Lunettes"),
+        ("glasses", "Verres"),
         ("frames", "Montures"),
         ("contact_lenses", "Lentilles"),
         ("others", "Autres"),

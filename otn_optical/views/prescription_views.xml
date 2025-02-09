@@ -33,6 +33,23 @@
                     <notebook>
                         <!-- Onglet Mesures -->
                         <page string="Mesures">
+                            <group col="12">
+                                <group colspan="4"/>
+                                <group colspan="8">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>EP</th>
+                                                <th><field name="ep_gl" widget="char"/></th>
+                                                <th>EP EG</th>
+                                                <th><field name="ep_od" widget="char"/></th>
+                                                <th>EP EG</th>
+                                                <th><field name="ep_og" widget="char"/></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </group>
+                            </group>
                             <group>
                                 <table class="table table-bordered">
                                     <thead>

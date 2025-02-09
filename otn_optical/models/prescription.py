@@ -20,16 +20,16 @@ class Prescription(models.Model):
         default=lambda self: _('New'))
     prescriber_id = fields.Many2one(
         comodel_name='res.partner', string='Prescripteur',
-        domain=_prescriber_id_domain)
+        domain="[('is_company','=',False)]", required=True)
 
     patient_id = fields.Many2one(
         comodel_name='res.partner', string='Patient',
-        domain="[('is_company','=',False)]")
+        domain="[('is_company','=',False)]", required=True)
 
     prescription_date = fields.Date(string="Prescription date", required=True)
     measure_date = fields.Date(string="Date de la mesure", required=True)
     measure_type = fields.Selection([
-        ('glasses', 'Lunettes'),
+        ('glasses', 'Verres'),
         ('contact_lenses', 'Lentilles'),
     ], string="Type de prescription", required=True)
 
@@ -39,6 +39,12 @@ class Prescription(models.Model):
         ('intermediate', 'Vision Intermédiaire'),
         ('progressive', 'Progressif')
     ], string="Type de Vision", required=True)
+    treatment = fields.Selection([
+        ('antireflective', 'Antireflet'),
+        ('progressive', 'Progressif'),
+        ('photochromic', 'Photochromique'),
+        ('organic', 'Organiques')
+    ], string="Traitement")
 
     od_sphere = fields.Char(string="OD Sphère")
     og_sphere = fields.Char(string="OG Sphère")
@@ -64,6 +70,7 @@ class Prescription(models.Model):
         ('temporal', 'Temporale')
     ], string="OG Base")
 
+    ep_gl = fields.Char(string="Écart Pupillaire Globale (mm)")
     ep_od = fields.Char(string="Écart Pupillaire OD (mm)")
     ep_og = fields.Char(string="Écart Pupillaire OG (mm)")
 

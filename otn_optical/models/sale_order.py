@@ -7,47 +7,54 @@ from odoo import fields, models, api
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    prescription_id = fields.Many2one('optical.prescription', domain="[('patient_id', '=', partner_id)]")
+    prescription_id = fields.Many2one("optical.prescription", domain="[('patient_id', '=', partner_id)]")
     measure_type = fields.Selection([
-        ('glasses', 'Lunettes'),
-        ('contact_lenses', 'Lentilles'),
-    ], string="Type de prescription", compute='_compute_measures_values')
+        ("glasses", "Verres"),
+        ("contact_lenses", "Lentilles"),
+    ], string="Type de prescription", compute="_compute_measures_values")
 
     vision_type = fields.Selection([
-        ('far', 'Vision de Loin'),
-        ('near', 'Vision de Près'),
-        ('intermediate', 'Vision Intermédiaire'),
-        ('progressive', 'Progressif')
-    ], string="Type de Vision", compute='_compute_measures_values')
+        ("far", "Vision de Loin"),
+        ("near", "Vision de Près"),
+        ("intermediate", "Vision Intermédiaire"),
+        ("progressive", "Progressif")
+    ], string="Type de Vision", compute="_compute_measures_values")
+    treatment = fields.Selection([
+        ('antireflective', 'Antireflet'),
+        ('progressive', 'Progressif'),
+        ('photochromic', 'Photochromique'),
+        ('organic', 'Organiques')
+    ], string="Traitement", compute="_compute_measures_values")
 
-    od_sphere = fields.Char(string="OD Sphère", compute='_compute_measures_values')
-    og_sphere = fields.Char(string="OG Sphère", compute='_compute_measures_values')
-    od_cylinder = fields.Char(string="OD Cylindre", compute='_compute_measures_values')
-    og_cylinder = fields.Char(string="OG Cylindre", compute='_compute_measures_values')
-    od_axis = fields.Char(string="OD Axe", compute='_compute_measures_values')
-    og_axis = fields.Char(string="OG Axe", compute='_compute_measures_values')
-    od_addition = fields.Char(string="OD Addition", compute='_compute_measures_values')
-    og_addition = fields.Char(string="OG Addition", compute='_compute_measures_values')
+    od_sphere = fields.Char(string="OD Sphère", compute="_compute_measures_values")
+    og_sphere = fields.Char(string="OG Sphère", compute="_compute_measures_values")
+    od_cylinder = fields.Char(string="OD Cylindre", compute="_compute_measures_values")
+    og_cylinder = fields.Char(string="OG Cylindre", compute="_compute_measures_values")
+    od_axis = fields.Char(string="OD Axe", compute="_compute_measures_values")
+    og_axis = fields.Char(string="OG Axe", compute="_compute_measures_values")
+    od_addition = fields.Char(string="OD Addition", compute="_compute_measures_values")
+    og_addition = fields.Char(string="OG Addition", compute="_compute_measures_values")
 
-    od_prism = fields.Char(string="OD Prisme", compute='_compute_measures_values')
-    og_prism = fields.Char(string="OG Prisme", compute='_compute_measures_values')
+    od_prism = fields.Char(string="OD Prisme", compute="_compute_measures_values")
+    og_prism = fields.Char(string="OG Prisme", compute="_compute_measures_values")
     od_base = fields.Selection([
-        ('inferior', 'Inférieur'),
-        ('superior', 'Supérieur'),
-        ('nasal', 'Nasale'),
-        ('temporal', 'Temporale')
-    ], string="OD Base", compute='_compute_measures_values')
+        ("inferior", "Inférieur"),
+        ("superior", "Supérieur"),
+        ("nasal", "Nasale"),
+        ("temporal", "Temporale")
+    ], string="OD Base", compute="_compute_measures_values")
     og_base = fields.Selection([
-        ('inferior', 'Inférieur'),
-        ('superior', 'Supérieur'),
-        ('nasal', 'Nasale'),
-        ('temporal', 'Temporale')
-    ], string="OG Base", compute='_compute_measures_values')
+        ("inferior", "Inférieur"),
+        ("superior", "Supérieur"),
+        ("nasal", "Nasale"),
+        ("temporal", "Temporale")
+    ], string="OG Base", compute="_compute_measures_values")
 
-    ep_od = fields.Char(string="Écart Pupillaire OD (mm)", compute='_compute_measures_values')
-    ep_og = fields.Char(string="Écart Pupillaire OG (mm)", compute='_compute_measures_values')
+    ep_gl = fields.Char(string="Écart Pupillaire Globale (mm)", compute="_compute_measures_values", store=True)
+    ep_od = fields.Char(string="Écart Pupillaire OD (mm)", compute="_compute_measures_values", store=True)
+    ep_og = fields.Char(string="Écart Pupillaire OG (mm)", compute="_compute_measures_values", store=True)
 
-    @api.depends('prescription_id')
+    @api.depends("prescription_id")
     def _compute_measures_values(self):
         for order in self:
             prescription = order.prescription_id
@@ -65,5 +72,7 @@ class SaleOrder(models.Model):
             order.og_prism = prescription.og_prism
             order.od_base = prescription.od_base
             order.og_base = prescription.og_base
+            order.treatment = prescription.treatment
             order.ep_od = prescription.ep_od
             order.ep_og = prescription.ep_og
+            order.ep_gl = prescription.ep_gl

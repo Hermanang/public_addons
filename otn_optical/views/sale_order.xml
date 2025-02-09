@@ -19,6 +19,23 @@
                         </group>
                         <group/>
                     </group>
+                    <group col="12">
+                            <group colspan="4"/>
+                            <group colspan="8">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>EP</th>
+                                            <th><field name="ep_gl" widget="char" readonly="0" force_save="1"/></th>
+                                            <th>EP EG</th>
+                                            <th><field name="ep_od" widget="char" readonly="0" force_save="1"/></th>
+                                            <th>EP EG</th>
+                                            <th><field name="ep_og" widget="char" readonly="0" force_save="1"/></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </group>
+                        </group>
                     <group>
                         <table class="table table-bordered">
                             <thead>
@@ -34,50 +51,22 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <strong>OD</strong>
-                                    </td>
-                                    <td>
-                                        <field name="od_sphere" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="od_cylinder" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="od_axis"/>
-                                    </td>
-                                    <td>
-                                        <field name="od_addition" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="od_prism" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="od_base"/>
-                                    </td>
+                                    <td><strong>OD</strong></td>
+                                    <td><field name="od_sphere" widget="char"/></td>
+                                    <td><field name="od_cylinder" widget="char"/></td>
+                                    <td><field name="od_axis"/></td>
+                                    <td><field name="od_addition" widget="char"/></td>
+                                    <td><field name="od_prism" widget="char"/></td>
+                                    <td><field name="od_base"/></td>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <strong>OG</strong>
-                                    </td>
-                                    <td>
-                                        <field name="og_sphere" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="og_cylinder" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="og_axis"/>
-                                    </td>
-                                    <td>
-                                        <field name="og_addition" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="og_prism" widget="char"/>
-                                    </td>
-                                    <td>
-                                        <field name="og_base"/>
-                                    </td>
+                                    <td><strong>OG</strong></td>
+                                    <td><field name="og_sphere" widget="char"/></td>
+                                    <td><field name="og_cylinder" widget="char"/></td>
+                                    <td><field name="og_axis"/></td>
+                                    <td><field name="og_addition" widget="char"/></td>
+                                    <td><field name="og_prism" widget="char"/></td>
+                                    <td><field name="og_base"/></td>
                                 </tr>
                             </tbody>
                         </table>
