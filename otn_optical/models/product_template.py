@@ -1,0 +1,88 @@
+# Copyright 2017 LasLabs Inc.
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+from email.policy import default
+
+from odoo import fields, models
+
+
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
+
+    lens_treatment_ids = fields.Many2many('product.lens.treatment', string='Traitements')
+    optical_product_type = fields.Selection([
+        ("lenses", "Verres"),
+        ("frames", "Montures"),
+        ("contact_lenses", "Lentilles"),
+        ("others", "Autres"),
+    ], string="Type de produit optique", default="others", required=True)
+
+    lens_od_sphere = fields.Char(string="OD Sphère")
+    lens_og_sphere = fields.Char(string="OG Sphère")
+    lens_od_cylinder = fields.Char(string="OD Cylindre")
+    lens_og_cylinder = fields.Char(string="OG Cylindre")
+
+    lens_type_ids = fields.Many2many('product.lens.type', string='Type de verre')
+    lens_surface = fields.Selection([
+        ('spherical', 'Sphérique'),
+        ('aspherical', 'Asphérique')
+    ], string='Surface')
+    lens_material = fields.Selection([
+        ('organic', 'Organique'),
+        ('polycarbonate', 'Polycarbonate'),
+        ('mineral', 'Minérale')
+    ], string='Matière')
+    lens_diameter = fields.Float('Diamètre')
+    lens_index = fields.Float('Indice')
+
+    # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    frame_shape = fields.Selection([
+        ('rectangular', 'Rectangulaire'),
+        ('oval', 'Ovale'),
+        ('square', 'Carré'),
+        ('browline', 'Browline'),
+        ('aviator', 'Aviateur'),
+        ('round', 'Rond'),
+        ('butterfly', 'Papillon'),
+        ('geometric', 'Géométrique'),
+        ('heart', 'Cœur'),
+    ], string='Forme de la monture')
+    frame_color = fields.Char('Couleur de la monture')
+    frame_material_ids = fields.Many2many('product.frame.material', string='Matière de la monture')
+    frame_usage_ids = fields.Many2many('product.frame.usage', string="Type d'usage")
+    frame_rim_type = fields.Selection([
+        ('rimless', 'Non cerclées'),
+        ('semi_rimless', 'Semi-cerclées'),
+        ('full_rim', 'Cerclées'),
+    ], string='Type de cercle')
+    lens_width = fields.Integer(string='Largeur des verres (mm)')
+    bridge_width = fields.Integer(string='Largeur du pont (mm)')
+    temple_length = fields.Integer(string='Longueur des bras (mm)')
+
+
+class LensTreatment(models.Model):
+    _name = 'product.lens.treatment'
+    _description = 'Traitement de verre'
+
+    name = fields.Char(string='Nom', required=True)
+
+
+class LensType(models.Model):
+    _name = 'product.lens.type'
+    _description = 'Type de verre'
+
+    name = fields.Char(string='Nom', required=True)
+
+class FrameMaterial(models.Model):
+    _name = 'product.frame.material'
+    _description = 'Matière des montures'
+
+    name = fields.Char(string='Nom', required=True)
+
+
+class FrameUsage(models.Model):
+    _name = 'product.frame.usage'
+    _description = 'Usage des montures'
+
+    name = fields.Char(string='Nom', required=True)
+
+

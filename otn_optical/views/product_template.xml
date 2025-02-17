@@ -4,41 +4,6 @@
     License LGPL-3 or later (http://www.gnu.org/licenses/lgpl.html).
 -->
 <odoo>
-    <record id="product_normal_form_view" model="ir.ui.view">
-        <field name="name">product.product.form</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//page[@name='general_information']" position="after">
-                <page name="measures" string="Mesures" invisible="optical_product_type == 'others'">
-                    <group>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Sphère</th>
-                                    <th>Cylindre</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>OD</strong></td>
-                                    <td><field name="od_sphere" widget="char"/></td>
-                                    <td><field name="od_cylinder" widget="char"/></td>
-                                </tr>
-                                <tr>
-                                    <td><strong>OG</strong></td>
-                                    <td><field name="og_sphere" widget="char"/></td>
-                                    <td><field name="og_cylinder" widget="char"/></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </group>
-                </page>
-            </xpath>
-        </field>
-    </record>
-
     <record id="product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.form.view.inherit.sale</field>
         <field name="model">product.template</field>
@@ -46,6 +11,59 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
                 <field name="optical_product_type"/>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page name="lens_properties" string="Propriétés des verres" invisible="optical_product_type != 'lenses'">
+                    <group>
+                        <group>
+                            <field name="lens_treatment_ids" widget="many2many_tags"/>
+                            <field name="lens_type_ids" widget="many2many_tags"/>
+                            <field name="lens_surface"/>
+                            <field name="lens_material"/>
+                            <field name="lens_diameter"/>
+                            <field name="lens_index"/>
+                        </group>
+                        <group>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th/>
+                                        <th>Sphère</th>
+                                        <th>Cylindre</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>OD</strong></td>
+                                        <td><field name="lens_od_sphere" widget="char"/></td>
+                                        <td><field name="lens_od_cylinder" widget="char"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>OG</strong></td>
+                                        <td><field name="lens_og_sphere" widget="char"/></td>
+                                        <td><field name="lens_og_cylinder" widget="char"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </group>
+                    </group>
+                </page>
+                <page name="frame_properties" string="Propriétés des montures" invisible="optical_product_type != 'frames'">
+                    <group>
+                        <group>
+                            <field name="frame_material_ids" widget="many2many_tags"/>
+                            <field name="frame_usage_ids" widget="many2many_tags"/>
+                            <field name="lens_width"/>
+                            <field name="bridge_width"/>
+                            <field name="temple_length"/>
+                        </group>
+                        <group>
+                            <field name="frame_shape"/>
+                            <field name="frame_color"/>
+                            <field name="frame_rim_type"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>
