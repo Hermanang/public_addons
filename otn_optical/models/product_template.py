@@ -1,13 +1,24 @@
 # Copyright 2017 LasLabs Inc.
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
-from email.policy import default
-
-from odoo import fields, models
+from random import randint
+from odoo import fields, models, api
 
 
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    @api.depends('default_code')
+    def _compute_custom_name(self):
+        for template in self:
+            treatments = " ".join(template.lens_treatment_ids.mapped('name'))
+            lens_types = " ".join(template.lens_type_ids.mapped('name'))
+            template.name = False if not template.name else (
+                '{}{} {} {}'.format(
+                    template.default_code and '[%s] ' % template.default_code or '', template.name,
+                    treatments, lens_types
+                ))
+
+    name = fields.Char(compute='_compute_custom_name', store=True, readonly=False)
     lens_treatment_ids = fields.Many2many('product.lens.treatment', string='Traitements')
     optical_product_type = fields.Selection([
         ("lenses", "Verres"),
@@ -59,30 +70,50 @@ class ProductTemplate(models.Model):
     temple_length = fields.Integer(string='Longueur des bras (mm)')
 
 
-class LensTreatment(models.Model):
-    _name = 'product.lens.treatment'
-    _description = 'Traitement de verre'
+class OpticalProductAttributeMixin(models.AbstractModel):
+    _name = "optical.product.attribute.mixin"
+    _description = "Can send messages via bus.bus"
+
+    def _get_default_color(self):
+        return randint(1, 11)
 
     name = fields.Char(string='Nom', required=True)
+    color = fields.Integer('Couleur', default=_get_default_color)
+
+class LensTreatment(models.Model):
+    _name = 'product.lens.treatment'
+    _inherit = 'optical.product.attribute.mixin'
+    _description = 'Traitement de verre'
+
+    def _get_default_color(self):
+        return 1
 
 
 class LensType(models.Model):
     _name = 'product.lens.type'
+    _inherit = 'optical.product.attribute.mixin'
     _description = 'Type de verre'
 
-    name = fields.Char(string='Nom', required=True)
+    def _get_default_color(self):
+        return 2
 
 class FrameMaterial(models.Model):
     _name = 'product.frame.material'
+    _inherit = 'optical.product.attribute.mixin'
     _description = 'Matière des montures'
 
-    name = fields.Char(string='Nom', required=True)
+    def _get_default_color(self):
+        return 3
 
 
 class FrameUsage(models.Model):
     _name = 'product.frame.usage'
+    _inherit = 'optical.product.attribute.mixin'
     _description = 'Usage des montures'
 
-    name = fields.Char(string='Nom', required=True)
+    def _get_default_color(self):
+        return 4
+
+
 
 
