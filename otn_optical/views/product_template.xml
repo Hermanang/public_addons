@@ -122,6 +122,14 @@
             <xpath expr="//field[@name='product_properties']" position="after">
                 <field name="lens_type_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="lens_treatment_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+
+            </xpath>
+            <xpath expr="//aside" position="inside">
+                <footer class="pt-1 position-absolute bottom-0"
+                    t-if="record.lens_od_sphere.value and record.lens_od_cylinder.value">>
+                    SPH: <field name="lens_od_sphere"/>
+                    CYL: <field name="lens_od_cylinder"/>
+                </footer>
             </xpath>
         </field>
     </record>
