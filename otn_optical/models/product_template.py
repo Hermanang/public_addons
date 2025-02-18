@@ -7,18 +7,6 @@ from odoo import fields, models, api
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    @api.depends('default_code')
-    def _compute_custom_name(self):
-        for template in self:
-            treatments = " ".join(template.lens_treatment_ids.mapped('name'))
-            lens_types = " ".join(template.lens_type_ids.mapped('name'))
-            template.name = False if not template.name else (
-                '{}{} {} {}'.format(
-                    template.default_code and '[%s] ' % template.default_code or '', template.name,
-                    treatments, lens_types
-                ))
-
-    name = fields.Char(compute='_compute_custom_name', store=True, readonly=False)
     lens_treatment_ids = fields.Many2many('product.lens.treatment', string='Traitements')
     optical_product_type = fields.Selection([
         ("lenses", "Verres"),
