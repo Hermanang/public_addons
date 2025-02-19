@@ -119,6 +119,9 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_kanban_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="optical_product_type"/>
+            </xpath>
             <xpath expr="//field[@name='product_properties']" position="after">
                 <field name="lens_type_ids" widget="many2many_tags" options="{'color_field': 'color'}"
                     t-if="record.optical_product_type.value == 'lenses'"/>
