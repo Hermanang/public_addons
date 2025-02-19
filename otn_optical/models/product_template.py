@@ -45,7 +45,14 @@ class ProductTemplate(models.Model):
         ('geometric', 'Géométrique'),
         ('heart', 'Cœur'),
     ], string='Forme de la monture')
-    frame_color = fields.Char('Couleur de la monture')
+    frame_gender = fields.Selection([
+        ('man', 'Homme'),
+        ('woman', 'Femme'),
+        ('mixed', 'Mixte'),
+        ('boy', 'Garçon'),
+        ('girl', 'Fille'),
+    ], string='Forme de la monture')
+    frame_color_ids = fields.Many2many('product.frame.color', string='Couleur de la monture')
     frame_material_ids = fields.Many2many('product.frame.material', string='Matière de la monture')
     frame_usage_ids = fields.Many2many('product.frame.usage', string="Type d'usage")
     frame_rim_type = fields.Selection([
@@ -101,6 +108,14 @@ class FrameUsage(models.Model):
 
     def _get_default_color(self):
         return 4
+
+class FrameColor(models.Model):
+    _name = 'product.frame.color'
+    _inherit = 'optical.product.attribute.mixin'
+    _description = 'Couleur des montures'
+
+    def _get_default_color(self):
+        return 5
 
 
 

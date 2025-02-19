@@ -4,3 +4,4 @@ access_lens_treatment,product.lens.treatment,model_product_lens_treatment,base.g
 access_lens_type,product.lens.type,model_product_lens_type,base.group_user,1,1,1,1
 access_product_frame_material,product.frame.material,model_product_frame_material,base.group_user,1,1,1,1
 access_product_frame_usage,product.frame.usage,model_product_frame_usage,base.group_user,1,1,1,1
+access_product_frame_color,product.product.frame.color,model_product_frame_color,base.group_user,1,1,1,1
