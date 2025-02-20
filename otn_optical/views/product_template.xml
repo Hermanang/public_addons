@@ -27,6 +27,14 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
+                                        <th>ADD</th>
+                                        <th><field name="lens_addition" widget="char"/></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
                                         <th/>
                                         <th>Sphère</th>
                                         <th>Cylindre</th>
@@ -37,11 +45,6 @@
                                         <td><strong>OD</strong></td>
                                         <td><field name="lens_od_sphere" widget="char"/></td>
                                         <td><field name="lens_od_cylinder" widget="char"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>OG</strong></td>
-                                        <td><field name="lens_og_sphere" widget="char"/></td>
-                                        <td><field name="lens_og_cylinder" widget="char"/></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -133,6 +136,7 @@
                     t-if="record.lens_od_sphere.value and record.lens_od_cylinder.value">
                     <div>S: <field name="lens_od_sphere"/></div>
                     <div>C: <field name="lens_od_cylinder"/></div>
+                    <div t-if="record.lens_addition.value">A: <field name="lens_addition"/></div>
                 </footer>
             </xpath>
         </field>
