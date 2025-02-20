@@ -30,6 +30,7 @@
         <field name="model">product.lens.treatment</field>
         <field name="arch" type="xml">
             <list string="Tags" editable="bottom" sample="1">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="color" widget="color_picker" />
             </list>

@@ -19,6 +19,7 @@ class ProductTemplate(models.Model):
     lens_og_sphere = fields.Char(string="OG Sphère")
     lens_od_cylinder = fields.Char(string="OD Cylindre")
     lens_og_cylinder = fields.Char(string="OG Cylindre")
+    lens_addition = fields.Char(string="Addition")
 
     lens_type_ids = fields.Many2many('product.lens.type', string='Type de verre')
     lens_surface = fields.Selection([
@@ -56,9 +57,9 @@ class ProductTemplate(models.Model):
     frame_material_ids = fields.Many2many('product.frame.material', string='Matière de la monture')
     frame_usage_ids = fields.Many2many('product.frame.usage', string="Type d'usage")
     frame_rim_type = fields.Selection([
-        ('rimless', 'Non cerclées'),
-        ('semi_rimless', 'Semi-cerclées'),
-        ('full_rim', 'Cerclées'),
+        ('rimless', 'Non cerclée'),
+        ('semi_rimless', 'Semi-cerclée'),
+        ('full_rim', 'Cerclée'),
     ], string='Type de cercle')
     lens_width = fields.Integer(string='Largeur des verres (mm)')
     bridge_width = fields.Integer(string='Largeur du pont (mm)')
@@ -67,13 +68,15 @@ class ProductTemplate(models.Model):
 
 class OpticalProductAttributeMixin(models.AbstractModel):
     _name = "optical.product.attribute.mixin"
-    _description = "Can send messages via bus.bus"
+    _order = 'sequence'
+    _description = "Optical product attribute"
 
     def _get_default_color(self):
         return randint(1, 11)
 
     name = fields.Char(string='Nom', required=True)
     color = fields.Integer('Couleur', default=_get_default_color)
+    sequence = fields.Integer(default=10)
 
 class LensTreatment(models.Model):
     _name = 'product.lens.treatment'
