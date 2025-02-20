@@ -145,6 +145,8 @@
             <field name="name" position="after">
                 <field name="lens_type_ids"/>
                 <field name="lens_treatment_ids"/>
+                <field name="lens_od_sphere"/>
+                <field name="lens_od_cylinder"/>
                 <field name="frame_material_ids"/>
                 <field name="frame_usage_ids"/>
             </field>

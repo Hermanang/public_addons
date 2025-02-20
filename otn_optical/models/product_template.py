@@ -15,10 +15,10 @@ class ProductTemplate(models.Model):
         ("others", "Autres"),
     ], string="Type de produit optique", default="others", required=True)
 
-    lens_od_sphere = fields.Char(string="OD Sphère")
-    lens_og_sphere = fields.Char(string="OG Sphère")
-    lens_od_cylinder = fields.Char(string="OD Cylindre")
-    lens_og_cylinder = fields.Char(string="OG Cylindre")
+    lens_od_sphere = fields.Char(string="Sphère")
+    # lens_og_sphere = fields.Char(string="OG Sphère")
+    lens_od_cylinder = fields.Char(string="Cylindre")
+    # lens_og_cylinder = fields.Char(string="OG Cylindre")
     lens_addition = fields.Char(string="Addition")
 
     lens_type_ids = fields.Many2many('product.lens.type', string='Type de verre')
