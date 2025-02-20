@@ -27,7 +27,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>ADD</th>
+                                        <th><strong>ADD</strong></th>
                                         <th><field name="lens_addition" widget="char"/></th>
                                     </tr>
                                 </thead>
@@ -35,18 +35,13 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th/>
-                                        <th>Sphère</th>
-                                        <th>Cylindre</th>
+                                        <th><strong>Sphère</strong></th>
+                                        <th><field name="lens_od_sphere" widget="char"/></th>
+
+                                        <th><strong>Cylindre</strong></th>
+                                        <field name="lens_od_cylinder" widget="char"/>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><strong>OD</strong></td>
-                                        <td><field name="lens_od_sphere" widget="char"/></td>
-                                        <td><field name="lens_od_cylinder" widget="char"/></td>
-                                    </tr>
-                                </tbody>
                             </table>
                         </group>
                     </group>
