@@ -1,2 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_optical_prescription,optical.prescription,model_optical_prescription,,1,1,1,1
+access_optical_prescription,optical.prescription,model_optical_prescription,base.group_user,1,1,1,1
+access_lens_treatment,product.lens.treatment,model_product_lens_treatment,base.group_user,1,1,1,1
+access_lens_type,product.lens.type,model_product_lens_type,base.group_user,1,1,1,1
+access_product_frame_material,product.frame.material,model_product_frame_material,base.group_user,1,1,1,1
+access_product_frame_usage,product.frame.usage,model_product_frame_usage,base.group_user,1,1,1,1
+access_product_frame_color,product.product.frame.color,model_product_frame_color,base.group_user,1,1,1,1

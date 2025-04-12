@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+    <!--
+        product.lens.type views
+    -->
+    <record id="product_lens_type_view_form" model="ir.ui.view">
+        <field name="name">product.lens.type.view.form</field>
+        <field name="model">product.lens.type</field>
+        <field name="arch" type="xml">
+            <form string="Tags">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Services"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="color" required="True" widget="color_picker"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_lens_type_view_tree" model="ir.ui.view">
+        <field name="name">product.lens.type.view.list</field>
+        <field name="model">product.lens.type</field>
+        <field name="arch" type="xml">
+            <list string="Tags" editable="bottom" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Tags Configuration -->
+    <record id="product_lens_type_action" model="ir.actions.act_window">
+        <field name="name">Lens type</field>
+        <field name="res_model">product.lens.type</field>
+        <field name="view_id" ref="product_lens_type_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer</p>
+        </field>
+    </record>
+
+    <menuitem
+        name="Lens type"
+        id="menu_lens_type"
+        action="product_lens_type_action"
+        parent="sale.prod_config_main"
+    />
+</odoo>

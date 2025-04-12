@@ -13,7 +13,6 @@
     "installable": True,
     "depends": ["sale_management", "contacts"],
     "data": [
-        # "security/security.xml",
         "security/ir.model.access.csv",
 
         "report/ir_actions_report_templates.xml",
@@ -24,8 +23,12 @@
         "views/prescription_views.xml",
         "views/res_partner.xml",
         "views/sale_order.xml",
-        "views/product_product.xml",
+        "views/product_template.xml",
         "views/account_move_line.xml",
+        "views/product_frame_usage_views.xml",
+        "views/product_lens_type_views.xml",
+        "views/product_lens_treatment_views.xml",
+        "views/product_frame_material_views.xml",
     ],
     "images": ["static/description/icon.png"],
 }

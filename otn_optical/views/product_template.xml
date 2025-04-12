@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    License LGPL-3 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.view.inherit.sale</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="optical_product_type"/>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page name="lens_properties" string="Propriétés des verres" invisible="optical_product_type != 'lenses'">
+                    <group>
+                        <group>
+                            <field name="lens_treatment_ids" widget="many2many_tags"/>
+                            <field name="lens_type_ids" widget="many2many_tags"/>
+                            <field name="lens_surface"/>
+                            <field name="lens_material"/>
+                            <field name="lens_diameter"/>
+                            <field name="lens_index"/>
+                        </group>
+                        <group>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><strong>ADD</strong></th>
+                                        <th><field name="lens_addition" widget="char"/></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Sphère</strong></th>
+                                        <th><field name="lens_od_sphere" widget="char"/></th>
+
+                                        <th><strong>Cylindre</strong></th>
+                                        <field name="lens_od_cylinder" widget="char"/>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </group>
+                    </group>
+                </page>
+                <page name="frame_properties" string="Propriétés des montures" invisible="optical_product_type != 'frames'">
+                    <group>
+                        <group>
+                            <field name="frame_material_ids" widget="many2many_tags"/>
+                            <field name="frame_usage_ids" widget="many2many_tags"/>
+                            <field name="lens_width"/>
+                            <field name="bridge_width"/>
+                            <field name="temple_length"/>
+                        </group>
+                        <group>
+                            <field name="frame_shape"/>
+                            <field name="frame_color_ids" widget="many2many_tags"/>
+                            <field name="frame_rim_type"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_frames_action_sell" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="path">frames</field>
+        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="view_id" ref="product.product_template_kanban_view"/>
+        <field name="search_view_id" ref="product.product_template_search_view"/>
+        <field name="domain">[("optical_product_type", "=", "frames")]</field>
+        <field name="context">{
+            "search_default_filter_to_sell":1,
+            "sale_multi_pricelist_product_template": 1,
+            "default_optical_product_type": "frames"
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+            </p>
+        </field>
+    </record>
+
+    <record id="product_glasses_action_sell" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="path">lenses</field>
+        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="view_id" ref="product.product_template_kanban_view"/>
+        <field name="search_view_id" ref="product.product_template_search_view"/>
+        <field name="domain">[("optical_product_type", "=", "lenses")]</field>
+        <field name="context">{
+            "search_default_filter_to_sell":1,
+            "sale_multi_pricelist_product_template": 1,
+            "default_optical_product_type": "lenses"
+            }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                You must define a product for everything you sell or purchase,
+                whether it's a storable product, a consumable or a service.
+            </p>
+        </field>
+    </record>
+
+    <record id="product_template_kanban_view" model="ir.ui.view">
+        <field name="name">Product.template.product.kanban</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="optical_product_type"/>
+            </xpath>
+            <xpath expr="//field[@name='product_properties']" position="after">
+                <field name="lens_type_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="lens_treatment_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="frame_material_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="frame_usage_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </xpath>
+            <xpath expr="//aside" position="inside">
+                <footer class="pt-1 position-absolute bottom-0"
+                    t-if="record.lens_od_sphere.value and record.lens_od_cylinder.value">
+                    <div>S: <field name="lens_od_sphere"/></div>
+                    <div>C: <field name="lens_od_cylinder"/></div>
+                    <div t-if="record.lens_addition.value">A: <field name="lens_addition"/></div>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_search_view" model="ir.ui.view">
+        <field name="name">product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="lens_type_ids"/>
+                <field name="lens_treatment_ids"/>
+                <field name="lens_od_sphere"/>
+                <field name="lens_od_cylinder"/>
+                <field name="frame_material_ids"/>
+                <field name="frame_usage_ids"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="sale.menu_product_template_action"
+        name="Autres"
+        action="sale.product_template_action"
+        parent="sale.product_menu_catalog"
+        sequence="21"/>
+    <menuitem id="menu_products_frames"
+        name="Montures"
+        action="product_frames_action_sell"
+        parent="sale.product_menu_catalog"
+        sequence="20"/>
+    <menuitem id="menu_products_glasses"
+        name="Verres"
+        action="product_glasses_action_sell"
+        parent="sale.product_menu_catalog"
+        sequence="20"/>
+</odoo>
