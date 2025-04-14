@@ -1,0 +1,130 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_commission_formula
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-14 15:14+0000\n"
+"PO-Revision-Date: 2024-06-19 16:35+0000\n"
+"Last-Translator: MorganeGoujon <morgane@scalizer.fr>\n"
+"Language-Team: French (https://www.transifex.com/oca/teams/23907/fr/)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid ""
+"<span class=\"instructions\">\n"
+"  Use 'line' to access all the line fields.\n"
+"  As field names may vary, you should differentiate the\n"
+"  formulas for sale.order.line and account.move.line.\n"
+"  You can, for instance, use line._name == 'sale.order.line'\n"
+"  or line._name == 'account.move.line'.\n"
+"\n"
+"  Use 'result' to return the commission amount.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"instructions\">\n"
+"  Utilisez 'line' pour accéder à tous les champs de la ligne.\n"
+"  Comme les noms des champs peuvent changer, vous devriez différenciez les\n"
+"  formules pour les sale.order.line et account.move.line.\n"
+"  Vous pouvez, par exemple, utiliser line._name == 'sale.order.line'\n"
+"  ou line._name == 'account.move.line'.\n"
+"\n"
+"  Utilisez 'result' pour retourner le montant de la commission.\n"
+"                        </span>"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Account Move Line common fields"
+msgstr "Champs commun de l'écriture comptable"
+
+#. module: commission_formula
+#: model:ir.model,name:commission_formula.model_commission
+msgid "Commission"
+msgstr "Commission"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Discount (%)"
+msgstr "Remise (%)"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Field"
+msgstr "Champ"
+
+#. module: commission_formula
+#: model:ir.model.fields,field_description:commission_formula.field_commission__formula
+#: model:ir.model.fields.selection,name:commission_formula.selection__commission__commission_type__formula
+msgid "Formula"
+msgstr "Formule"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Instructions"
+msgstr "Instructions"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Label"
+msgstr "Libellé"
+
+#. module: commission_formula
+#: model:ir.model,name:commission_formula.model_commission_line_mixin
+msgid ""
+"Mixin model for having commission agent lines in any object inheriting from "
+"this one"
+msgstr ""
+"Model abstrait pour avoir les lignes d'agent de commission dans tous les "
+"objets qui héritent de ce modèle"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Sale Oder Line common fields"
+msgstr "Champs communs de ligne de bon de commande de vente"
+
+#. module: commission_formula
+#: model:ir.model.fields,help:commission_formula.field_commission__commission_type
+msgid ""
+"Select the percentage type of the commission:\n"
+"* 'Fixed percentage': all commissions are computed with a fixed percentage. "
+"You can fill the percentage in the field \"Fixed percentage\".\n"
+"* 'By sections': percentage varies depending amount intervals. You can fill "
+"intervals and percentages in the section \"Rate definition\"."
+msgstr ""
+"Sélectionner le pourcentage type de la commission :\n"
+"* 'Pourcentage fixe' : toutes les commissions sont calculées avec un "
+"pourcentage fixe. Vous pouvez remplir ce pourcentage dans le champs "
+"\"Pourcentage fixe\".\n"
+"* 'Par sections' : pourcentage varient en fonction du montant des "
+"intervalles. Vous pouvez remplir les intervalles et les pourcentages dans la "
+"section \"définition du taux\"."
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Subtotal"
+msgstr "Sous-total"
+
+#. module: commission_formula
+#: model:ir.model.fields,field_description:commission_formula.field_commission__commission_type
+msgid "Type"
+msgstr "Type"
+
+#. module: commission_formula
+#: model_terms:ir.ui.view,arch_db:commission_formula.commission_form
+msgid "Unit Price"
+msgstr "Prix Unitaire"
