@@ -1,0 +1,230 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* bi_website_shop_product_filter
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-17 10:48+0000\n"
+"PO-Revision-Date: 2023-10-17 10:48+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: bi_website_shop_product_filter
+#: model_terms:ir.ui.view,arch_db:bi_website_shop_product_filter.custom_filters
+msgid "Applied Filters"
+msgstr "Angewandte Filter"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields.selection,name:bi_website_shop_product_filter.selection__product_filter__type__color
+msgid "Color"
+msgstr "Farbe"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__product_count
+msgid "Count"
+msgstr "Zählen"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__create_uid
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter__create_uid
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__create_uid
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__create_date
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter__create_date
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__create_date
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__display_name
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter__display_name
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__display_name
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__display_name
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__dynamic_count
+msgid "Dynamic Count"
+msgstr "Dynamische Zählung"
+
+#. module: bi_website_shop_product_filter
+#: model_terms:ir.ui.view,arch_db:bi_website_shop_product_filter.filter_product_template_form
+msgid "Filter"
+msgstr "Filter"
+
+#. module: bi_website_shop_product_filter
+#: model_terms:ir.ui.view,arch_db:bi_website_shop_product_filter.view_odoo_product_filter_form_view
+msgid "Filter Attribute Values"
+msgstr "Attributwerte filtern"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model,name:bi_website_shop_product_filter.model_group_filter
+msgid "Filter Group"
+msgstr "Filtergruppe"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter__name
+msgid "Filter Group Name"
+msgstr "Filtergruppenname"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__filter_name_id
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__filter_id
+msgid "Filter Name"
+msgstr "Filtername"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model,name:bi_website_shop_product_filter.model_filter_product_line
+#: model:ir.model,name:bi_website_shop_product_filter.model_product_filter
+msgid "Filter Product"
+msgstr "Produkt filtern"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model,name:bi_website_shop_product_filter.model_product_filter_value
+msgid "Filter Product Value"
+msgstr "Produktwert filtern"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__filter_value_ids
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__filter_value_ids
+msgid "Filter Values"
+msgstr "Werte filtern"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__name
+msgid "Filter Values Name"
+msgstr "Name der Filterwerte"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__product_tmpl_id
+msgid "Filter View"
+msgstr "Filteransicht"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__group_id
+msgid "Group Filter"
+msgstr "Gruppenfilter"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__html_color
+msgid "HTML Color Index"
+msgstr "HTML-Farbindex"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,help:bi_website_shop_product_filter.field_product_filter_value__html_color
+msgid ""
+"Here you can set a\n"
+"\t\tspecific HTML color index (e.g. #ff0000) to display the color if the\n"
+"\t\tfilterer type is 'Color'."
+msgstr ""
+"Hier können Sie eine einstellen\n"
+"\t\tspezifischer HTML-Farbindex (z. B. #ff0000), um die Farbe anzuzeigen, wenn die\n"
+"\t\tDer Filtertyp ist „Farbe“."
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__id
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter__id
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__id
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__id
+msgid "ID"
+msgstr ""
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line____last_update
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter____last_update
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter____last_update
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value____last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__write_uid
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter__write_uid
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__write_uid
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_filter_product_line__write_date
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_group_filter__write_date
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__write_date
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter_value__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__name
+msgid "Name"
+msgstr "Name"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model,name:bi_website_shop_product_filter.model_product_template
+msgid "Product"
+msgstr "Produkt"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__filter_ids
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_product__filter_ids
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_template__filter_ids
+#: model:ir.ui.menu,name:bi_website_shop_product_filter.odoo_product_filter_menu
+#: model:ir.ui.menu,name:bi_website_shop_product_filter.odoo_product_filter_menu_website_sale
+msgid "Product Filter"
+msgstr "Produktfilter"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.ui.menu,name:bi_website_shop_product_filter.odoo_product_filter_value_menu
+#: model:ir.ui.menu,name:bi_website_shop_product_filter.odoo_product_filter_value_menu_website_sale
+msgid "Product Filter Value"
+msgstr "Produktfilterwert"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields.selection,name:bi_website_shop_product_filter.selection__product_filter__type__radio
+msgid "Radio"
+msgstr "Radio"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields.selection,name:bi_website_shop_product_filter.selection__product_filter__type__select
+msgid "Select"
+msgstr "Wählen"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model.fields,field_description:bi_website_shop_product_filter.field_product_filter__type
+msgid "Type"
+msgstr "Typ"
+
+#. module: bi_website_shop_product_filter
+#: model_terms:ir.ui.view,arch_db:bi_website_shop_product_filter.view_product_filter_line_tree_view
+msgid "Values"
+msgstr "Werte"
+
+#. module: bi_website_shop_product_filter
+#: model_terms:ir.ui.view,arch_db:bi_website_shop_product_filter.view_odoo_product_filter_form_view
+#: model_terms:ir.ui.view,arch_db:bi_website_shop_product_filter.view_odoo_product_filter_tree_view
+#: model_terms:ir.ui.view,arch_db:bi_website_shop_product_filter.view_odoo_product_filter_value_tree_view
+msgid "Variant Values"
+msgstr "Variantenwerte"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.model,name:bi_website_shop_product_filter.model_website
+msgid "Website"
+msgstr "Webseite"
+
+#. module: bi_website_shop_product_filter
+#: model:ir.actions.act_window,name:bi_website_shop_product_filter.action_odoo_product_filter_menu
+#: model:ir.actions.act_window,name:bi_website_shop_product_filter.action_odoo_product_filter_value_menu
+msgid "Website Product Filter"
+msgstr "Website-Produktfilter"

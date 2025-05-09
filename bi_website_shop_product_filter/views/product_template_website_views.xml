@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <template id="products_filters" inherit_id="website_sale.products" active="False" customize_show="True"
+              name="Product Filters">
+        <xpath expr="//div[hasclass('o_wsale_products_grid_before_rail')]" position="inside">
+            <t t-call="bi_website_shop_product_filter.custom_filters"/>
+        </xpath>
+    </template>
+
+    <template id="products_filters_offcanvas" inherit_id="website_sale.o_wsale_offcanvas" 
+              customize_show="True"
+              name="Product Filters offcanvas">
+        <xpath expr="//div[@id='o_wsale_offcanvas_content']" position="inside">
+            <t t-call="bi_website_shop_product_filter.custom_filters"/>
+        </xpath>
+    </template>
+
+    <template id="custom_filters" name="Custom filters">
+        <t t-if="filters or applied_filter==True">
+            <div class="card">
+                <form class="js_filtervalue mb32" method="get">
+                    <input type="hidden" name="search" t-att-value="search"/>
+                    <input type="hidden" name="order" t-att-value="order"/>
+                    <ul class="nav nav-pills flex-column">
+                        <div class="card-primary">
+<!--                            <t t-if="applied_filter==True">-->
+                                <div class="customfilter card-header">Applied Filter</div>
+                                <t t-foreach="filters" t-as="a">
+                                    <t t-foreach="a.filter_value_ids" t-as="v">
+                                        <t t-if="v.id in filter_set">
+                                            <b class="nav-link mx-2"><span t-esc="v.name"/></b>
+                                        </t>
+                                    </t>
+                                </t>
+<!--                            </t>-->
+                            <t t-foreach="grouped_tasks" t-as="filters">
+                                <div class="card-header customfilter">
+                                    <span t-field="filters[0].sudo().group_id.name"/>
+                                </div>
+                                <t t-foreach="filters" t-as="a">
+                                    <li class="nav-item mb-2">
+                                        <div class="p-3">
+                                            <strong t-field="a.name"/>
+                                        </div>
+                                        <t t-if="a.type == 'select'">
+                                            <select class="form-control" name="filter">
+                                                <option value=""/>
+                                                <t t-foreach="a.sudo().filter_value_ids" t-as="v">
+                                                    <!-- <t t-if="v.dynamic_count &gt; 0"> -->
+                                                        <option t-att-value="'%s-%s' % (a.id,v.id)"
+                                                                t-esc="v.name,v.dynamic_count"
+                                                                t-att-selected="v.id in filter_set"/>
+                                                    <!-- </t> -->
+                                                </t>
+                                            </select>
+                                        </t>
+                                        <t t-if="a.type == 'radio'">
+                                            <ul class="nav nav-pills flex-column" style="m-2">
+                                                <t t-foreach="a.filter_value_ids" t-as="v">
+                                                    <li class="nav-item mb-2">
+                                                        <label t-attf-class="nav-link mx-2 #{' active' if v.id in filter_set else ''}">
+                                                            <input type="checkbox" name="filter"
+                                                                   t-att-value="'%s-%s' % (a.id,v.id)"
+                                                                   t-att-checked="'checked' if v.id in filter_set else None"/>
+                                                            <span t-field="v.name"/>
+                                                            <span>(<b><t t-esc='v.dynamic_count'/></b>)
+                                                            </span>
+                                                        </label>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </t>
+                                        <t t-if="a.type == 'color'" class="customcolor">
+                                            <div style="padding: 5px 10px;">
+                                                <t t-foreach="a.filter_value_ids" t-as="v">
+                                                        <label t-attf-style="background-color:#{v.html_color or v.name}"
+                                                               t-attf-class="css_attribute_color mb-2 #{'active' if v.id in filter_set else ''}"
+                                                               >
+                                                            <input type="checkbox" name="filter"
+                                                                   t-att-value="'%s-%s' % (a.id,v.id)"
+                                                                   t-att-checked="'checked' if v.id in filter_set else None"
+                                                                   t-att-title="v.name"/>
+                                                        </label>
+                                                        <span>(<b><t t-esc='v.dynamic_count'/></b>)
+                                                        </span>
+                                                </t>
+                                            </div>
+                                        </t>
+                                    </li>
+                                </t>
+                            </t>
+                        </div>
+                    </ul>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>
