@@ -1,0 +1,544 @@
+<odoo>
+    <template id="homepage">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_sidegrid pt56 o_colored_level pb0" data-snippet="s_sidegrid" data-name="Grid latéral"
+                         style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Wavy/12_001&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Wavy_12_001"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="13">
+                            <div class="o_grid_item g-col-lg-5 g-height-9 col-lg-5 o_colored_level o_anim_fade_in o_animate o_anim_from_right"
+                                 style="z-index: 1; grid-area: 1 / 8 / 10 / 13; --grid-item-padding-x: 24px;">
+                                <h1 class="display-4">
+                                    <strong>Des Lentilles Discrètes aux Montures Élégantes</strong>
+
+                                </h1>
+                                <p class="lead"><br/>Chaque innovation majeure, qu'elle ait été conçue avec minutie ou
+                                    qu'elle soit le fruit d'une créativité spontanée, contient des histoires qui ne
+                                    demandent qu'à être découvertes.
+                                    <br/>
+                                    <br/>
+                                </p>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-4 g-col-lg-4 col-lg-4 o_colored_level"
+                                 style="z-index: 2; grid-area: 1 / 1 / 5 / 5;">
+                                <img src="/web/image/1904-d64b5f27/angle-de-vue-eleve-avec-etui-et-pince-a-epiler.webp"
+                                     alt="" class="img img-fluid rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1859"
+                                     data-original-src="/web/image/1859-e5a09a57/angle-de-vue-eleve-avec-etui-et-pince-a-epiler.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="lazy"/>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image o_snippet_mobile_invisible g-height-9 g-col-lg-3 col-lg-3 d-lg-block d-none o_colored_level"
+                                 style="z-index: 3; grid-area: 1 / 5 / 10 / 8;">
+                                <img src="/web/image/1804-03857689/pexels-jomigraphy-5078351-9439696.webp" alt=""
+                                     class="img img-fluid rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1800"
+                                     data-original-src="/web/image/1800-d5bb9dc9/pexels-jomigraphy-5078351-9439696.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="lazy"/>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image o_snippet_mobile_invisible g-height-9 g-col-lg-4 col-lg-4 d-lg-block d-none o_colored_level"
+                                 style="z-index: 4; grid-area: 5 / 1 / 14 / 5;" data-invisible="1">
+                                <img src="/web/image/1830-fdaa4eb4/un-nerd-masculin-surpris-porte-des-lunettes-rondes-garde-la-main-sur-le-cadre-porte-une-casquette-et-une-veste-l-air-maladroit.webp"
+                                     alt="" class="img img-fluid rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1827"
+                                     data-original-src="/web/image/1827-3a353bde/un-nerd-masculin-surpris-porte-des-lunettes-rondes-garde-la-main-sur-le-cadre-porte-une-casquette-et-une-veste-l-air-maladroit.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="lazy"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+                <section class="s_references o_cc o_cc1 o_colored_level pt32 pb40" data-snippet="s_references"
+                         data-name="Références" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Zigs/03&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Zigs_03"/>
+                    <div class="container-fluid">
+                        <div class="row s_nb_column_fixed align-items-stretch">
+
+                            <div class="col-6 col-lg-2 pt16 pb16 o_colored_level">
+                                <img src="/web/image/website.s_reference_demo_image_1" class="img img-fluid mx-auto"
+                                     alt="" loading="lazy" data-mimetype="image/png" data-original-id="1224"
+                                     data-original-src="/website/static/src/img/snippets_demo/s_references_1.png"
+                                     data-mimetype-before-conversion="image/png"/>
+                            </div>
+                            <div class="col-6 col-lg-2 pt16 pb16 o_colored_level">
+                                <img src="/web/image/website.s_reference_demo_image_2" class="img img-fluid mx-auto"
+                                     alt="" loading="lazy" data-mimetype="image/png" data-original-id="1225"
+                                     data-original-src="/website/static/src/img/snippets_demo/s_references_2.png"
+                                     data-mimetype-before-conversion="image/png"/>
+                            </div>
+                            <div class="col-6 col-lg-2 pt16 pb16 o_colored_level">
+                                <img src="/web/image/website.s_reference_demo_image_3" class="img img-fluid mx-auto"
+                                     alt="" loading="lazy" data-mimetype="image/png" data-original-id="1226"
+                                     data-original-src="/website/static/src/img/snippets_demo/s_references_3.png"
+                                     data-mimetype-before-conversion="image/png"/>
+                            </div>
+                            <div class="col-6 col-lg-2 pt16 pb16 o_colored_level">
+                                <img src="/web/image/website.s_reference_demo_image_4" class="img img-fluid mx-auto"
+                                     alt="" loading="lazy" data-mimetype="image/png" data-original-id="1227"
+                                     data-original-src="/website/static/src/img/snippets_demo/s_references_4.png"
+                                     data-mimetype-before-conversion="image/png"/>
+                            </div>
+                            <div class="col-6 col-lg-2 pt16 pb16 o_colored_level">
+                                <img src="/web/image/website.s_reference_demo_image_5" class="img img-fluid mx-auto"
+                                     alt="" loading="lazy" data-mimetype="image/png" data-original-id="1228"
+                                     data-original-src="/website/static/src/img/snippets_demo/s_references_5.png"
+                                     data-mimetype-before-conversion="image/png"/>
+                            </div>
+                            <div class="col-6 col-lg-2 pt16 pb16 o_colored_level">
+                                <img src="/web/image/website.s_reference_default_image_6" class="img img-fluid mx-auto"
+                                     alt="" loading="lazy" data-mimetype="image/png" data-original-id="1229"
+                                     data-original-src="/website/static/src/img/snippets_demo/s_references_6.png"
+                                     data-mimetype-before-conversion="image/png"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_masonry_block pb48 o_colored_level pt0" data-vcss="001" data-vxml="001"
+                         data-masonry-template="images" data-snippet="s_masonry_block" data-name="Masonry"
+                         style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Wavy/12_001&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Wavy_12_001"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="8" style="gap: 16px;">
+                            <div class="o_grid_item o_cc o_cc5 g-height-8 g-col-lg-6 col-lg-6 shadow rounded-3 o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box justify-content-start o_animate o_anim_zoom_out o_visible"
+                                 data-name="Block"
+                                 style="z-index: 1; grid-area: 1 / 1 / 9 / 7; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px; background-image: url(&quot;/web/image/1804-03857689/pexels-jomigraphy-5078351-9439696.webp&quot;) !important;"
+                                 data-mimetype="image/webp" data-original-id="1800"
+                                 data-original-src="/web/image/1800-d5bb9dc9/pexels-jomigraphy-5078351-9439696.jpg"
+                                 data-mimetype-before-conversion="image/jpeg" data-resize-width="1536">
+                                <div class="o_we_bg_filter bg-black-50"/>
+                                <h3 class="display-4-fs">Lunettes&amp;nbsp;<br/>de soleil
+                                </h3>
+                                <p class="lead">Atteignons de nouveaux sommets ensemble</p>
+                            </div>
+                            <div class="o_grid_item o_cc o_cc5 g-height-8 g-col-lg-6 col-lg-6 shadow rounded-3 o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box justify-content-start o_animate o_anim_zoom_in o_visible"
+                                 data-name="Block"
+                                 style="z-index: 2; grid-area: 1 / 7 / 9 / 13; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px; background-image: url(&quot;/web/image/1867-14e7b6f6/concepts-de-beaute-vision-vue-ophtalmologie-et-personnes-gros-plan-du-profil-d-une-femme-coreenne-ou-asiatique-mettant-des-lentilles-de-contact-en-studio.webp&quot;) !important;"
+                                 data-mimetype="image/webp" data-original-id="1857"
+                                 data-original-src="/web/image/1857-ab885b71/concepts-de-beaute-vision-vue-ophtalmologie-et-personnes-gros-plan-du-profil-d-une-femme-coreenne-ou-asiatique-mettant-des-lentilles-de-contact-en-studio.jpg"
+                                 data-mimetype-before-conversion="image/jpeg" data-resize-width="1280">
+                                <div class="o_we_bg_filter bg-black-50"/>
+                                <h3 class="display-4-fs">Lentilles&amp;nbsp;<br class="d-none d-lg-inline"/>de contact
+                                </h3>
+                                <p class="lead">Où les idées prennent vie</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_masonry_block o_colored_level pt8 pb80" data-vcss="001" data-vxml="001"
+                         data-masonry-template="images" data-snippet="s_masonry_block" data-name="Masonry"
+                         style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Wavy/12_001&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Wavy_12_001"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="8" style="gap: 16px;">
+                            <div class="o_grid_item o_cc o_cc5 g-height-8 g-col-lg-6 col-lg-6 justify-content-start shadow rounded-3 o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_anim_fade_in o_animate o_anim_from_top o_visible"
+                                 data-name="Block"
+                                 style="z-index: 1; grid-area: 1 / 1 / 9 / 7; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px; background-image: url(&quot;/web/image/1830-fdaa4eb4/un-nerd-masculin-surpris-porte-des-lunettes-rondes-garde-la-main-sur-le-cadre-porte-une-casquette-et-une-veste-l-air-maladroit.webp&quot;) !important;"
+                                 data-mimetype="image/webp" data-original-id="1827"
+                                 data-original-src="/web/image/1827-3a353bde/un-nerd-masculin-surpris-porte-des-lunettes-rondes-garde-la-main-sur-le-cadre-porte-une-casquette-et-une-veste-l-air-maladroit.jpg"
+                                 data-mimetype-before-conversion="image/jpeg" data-resize-width="1920">
+                                <div class="o_we_bg_filter bg-black-50"/>
+                                <h3 class="display-4-fs">Lunettes&amp;nbsp;<br/>de vue
+                                </h3>
+                                <p class="lead">Atteignons de nouveaux sommets ensemble</p>
+                            </div>
+                            <div class="o_grid_item o_cc o_cc5 g-height-8 g-col-lg-6 col-lg-6 shadow rounded-3 o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box o_anim_fade_in o_animate justify-content-start o_anim_from_bottom o_visible"
+                                 data-name="Block"
+                                 style="z-index: 2; grid-area: 1 / 7 / 9 / 13; --grid-item-padding-y: 30px; --grid-item-padding-x: 30px; background-image: url(&quot;/web/image/1896-061cf5fd/lunettes-a-monture-legerement-arrondie.webp&quot;) !important;"
+                                 data-mimetype="image/webp" data-original-id="1895"
+                                 data-original-src="/web/image/1895-04099d9f/lunettes-a-monture-legerement-arrondie.jpg"
+                                 data-mimetype-before-conversion="image/jpeg" data-resize-width="1280">
+                                <div class="o_we_bg_filter bg-black-50"/>
+                                <h3 class="display-4-fs">Verres</h3>
+                                <p class="lead">Où les idées prennent vie
+                                    <a class="o_translate_inline"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section
+                        class="s_image_title o_cc o_cc5 pt32 pb32 o_colored_level oe_img_bg o_bg_img_center o_bg_img_origin_border_box"
+                        style="position: relative; background-image: url(&quot;/web/image/1811-6af6df90/pexels-norma-mortenson-7301705.webp&quot;) !important;"
+                        data-snippet="s_image_title" data-name="Image Titre"
+                        data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Floats/04&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;,&quot;animated&quot;:&quot;true&quot;}"
+                        data-mimetype="image/webp" data-original-id="1808"
+                        data-original-src="/web/image/1808-9a50c3cf/pexels-norma-mortenson-7301705.jpg"
+                        data-mimetype-before-conversion="image/jpeg" data-resize-width="1280">
+                    <div class="o_we_bg_filter bg-black-50"/>
+                    <div class="o_we_shape o_web_editor_Floats_04 o_we_animated"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="9">
+                            <div class="o_grid_item g-height-9 g-col-lg-8 col-lg-8 o_colored_level"
+                                 style="--grid-item-padding-y: 32px; grid-area: 1 / 1 / 10 / 9; z-index: 1;">
+                                <h1 class="display-3">
+
+                                    <strong>L'élégance qui protège.</strong>
+
+                                    &amp;nbsp;
+                                    <br/>
+                                </h1>
+                            </div>
+                            <div class="o_grid_item g-height-3 g-col-lg-7 col-lg-7 o_colored_level"
+                                 style="--grid-item-padding-y: 24px; grid-area: 7 / 6 / 10 / 13; z-index: 2;">
+                                <p class="lead" style="text-align: end;">
+
+                                    <strong>Réinventez votre regard – une collection où protection et élégance ne font
+                                        qu'un. Des montures d'exception, une défense UV sans concession.
+                                    </strong>
+
+                                    &amp;nbsp;
+                                    <br/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_image_text_box o_colored_level pb48 pt80" data-snippet="s_image_text_box"
+                         data-name="Image Boîte de texte" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Zigs/03&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Zigs_03"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="10" style="column-gap: 24px;">
+                            <div class="o_grid_item o_grid_item_image g-col-lg-6 g-height-10 col-lg-6 o_colored_level o_anim_fade_in o_animate o_anim_from_left o_visible"
+                                 style="grid-area: 1 / 1 / 11 / 7; z-index: 1; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; order: 2;">
+                                <img src="/web/image/1851-f38cb5cc/pexels-hardeep-24538746.webp" alt=""
+                                     class="img img-fluid rounded order-lg-0 o_we_custom_image"
+                                     data-mimetype="image/webp" data-original-id="1806"
+                                     data-original-src="/web/image/1806-954163d9/pexels-hardeep-24538746.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-width="1280"
+                                     data-height="1509.071038251366" data-scale-x="1" data-scale-y="1"
+                                     data-aspect-ratio="0/0" loading="eager"/>
+                            </div>
+                            <div class="o_grid_item o_cc o_cc2 g-col-lg-6 rounded order-lg-0 o_colored_level g-height-10 col-lg-6 o_anim_fade_in o_animate o_anim_from_right o_visible"
+                                 style="grid-area: 1 / 7 / 11 / 13; z-index: 2; --grid-item-padding-y: 140px; --grid-item-padding-x: 48px; order: 1;">
+                                <h2>Lunettes de soleil</h2>
+                                <p>
+
+                                </p>
+                                <p style="text-align: left;">Ne manquez pas notre incroyable collection de lunettes de
+                                    soleil, élaborée par des designers de renom pour sublimer votre style!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section data-snippet="s_dynamic_snippet_carousel"
+                         class="s_dynamic_snippet_carousel s_dynamic s_dynamic_empty pt32 pb32 o_colored_level s_product_product_mini_image o_dynamic_snippet_empty"
+                         data-custom-template-data="{}" data-name="Carrousel dynamique" data-number-of-records="16"
+                         data-filter-id="1"
+                         data-template-key="website_sale.dynamic_filter_template_product_product_mini_image"
+                         data-carousel-interval="5000" data-number-of-elements="4"
+                         data-number-of-elements-small-devices="1" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Wavy/12_001&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Wavy_12_001"/>
+                    <div class="container">
+                        <div class="row s_nb_column_fixed">
+                            <section
+                                    class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row mb-lg-0 pb-3 pb-md-0 o_colored_level justify-content-between">
+                                <div>
+                                    <h4 class="o_default_snippet_text">Nos derniers contenus</h4>
+                                    <p class="lead o_default_snippet_text">Découvrez les nouveautés dans notre
+                                        entreprise !
+                                    </p>
+                                </div>
+                                <div>
+                                    <a title="Voir tout"
+                                       class="s_dynamic_snippet_main_page_url d-none o_default_snippet_text" href="#">
+                                        Voir tout
+                                        <i class="fa fa-long-arrow-right ms-2"/>
+                                    </a>
+                                </div>
+                            </section>
+                            <section
+                                    class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col o_colored_level">
+                                <div class="css_non_editable_mode_hidden">
+                                    <div class="missing_option_warning alert alert-info fade show d-none d-print-none rounded-0 o_default_snippet_text">
+                                        Votre snippet dynamique sera affiché ici... Ce message est affiché parce que
+                                        vous n'avez pas défini le filtre et le modèle à utiliser.
+                                        <br/>
+                                    </div>
+                                </div>
+                                <div class="dynamic_snippet_template"/>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_image_text_box o_colored_level pb32 pt88" data-snippet="s_image_text_box"
+                         data-name="Image Boîte de texte" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Zigs/03&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Zigs_03"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="10" style="column-gap: 24px;">
+
+
+                            <div class="o_grid_item o_cc o_cc2 g-col-lg-6 rounded o_colored_level g-height-8 col-lg-6 o_anim_fade_in o_animate o_anim_from_left o_visible"
+                                 style="z-index: 0; --grid-item-padding-y: 140px; --grid-item-padding-x: 48px; grid-area: 1 / 1 / 9 / 7;">
+                                <h2 style="text-align: left;">Lentilles de contact</h2>
+                                <p>
+
+                                </p>
+                                <p>
+
+                                </p>
+                                <p style="text-align: left;">La beauté de vos yeux mérite d'être célébrée avec la plus
+                                    grande excellence
+                                </p>
+                                <h6 style="text-align: left;">Profiter de vos lentilles A des prix web.</h6>
+                                <p class="mb-0">
+                                    <br/>
+                                </p>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-col-lg-6 g-height-10 col-lg-6 o_colored_level o_anim_fade_in o_animate o_anim_from_right o_visible"
+                                 style="z-index: 1; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; grid-area: 1 / 7 / 11 / 13;">
+                                <img src="/web/image/1866-77f26ee7/femme-retirant-les-lentilles-de-contact-de-la-boite.webp"
+                                     alt="" class="img img-fluid order-lg-0 o_we_custom_image rounded"
+                                     data-mimetype="image/webp" data-original-id="1862"
+                                     data-original-src="/web/image/1862-f6089138/femme-retirant-les-lentilles-de-contact-de-la-boite.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="eager"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section data-snippet="s_dynamic_snippet_carousel"
+                         class="s_dynamic_snippet_carousel s_dynamic s_dynamic_empty pb32 o_colored_level s_product_product_mini_image pt32 o_dynamic_snippet_empty"
+                         data-custom-template-data="{}" data-name="Carrousel dynamique" data-number-of-records="16"
+                         data-filter-id="1"
+                         data-template-key="website_sale.dynamic_filter_template_product_product_mini_image"
+                         data-carousel-interval="5000" data-number-of-elements="4"
+                         data-number-of-elements-small-devices="1" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Wavy/12_001&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Wavy_12_001"/>
+                    <div class="container">
+                        <div class="row s_nb_column_fixed">
+                            <section
+                                    class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0 o_colored_level">
+                                <div>
+                                    <h4>Nos&amp;nbsp;Lentilles</h4>
+                                    <p class="lead">Explorez les dernières tendances en lentilles de contact!</p>
+                                </div>
+                                <div>
+                                    <a title="Voir tout"
+                                       class="s_dynamic_snippet_main_page_url d-none o_default_snippet_text" href="#">
+                                        Voir tout
+                                        <i class="fa fa-long-arrow-right ms-2"/>
+                                    </a>
+                                </div>
+                            </section>
+                            <section
+                                    class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col o_colored_level">
+                                <div class="css_non_editable_mode_hidden">
+                                    <div class="missing_option_warning alert alert-info fade show d-none d-print-none rounded-0 o_default_snippet_text">
+                                        Votre snippet dynamique sera affiché ici... Ce message est affiché parce que
+                                        vous n'avez pas défini le filtre et le modèle à utiliser.
+                                        <br/>
+                                    </div>
+                                </div>
+                                <div class="dynamic_snippet_template"/>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_sidegrid o_colored_level pt24 pb64 d-lg-none o_snippet_desktop_invisible"
+                         data-snippet="s_sidegrid" data-name="Grid latéral" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Zigs/03&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}"
+                         data-invisible="1">
+                    <div class="o_we_shape o_web_editor_Zigs_03"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="13">
+                            <div class="o_grid_item g-col-lg-5 g-height-9 o_colored_level col-lg-5"
+                                 style="z-index: 1; grid-area: 1 / 8 / 10 / 13; --grid-item-padding-x: 24px">
+                                <h1 class="display-4">
+                                    <span class="h2-fs">
+                                        <strong>Des lentilles discrètes, mais parfaites</strong>
+                                    </span>
+
+                                    <br/>
+                                </h1>
+                                <p class="lead">
+                                    <br/>
+                                    <br/>
+                                    <strong>Ces lentilles sont si agréables à porter que vous aurez l'impression de ne
+                                        rien avoir sur les yeux, tant leur confort est exceptionnel !
+                                    </strong>
+
+                                </p>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-4 g-col-lg-4 col-lg-4 o_colored_level"
+                                 style="z-index: 2; grid-area: 1 / 1 / 5 / 5;">
+                                <img src="/web/image/1863-793bf439/lentille-de-contact-intelligente-sur-le-bout-du-doigt-nouvelle-technologie.webp"
+                                     alt="" class="img img-fluid rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1858"
+                                     data-original-src="/web/image/1858-12723b95/lentille-de-contact-intelligente-sur-le-bout-du-doigt-nouvelle-technologie.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="lazy"/>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image o_snippet_mobile_invisible g-height-9 g-col-lg-3 col-lg-3 d-lg-block d-none o_colored_level"
+                                 style="z-index: 3; grid-area: 1 / 5 / 10 / 8;">
+                                <img src="/web/image/1864-71f1a5ce/homme-appliquant-sa-lentille-de-contact.webp" alt=""
+                                     class="img img-fluid rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1860"
+                                     data-original-src="/web/image/1860-421f1059/homme-appliquant-sa-lentille-de-contact.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="lazy"/>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image o_snippet_mobile_invisible g-height-9 g-col-lg-4 col-lg-4 d-lg-block d-none o_colored_level"
+                                 style="z-index: 4; grid-area: 5 / 1 / 14 / 5;">
+                                <img src="/web/image/1867-14e7b6f6/concepts-de-beaute-vision-vue-ophtalmologie-et-personnes-gros-plan-du-profil-d-une-femme-coreenne-ou-asiatique-mettant-des-lentilles-de-contact-en-studio.webp"
+                                     alt="" class="img img-fluid rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1857"
+                                     data-original-src="/web/image/1857-ab885b71/concepts-de-beaute-vision-vue-ophtalmologie-et-personnes-gros-plan-du-profil-d-une-femme-coreenne-ou-asiatique-mettant-des-lentilles-de-contact-en-studio.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="lazy"/>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image o_snippet_mobile_invisible g-height-4 g-col-lg-8 col-lg-8 d-lg-block d-none o_colored_level"
+                                 style="z-index: 5; grid-area: 10 / 5 / 14 / 13;">
+                                <img src="/web/image/1865-9e8018ea/angle-de-vue-eleve-avec-etui-et-pince-a-epiler.webp"
+                                     alt="" class="img img-fluid rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1859"
+                                     data-original-src="/web/image/1859-e5a09a57/angle-de-vue-eleve-avec-etui-et-pince-a-epiler.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-y="170.48034934497818"
+                                     data-width="1920.0000000000002" data-height="1045.240174672489" data-scale-x="1"
+                                     data-scale-y="1" data-aspect-ratio="0/0" loading="lazy"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_image_text_box o_colored_level pb48 pt88" data-snippet="s_image_text_box"
+                         data-name="Image Boîte de texte" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Zigs/03&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Zigs_03"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="10" style="column-gap: 24px;">
+                            <div class="o_grid_item o_grid_item_image g-col-lg-6 g-height-10 col-lg-6 o_colored_level o_anim_fade_in o_animate o_anim_from_left o_visible"
+                                 style="grid-area: 1 / 1 / 11 / 7; z-index: 1; --grid-item-padding-y: 0px; --grid-item-padding-x: 0px; order: 2;">
+                                <img src="/web/image/1844-4e91b256/mere-avec-petit-fils-dans-le-magasin-de-lunettes.webp"
+                                     alt="" class="img img-fluid rounded order-lg-0 o_we_custom_image"
+                                     data-mimetype="image/webp" data-original-id="1833"
+                                     data-original-src="/web/image/1833-facd759a/mere-avec-petit-fils-dans-le-magasin-de-lunettes.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="eager"/>
+                            </div>
+                            <div class="o_grid_item o_cc o_cc2 g-col-lg-6 rounded order-lg-0 o_colored_level g-height-10 col-lg-6 o_anim_fade_in o_animate o_anim_from_right o_visible"
+                                 style="grid-area: 1 / 7 / 11 / 13; z-index: 2; --grid-item-padding-y: 140px; --grid-item-padding-x: 48px; order: 1;">
+                                <h2>Lunettes de vue</h2>
+                                <p>
+
+                                </p>
+                                <p>
+
+                                </p>
+                                <p style="text-align: left;">Ne manquez pas notre incroyable collection de lunettes de
+                                    soleil, élaborée par des designers de renom pour sublimer votre style!
+                                </p>
+                                <p class="mb-0">
+                                    <br/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section data-snippet="s_dynamic_snippet_carousel"
+                         class="s_dynamic_snippet_carousel s_dynamic s_dynamic_empty pt32 pb32 o_colored_level s_product_product_mini_image o_dynamic_snippet_empty"
+                         data-custom-template-data="{}" data-name="Carrousel dynamique" data-number-of-records="16"
+                         data-filter-id="1"
+                         data-template-key="website_sale.dynamic_filter_template_product_product_mini_image"
+                         data-carousel-interval="5000" data-number-of-elements="4"
+                         data-number-of-elements-small-devices="1" style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Wavy/12_001&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Wavy_12_001"/>
+                    <div class="container">
+                        <div class="row s_nb_column_fixed">
+                            <section
+                                    class="s_dynamic_snippet_title oe_unremovable oe_unmovable d-flex flex-column flex-md-row justify-content-between mb-lg-0 pb-3 pb-md-0 o_colored_level">
+                                <div>
+                                    <h4>Notre&amp;nbsp;collection de lunettes de vue</h4>
+                                    <p class="lead o_default_snippet_text">Découvrez les nouveautés dans notre
+                                        entreprise !
+                                    </p>
+                                </div>
+                                <div>
+                                    <a title="Voir tout"
+                                       class="s_dynamic_snippet_main_page_url d-none o_default_snippet_text" href="#">
+                                        Voir tout
+                                        <i class="fa fa-long-arrow-right ms-2"/>
+                                    </a>
+                                </div>
+                            </section>
+                            <section
+                                    class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col o_colored_level">
+                                <div class="css_non_editable_mode_hidden">
+                                    <div class="missing_option_warning alert alert-info fade show d-none d-print-none rounded-0 o_default_snippet_text">
+                                        Votre snippet dynamique sera affiché ici... Ce message est affiché parce que
+                                        vous n'avez pas défini le filtre et le modèle à utiliser.
+                                        <br/>
+                                    </div>
+                                </div>
+                                <div class="dynamic_snippet_template"/>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_masonry_block o_colored_level pt56 pb88" data-vcss="001" data-vxml="001"
+                         data-masonry-template="mosaic" data-snippet="s_masonry_block" data-name="Masonry"
+                         style="position: relative;"
+                         data-oe-shape-data="{&quot;shape&quot;:&quot;web_editor/Zigs/03&quot;,&quot;flip&quot;:[],&quot;showOnMobile&quot;:false,&quot;shapeAnimationSpeed&quot;:&quot;0&quot;}">
+                    <div class="o_we_shape o_web_editor_Zigs_03"/>
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="10" style="gap: 16px;">
+                            <div class="o_grid_item o_cc o_cc3 g-height-3 g-col-lg-3 col-lg-3 justify-content-start order-lg-0 rounded-3 o_colored_level o_animate o_anim_zoom_in o_visible"
+                                 data-name="Block"
+                                 style="order: 1; z-index: 1; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 1 / 1 / 4 / 4;">
+                                <h3 class="o_default_snippet_text">Innovation</h3>
+                                <p>Découvrez des&amp;nbsp;magnifiques lunettes de prescription</p>
+                            </div>
+                            <div class="o_grid_item o_cc o_cc2 g-height-3 g-col-lg-3 col-lg-3 order-lg-0 rounded-3 o_colored_level justify-content-start o_animate o_anim_zoom_out o_visible"
+                                 data-name="Block"
+                                 style="order: 2; z-index: 2; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 1 / 4 / 4 / 7;">
+                                <h3>Focus</h3>
+                                <p>Établir des connexions</p>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-7 g-col-lg-6 col-lg-6 rounded-3 text-center order-lg-0 o_colored_level o_animate o_anim_zoom_out o_visible"
+                                 data-name="Block" style="order: 0; z-index: 3; grid-area: 1 / 7 / 8 / 13;">
+                                <img src="/web/image/1830-fdaa4eb4/un-nerd-masculin-surpris-porte-des-lunettes-rondes-garde-la-main-sur-le-cadre-porte-une-casquette-et-une-veste-l-air-maladroit.webp"
+                                     alt="" class="img img-fluid mx-auto rounded o_we_custom_image"
+                                     data-mimetype="image/webp" data-original-id="1827"
+                                     data-original-src="/web/image/1827-3a353bde/un-nerd-masculin-surpris-porte-des-lunettes-rondes-garde-la-main-sur-le-cadre-porte-une-casquette-et-une-veste-l-air-maladroit.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="eager"/>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-7 g-col-lg-6 col-lg-6 rounded-3 text-center order-lg-0 o_colored_level o_animate o_anim_bounce_in o_visible"
+                                 data-name="Block" style="order: 3; z-index: 4; grid-area: 4 / 1 / 11 / 7;">
+                                <img src="/web/image/1854-9479254b/bel-homme-dans-un-magasin-d-optique.webp" alt=""
+                                     class="img img-fluid mx-auto rounded o_we_custom_image" data-mimetype="image/webp"
+                                     data-original-id="1815"
+                                     data-original-src="/web/image/1815-80e8fe8b/bel-homme-dans-un-magasin-d-optique.jpg"
+                                     data-mimetype-before-conversion="image/jpeg" data-resize-width="NaN"
+                                     loading="eager"/>
+                            </div>
+                            <div class="o_grid_item o_cc o_cc2 g-height-3 g-col-lg-3 col-lg-3 text-center order-lg-0 rounded-3 o_colored_level justify-content-center o_anim_fade_in o_animate o_anim_from_bottom o_visible"
+                                 data-name="Block"
+                                 style="order: 4; z-index: 5; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 8 / 7 / 11 / 10;">
+                                <h3 class="display-1-fs o_default_snippet_text">22%</h3>
+                                <p>Atteindre de nouveaux sommets</p>
+                            </div>
+                            <div class="o_grid_item o_cc o_cc4 g-height-3 g-col-lg-3 col-lg-3 text-center order-lg-0 rounded-3 o_colored_level justify-content-center o_anim_fade_in o_animate o_anim_from_right o_visible"
+                                 data-name="Block"
+                                 style="order: 5; z-index: 6; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 8 / 10 / 11 / 13;">
+                                <h3 class="display-1-fs o_default_snippet_text">+12</h3>
+                                <p>Marques différentes</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

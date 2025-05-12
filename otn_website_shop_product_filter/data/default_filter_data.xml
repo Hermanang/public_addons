@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Records for Lens Treatments -->
+        <record id="lens_treatment_ids" model="filter.field">
+            <field name="name">Traitements</field>
+            <field name="key">lens_treatment_ids</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Optical Product Type -->
+        <record id="optical_product_type" model="filter.field">
+            <field name="name">Type de produit optique</field>
+            <field name="key">optical_product_type</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Lens Type -->
+        <record id="lens_type_ids" model="filter.field">
+            <field name="name">Type de verre</field>
+            <field name="key">lens_type_ids</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Lens Surface -->
+        <record id="lens_surface" model="filter.field">
+            <field name="name">Surface</field>
+            <field name="key">lens_surface</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Lens Material -->
+        <record id="lens_material" model="filter.field">
+            <field name="name">Matière</field>
+            <field name="key">lens_material</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Frame Shape -->
+        <record id="frame_shape" model="filter.field">
+            <field name="name">Forme de la monture</field>
+            <field name="key">frame_shape</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Frame Gender -->
+        <record id="frame_gender" model="filter.field">
+            <field name="name">Genre de cadre</field>
+            <field name="key">frame_gender</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Frame Color -->
+        <record id="frame_color_ids" model="filter.field">
+            <field name="name">Couleur de la monture</field>
+            <field name="key">frame_color_ids</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Frame Material -->
+        <record id="frame_material_ids" model="filter.field">
+            <field name="name">Matière de la monture</field>
+            <field name="key">frame_material_ids</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Frame Usage -->
+        <record id="frame_usage_ids" model="filter.field">
+            <field name="name">Type d'usage</field>
+            <field name="key">frame_usage_ids</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- Records for Frame Rim Type -->
+        <record id="frame_rim_type" model="filter.field">
+            <field name="name">Type de cercle</field>
+            <field name="key">frame_rim_type</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

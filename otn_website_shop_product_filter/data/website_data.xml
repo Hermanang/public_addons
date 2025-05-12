@@ -1,0 +1,19 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Default pages -->
+        <record id="homepage_page" model="website.page">
+            <field name="is_published">True</field>
+            <field name="url">/accueil</field>
+            <field name="view_id" ref="otn_website_shop_product_filter.homepage"/>
+            <field name="track">True</field>
+            <field name="website_meta_description">Page d'accueil Luxe Optique</field>
+        </record>
+        <record id="homepage_page_menu" model="website.menu">
+            <field name="name">Page d'accueil</field>
+            <field name="url">/accueil</field>
+            <field name="page_id" ref="otn_website_shop_product_filter.homepage_page"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">1</field>
+        </record>
+    </data>
+</odoo>

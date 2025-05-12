@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+
+	<record id="view_filter_field_tree_view" model="ir.ui.view">
+		<field name="name">filter.field.tree.view</field>
+		<field name="model">filter.field</field>
+		<field name="arch" type="xml">
+			<list string="Champs à filtrer" editable="bottom">
+				<field name="name"/>
+				<field name="key"/>
+				<field name="active" widget="boolean_toggle"/>
+			</list>
+		</field>
+	</record>
+
+
+	<record id="view_filter_field_form_view" model="ir.ui.view">
+		<field name="name">filter.field.form.view</field>
+		<field name="model">filter.field</field>
+		<field name="arch" type="xml">
+			<form string="Champs à filtrer">
+				<sheet>                                      
+					<group>
+						<group>
+						<field name="name"/>
+						<field name="key"/>
+						<field name="active"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_filter_field" model="ir.actions.act_window">
+		<field name="name">Champ à filtrer</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">filter.field</field>
+		<field name="view_mode">list,form</field>
+	</record>
+		
+
+	<menuitem id="filter_field_menu" parent="sale.prod_config_main"
+		name="Champ à filtrer" action="action_filter_field" sequence="30" />
+
+</odoo>
