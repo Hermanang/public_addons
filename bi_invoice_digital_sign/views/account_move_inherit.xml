@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="customer_signature_id" model="ir.ui.view">
+        <field name="name">Require signature id</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']" position="after">
+                <page string="Customer Signature" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}">
+                    <group>
+                        <field name="signed_person"/>
+                        <field name="signed_time"/>
+                        <field name="signature" widget="image"/>
+                    </group>
+                </page>
+                <page string="Vendor Signature" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}">
+                    <group>
+                        <field name="signed_person"/>
+                        <field name="signed_time"/>
+                        <field name="signature" widget="image"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="invoice_report_digital_sign" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='qrcode']" position="before">
+            <div t-if="o.signature" class="mt-4 ml64 mr4" name="signature">
+                <div class="offset-8">
+                    <strong>Signature</strong>
+                </div>
+                <div class="offset-8">
+                    <img t-att-src="image_data_uri(o.signature)" style="max-height: 4cm; max-width: 8cm;"/>
+                </div>
+                <div class="offset-8 text-center">
+                    <p t-field="o.signed_person"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
+
