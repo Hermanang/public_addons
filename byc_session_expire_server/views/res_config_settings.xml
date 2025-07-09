@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="byc_server_session_expire_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">byc.server.session.expire.res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="user_default_rights" position="after">
+                <div id="byc_server_session_expire_settings">
+                    <block title="Server-Side Inactivity Timeout">
+                        <!-- Main Toggle for Server-Side Timeout -->
+                        <setting id="server_session_timeout_enabled_setting"
+                            string="Enable Server-Side Session Timeout"
+                            help="Activates a secure, server-enforced timeout. Sessions are terminated on the server after a period of inactivity (no requests sent), even if the user's browser is closed. This is more secure than client-side timeouts."
+                            company_dependent="1">
+                            <field name="byc_server_enable_auto_session_logout"/>
+                        </setting>
+
+                        <!-- Timeout Limit -->
+                        <setting id="server_session_timeout_limit_setting"
+                            string="Inactivity Limit (HH:MM)"
+                            help="Set the duration of server inactivity before a user is logged out. For example, enter 01:30 for 1 hour and 30 minutes. This only applies if the server-side timeout is enabled."
+                            company_dependent="1"
+                            invisible="not byc_server_enable_auto_session_logout">
+                            <field name="byc_server_session_expire_limit" widget="float_time"/>
+                        </setting>
+
+                        <!-- Exclude Administrator -->
+                        <setting id="server_exclude_admin_setting"
+                            string="Exclude Administrator (Server-Side)"
+                            help="If checked, the Administrator's session will never be terminated by this server-side mechanism."
+                            company_dependent="1"
+                            invisible="not byc_server_enable_auto_session_logout"
+                            groups="base.group_system">
+                            <field name="byc_server_exclude_admin_from_session_expire"/>
+                        </setting>
+
+                        <!-- User-Specific Mode -->
+                        <setting id="server_enable_user_specific_setting"
+                            string="Apply Server Timeout to Specific Users Only"
+                            help="If enabled, the server-side timeout will only affect the users selected below. All other users will be ignored."
+                            company_dependent="1"
+                            invisible="not byc_server_enable_auto_session_logout">
+                            <field name="byc_server_enable_user_specific_session_expire"/>
+                            <div class="content-group mt-2" invisible="not byc_server_enable_user_specific_session_expire">
+                                <label for="byc_server_user_specific_session_expire_users" string="Targeted Users"/>
+                                <field name="byc_server_user_specific_session_expire_users" widget="many2many_tags"/>
+                            </div>
+                        </setting>
+
+                        <!-- Time Window Restrictions -->
+                        <setting id="server_time_window_setting"
+                            string="Enable Time Window Restrictions"
+                            help="Restrict login and session validity to specific time windows (e.g. 8AM-6PM)"
+                            company_dependent="1">
+                            <field name="byc_server_enable_time_window"/>
+                        </setting>
+
+                        <setting id="server_start_time_setting"
+                            string="Allowed Start Time (HH:MM)"
+                            help="Earliest time when login is allowed (e.g. 8.5 for 8:30 AM)"
+                            company_dependent="1"
+                            invisible="not byc_server_enable_time_window">
+                            <field name="byc_server_start_time" widget="float_time"/>
+                        </setting>
+
+                        <setting id="server_end_time_setting"
+                            string="Allowed End Time (HH:MM)"
+                            help="Latest time when login is allowed (e.g. 18.0 for 6:00 PM)"
+                            company_dependent="1"
+                            invisible="not byc_server_enable_time_window">
+                            <field name="byc_server_end_time" widget="float_time"/>
+                        </setting>
+                    </block>
+                </div>
+            </block>
+        </field>
+    </record>
+</odoo>
