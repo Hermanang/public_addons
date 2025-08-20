@@ -12,4 +12,16 @@
         <field name="binding_type">report</field>
     </record>
 
+    <!-- Action de rapport -->
+  <record id="action_report_optical_assembly" model="ir.actions.report">
+      <field name="name">Fiche de Montage / Reçu</field>
+      <field name="model">sale.order</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">otn_optical.report_saleorder_document_optical_receipt</field>
+      <field name="report_file">otn_optical.report_saleorder_document_optical_receipt</field>
+      <field name="print_report_name">'Fiche de montage - %s' % (object.name or '')</field>
+      <field name="binding_model_id" ref="sale.model_sale_order"/>
+      <field name="binding_type">report</field>
+  </record>
+
 </odoo>
