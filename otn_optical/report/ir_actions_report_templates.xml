@@ -83,9 +83,9 @@
             <t t-set="prompt_phone"          t-value="'Tél: +221    ___ ___   ___ ___ ___   ___ ___   ___ ___'"/>
 
             <!-- Récupérer toutes les lignes "montures" -->
-            <t t-set="frame" t-value="doc.order_line.filtered(lambda l: (not l.display_type) and l.product_id.optical_product_type =='frames')"/>
+            <t t-set="frame" t-value="doc.order_line.filtered(lambda l: (not l.display_type) and l.product_id.optical_product_type =='frames' and (not l.tag_ids))"/>
             <!-- Récupérer toutes les lignes "verres" -->
-            <t t-set="lens_lines" t-value="doc.order_line.filtered(lambda l: (not l.display_type) and l.product_id.optical_product_type =='lenses')"/>
+            <t t-set="lens_lines" t-value="doc.order_line.filtered(lambda l: (not l.display_type) and l.product_id.optical_product_type =='lenses' and (not l.tag_ids))"/>
 
             <div class="page o-opt-wrap">
                 <!-- ====== REÇU ====== -->
