@@ -1,0 +1,24 @@
+From 826a88d7a0ffa36f637b2f71d08dc0049602a9bd Mon Sep 17 00:00:00 2001
+From: Alister Brenton <gitlab@jotnarsystems.com>
+Date: Mon, 13 Jun 2022 20:29:36 +0100
+Subject: [PATCH] merged
+
+---
+ gocardless/models/models.py | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/gocardless/models/models.py b/gocardless/models/models.py
+index 10eab8f..251c3d5 100644
+--- a/gocardless/models/models.py
++++ b/gocardless/models/models.py
+@@ -290,7 +290,6 @@ class Invoice(models.Model):
+         payment.create({
+             'payment_type': 'inbound',
+             'amount': gc_payment.amount,
+-            'payment_method_line_id': self.env['account.payment.method'].search([('payment_type','=','inbound'),('code','=','manual')]).id,
+             'payment_date': datetime.date.today(),
+             'journal_id': int(journal.id),
+             'currency_id': int(self.currency_id.id),
+-- 
+2.31.1.windows.1
+
