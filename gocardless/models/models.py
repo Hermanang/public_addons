@@ -727,6 +727,9 @@ class ResConfigSettings(models.TransientModel):
 
     gc_journal_id       = fields.Many2one(comodel_name='account.journal',string="Journal to record payments in")
     
+    gc_client_id        = fields.Char("Client ID")
+    gc_client_secret    = fields.Char("Client Secret")
+    
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
@@ -744,7 +747,9 @@ class ResConfigSettings(models.TransientModel):
             gc_webhook_url = urls.url_join(ICPSudo.get_param('web.base.url'),'/gocardless/webhook/'),
             gc_custom_domain = ICPSudo.get_param('gocardless.gc_custom_domain'),
             gc_keep_journal = kj,
-            gc_journal_id = int(jid) or False
+            gc_journal_id = int(jid) or False,
+            gc_client_id = ICPSudo.get_param('gocardless.gc_client_id'),
+            gc_client_secret = ICPSudo.get_param('gocardless.gc_client_secret')
         )
         return res
     #end get_values
@@ -760,6 +765,8 @@ class ResConfigSettings(models.TransientModel):
         ICPSudo.set_param('gocardless.gc_custom_domain', self.gc_custom_domain)
         ICPSudo.set_param('gocardless.gc_keep_journal', self.gc_keep_journal)
         ICPSudo.set_param('gocardless.gc_journal_id', int(self.gc_journal_id.id))
+        ICPSudo.set_param('gocardless.gc_client_id', self.gc_client_id)
+        ICPSudo.set_param('gocardless.gc_client_secret', self.gc_client_secret)
     #end set_values
 
 

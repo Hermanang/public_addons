@@ -39,12 +39,12 @@
                 <p>Hi,</p>
                 <p>Congratulations - the GoCardless module has been successfully installed. In order to complete setup, the Odoo service <b>must</b> now be restarted.</p>
                 <p>Please note that the GoCardless module may not function correctly until this step has been completed.</p>
-                <p>If you require any further assistance, please feel free to contact <a href="mailto:support@jotnarsystems.com">support@jotnarsystems.com</a> at any time.</p>
-                <p>Thanks again for choosing Jötnar Systems.</p>
+                <p>If you require any further assistance, please feel free to contact your system administrator.</p>
+                <p>Thanks again for choosing our payment solution.</p>
             </field>
             <field name="message_type">email</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="email_from">support@jotnarsystems.com</field>
+            <field name="email_from">{{ object.env.company.email_formatted }}</field>
             <field name="author_id" eval="False"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
             <field name="date" eval="datetime.today()"/>

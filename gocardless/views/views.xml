@@ -120,6 +120,14 @@
                                         <button invisible="gc_access_token in ['', False, None]" name="gocardless_connect" string="Reconnect to GoCardless" type="object"/>
                                     </setting>
                                 </block>
+                                <block title="OAuth Configuration" invisible="gc_access_token not in ['', False, None]">
+                                    <setting>
+                                        <field name="gc_client_id"/>
+                                    </setting>
+                                    <setting>
+                                        <field name="gc_client_secret"/>
+                                    </setting>
+                                </block>
                                 <block title="General Settings">
                                     <setting help="This is the description which will appear at the top of the GoCardless customer forms.">
                                         <field name="gc_description"/>
@@ -154,22 +162,22 @@
                                 </block>
                                 <block col="4" title="Maintenance">
                                     <setting groups="base.group_system" invisible="gc_access_token in ['', False, None]">
-                                        <p>Intended for debugging purposes only. Please do not touch unless directed to by Jötnar Systems support staff</p>
+                                        <p>Intended for debugging purposes only. Please do not touch unless directed to by your system administrator</p>
                                         <button confirm="This will re-scan your GoCardless account for up to the last 500 events from all time.                                         This may take some time. Are you sure you wish to continue?" name="do_full_event_refresh" string="Refresh All Events" type="object"/>
                                     </setting>
                                 </block>
                                 <block title="Help &amp; Support">
                                     <p>
                                         For more information, please visit
-                                        <a href="https://www.jotnarsystems.com">
-                                            Jötnar Systems.
+                                        <a href="https://www.yourcompany.com">
+                                            Your Company.
                                         </a>
                                     </p>
                                     <p/>
                                     <p>
                                         For technical support, please feel free to email
-                                        <a href="mailto:support@jotnarsystems.com">
-                                            support@jotnarsystems.com
+                                        <a href="mailto:support@yourcompany.com">
+                                            support@yourcompany.com
                                         </a>
                                     </p>
                                 </block>

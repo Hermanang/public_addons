@@ -12,8 +12,8 @@
 #        No customer information is shared with Jötnar Systems at any time.
 #    """,
 
-    'author': "Jötnar Systems",
-    'website': "https://www.jotnarsystems.com",
+    'author': "Your Company",
+    'website': "https://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
@@ -26,7 +26,7 @@
     'license': 'OPL-1',
     'price': 0,
     'currency': 'EUR',
-    'support': 'support@jotnarsystems.com',
+    'support': 'support@yourcompany.com',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'account'],

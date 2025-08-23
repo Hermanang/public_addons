@@ -23,42 +23,70 @@ class Gocardless(http.Controller):
 
     @http.route('/gocardless/oauth-begin', auth='user')
     def gc_oauth(self, **kw):
-
-        url_base        = http.request.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        
-        jot_url_base    = 'https://gc-api.jotnarsystems.com'     
-        
         environment = http.request.env['ir.config_parameter'].sudo().get_param('gocardless.gc_environment')
-       
-        prefill = {}
-
-        company = http.request.env.user.company_id        
-        prefill = {
-            'cust_org_name':    company.display_name,
-            'cust_email':       company.email,
-            'cust_url':         url_base,
+        
+        # Configuration directe avec GoCardless
+        if environment == 'sandbox':
+            base_url = 'https://connect-sandbox.gocardless.com'
+        else:
+            base_url = 'https://connect.gocardless.com'
+        
+        # Paramètres pour l'authentification OAuth directe
+        params = {
+            'client_id': http.request.env['ir.config_parameter'].sudo().get_param('gocardless.gc_client_id'),
+            'redirect_uri': urls.url_join(http.request.env['ir.config_parameter'].sudo().get_param('web.base.url'), '/gocardless/auth-return'),
+            'response_type': 'code',
+            'scope': 'read_write',
+            'state': 'gocardless_oauth',
+            'prefill': json.dumps({
+                'company_name': http.request.env.user.company_id.display_name,
+                'email': http.request.env.user.company_id.email
+            })
         }
-
-        redir_url = urls.url_join(jot_url_base, "/gc/auth")        
-        qs = urls.url_encode(prefill)
-
-        return werkzeug.utils.redirect("{}?{}&{}={}".format(redir_url, qs, environment, environment))
+        
+        auth_url = "{}?{}".format(urls.url_join(base_url, '/oauth/authorize'), urls.url_encode(params))
+        return werkzeug.utils.redirect(auth_url)
 
     @http.route('/gocardless/auth-return', auth='user')
     def gc_oauth_return(self, **kw):
         ICPSudo = http.request.env['ir.config_parameter'].sudo()
         
-        if kw.get('token'):
-            ICPSudo.set_param('gocardless.gc_access_token', kw.get('token'))
-            client = gocardless_pro.Client(
-                access_token = kw.get('token'),
-                environment = ICPSudo.get_param('gocardless.gc_environment')
-            )
-            creditor = client.creditors.list().records[0]
-            if creditor.verification_status == 'action_required':
-                return werkzeug.utils.redirect("https://verify{}.gocardless.com".format(
-                    ('-sandbox' if ICPSudo.get_param('gocardless.gc_environment') == 'sandbox' else '')
-                ))
+        if kw.get('code'):
+            # Échanger le code d'autorisation contre un token d'accès
+            environment = ICPSudo.get_param('gocardless.gc_environment')
+            
+            if environment == 'sandbox':
+                token_url = 'https://connect-sandbox.gocardless.com/oauth/access_token'
+            else:
+                token_url = 'https://connect.gocardless.com/oauth/access_token'
+            
+            # Préparer les données pour l'échange de token
+            data = {
+                'client_id': http.request.env['ir.config_parameter'].sudo().get_param('gocardless.gc_client_id'),
+                'client_secret': http.request.env['ir.config_parameter'].sudo().get_param('gocardless.gc_client_secret'),
+                'grant_type': 'authorization_code',
+                'code': kw.get('code'),
+                'redirect_uri': urls.url_join(http.request.env['ir.config_parameter'].sudo().get_param('web.base.url'), '/gocardless/auth-return')
+            }
+            
+            # Faire la requête pour obtenir le token
+            import requests
+            response = requests.post(token_url, data=data)
+            
+            if response.status_code == 200:
+                token_data = response.json()
+                access_token = token_data.get('access_token')
+                
+                ICPSudo.set_param('gocardless.gc_access_token', access_token)
+                client = gocardless_pro.Client(
+                    access_token=access_token,
+                    environment=environment
+                )
+                creditor = client.creditors.list().records[0]
+                if creditor.verification_status == 'action_required':
+                    return werkzeug.utils.redirect("https://verify{}.gocardless.com".format(
+                        ('-sandbox' if environment == 'sandbox' else '')
+                    ))
         
         return werkzeug.utils.redirect("/")
 
