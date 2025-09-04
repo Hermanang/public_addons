@@ -247,7 +247,7 @@
                         </div>
                         <div t-if="doc.date_order" class="col" name="informations_date">
                             <strong t-if="is_proforma">Date d'émission</strong>
-                            <strong t-elif="doc.state in ['draft', 'sent']">Quotation Date</strong>
+                            <strong t-elif="doc.state in ['draft', 'sent']">Date devis</strong>
                             <strong t-else="">Date</strong>
                             <div t-field="doc.date_order" t-options="{&quot;widget&quot;: &quot;date&quot;}">2023-12-31</div>
                         </div>
