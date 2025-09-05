@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="address" inherit_id="website_sale.address">
+        <xpath expr="//input[@name='required_fields']" position="replace">
+            <input type="hidden" name="required_fields" t-att-value="'name'"/>
+        </xpath>
+
+        <xpath expr="//div[@id='div_city']" position="replace"/>
+        <xpath expr="//div[@id='div_country']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='company_name_div']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_vat']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_street2']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_state']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-if='zip_before_city']//div[@id='div_zip']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+        <xpath expr="//t[@t-if='not zip_before_city']//div[@id='div_zip']" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+        </xpath>
+
+        <xpath expr="//div[@id='div_street']" position="attributes">
+            <attribute name="class">col-lg-6 mb-2</attribute>
+        </xpath>
+        <xpath expr="//div[@id='div_phone']" position="after">
+            <xpath expr="//div[@id='div_street']" position="move"/>
+        </xpath>
+
+    </template>
+
+    <template id="products_item" inherit_id="website_sale.products_item" priority="100">
+        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="inside">
+            <style>a.whatsapp-hover:hover {background:#25D366 !important; color:#fff;}</style>
+            <a t-attf-href="https://api.whatsapp.com/send?phone=#{website.mobile_number}&amp;text=Salut, je suis intéressé par la monture: #{website.get_base_url() + product_href}"
+               role="button"
+               class="btn whatsapp-hover"
+               aria-label="Whatsapp" title="Whatsapp">
+                <span class="fa fa-whatsapp" style="color:black;"></span>
+            </a>
+        </xpath>
+    </template>
+</odoo>
