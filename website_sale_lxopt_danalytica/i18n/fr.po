@@ -19,11 +19,65 @@ msgstr ""
 msgid "Review Reservation"
 msgstr "Vérifier la réservation"
 
-#. module: website_sale
+#. module: website_sale_lxopt_danalytica
 #. odoo-python
-#: code:addons/website_sale/models/website.py:0
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
 msgid "Confirm reservation"
 msgstr "Confirmer la réservation"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Sign In"
+msgstr "Se connecter"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Checkout"
+msgstr "Réservation"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Continue shopping"
+msgstr "Poursuivre les achats"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Delivery"
+msgstr "Livraison"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Confirm"
+msgstr "Confirmer"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Back to cart"
+msgstr "Retour au panier"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Extra Info"
+msgstr "Infos supplémentaires"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Continue checkout"
+msgstr "Continuer la réservation"
+
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Back to delivery"
+msgstr "Retour à la livraison"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
