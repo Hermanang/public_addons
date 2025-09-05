@@ -13,11 +13,17 @@ msgstr ""
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
+#. module: website_sale_lxopt_danalytica
+#. odoo-python
+#: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+msgid "Review Reservation"
+msgstr "Vérifier la réservation"
+
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
-msgid "Review Order"
-msgstr "Vérifier la reservation"
+msgid "Confirm reservation"
+msgstr "Confirmer la réservation"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
