@@ -9,7 +9,7 @@
     'description': """Module dédié au site web Luxe Optique, développé avec le soutien de l’agence Analytica. 
 Il apporte des ajustements ciblés aux formulaires de commande et ajoute un bouton de contact WhatsApp pour améliorer l’expérience client.
 """,
-    'depends': ['website_sale'],
+    'depends': ['website_sale', 'website_floating_whatsapp_icon'],
     'data': [
         'views/templates.xml'
     ],
