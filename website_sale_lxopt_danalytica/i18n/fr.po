@@ -70,6 +70,7 @@ msgstr "Infos supplémentaires"
 #. module: website_sale_lxopt_danalytica
 #. odoo-python
 #: code:addons/website_sale_lxopt_danalytica/models/website.py:0
+#: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Continue checkout"
 msgstr "Continuer la réservation"
 
