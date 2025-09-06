@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gocardless_config,GoCardless Configuration Access,model_gocardless_config,base.group_system,1,1,1,1
 access_gocardless_payment,GoCardless Payment Access,model_gocardless_payment,account.group_account_invoice,1,0,0,0
 access_gocardless_mandate,GoCardless Payment Access,model_gocardless_mandate,account.group_account_invoice,1,1,1,0
 access_gocardless_event,GoCardless Payment Access,model_gocardless_event,account.group_account_invoice,1,0,0,0

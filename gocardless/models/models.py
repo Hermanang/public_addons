@@ -61,6 +61,23 @@ class GCPayment(models.Model):
     
     _rec_name   = 'gc_payment_id'
 
+    config_id = fields.Many2one(
+        'gocardless.config', 
+        string='Configuration',
+        required=True,
+        default=lambda self: self.env['gocardless.config'].get_default_config(),
+        ondelete='restrict',
+        help="GoCardless configuration this payment belongs to"
+    )
+    company_id = fields.Many2one(
+        'res.company', 
+        string='Company', 
+        related='config_id.company_id', 
+        store=True,
+        readonly=True,
+        index=True
+    )
+
     amount = fields.Float("Transaction amount")
     
     claim_date  = fields.Datetime("Date claimed")
@@ -180,13 +197,13 @@ class Invoice(models.Model):
 
     gc_display_gc = fields.Boolean(string="GoCardless Chargeable", store=False, compute='_compute_display_gc', search='_display_gc_search', copy=False)
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'company_id')
     def _compute_display_gc(self):
-        if (self.env['ir.config_parameter'].sudo().get_param('gocardless.gc_access_token') not in ['', False, None]):
-            for rec in self:
+        for rec in self:
+            config = self.env['gocardless.config'].get_active_config(rec.company_id.id)
+            if config and config.gc_access_token:
                 rec.gc_display_gc = (rec.partner_id.gc_state not in ['setup', 'pending'])
-        else:
-            for rec in self:
+            else:
                 rec.gc_display_gc = False
 
     def _display_gc_search(self, operator, value):
@@ -236,10 +253,17 @@ class Invoice(models.Model):
     def action_gocardless_take_payment(self):
         invoice = self
         
-        ICPSudo = self.env['ir.config_parameter'].sudo()
+        # Obtenir la configuration GoCardless de la société de la facture
+        config = self.env['gocardless.config'].get_active_config(invoice.company_id.id)
+        if not config or not config.gc_access_token:
+            raise exceptions.UserError(
+                "No active GoCardless configuration found for this company. "
+                "Please configure GoCardless in the company settings."
+            )
+        
         client = gocardless_pro.Client(
-            access_token = ICPSudo.get_param('gocardless.gc_access_token'),
-            environment = ICPSudo.get_param('gocardless.gc_environment')
+            access_token=config.gc_access_token,
+            environment=config.gc_environment
         )
 
         try:
@@ -324,6 +348,23 @@ class GC_Mandate(models.Model):
 
     _rec_name   = 'gc_mandate_id'
 
+    config_id = fields.Many2one(
+        'gocardless.config', 
+        string='Configuration',
+        required=True,
+        default=lambda self: self.env['gocardless.config'].get_default_config(),
+        ondelete='restrict',
+        help="GoCardless configuration this mandate belongs to"
+    )
+    company_id = fields.Many2one(
+        'res.company', 
+        string='Company', 
+        related='config_id.company_id', 
+        store=True,
+        readonly=True,
+        index=True
+    )
+
     gc_state    = fields.Selection(
         [
             ['pending','Pending'],
@@ -375,6 +416,23 @@ class GC_Event(models.Model):
 
     _rec_name = 'event_id'
 
+    config_id = fields.Many2one(
+        'gocardless.config', 
+        string='Configuration',
+        required=True,
+        default=lambda self: self.env['gocardless.config'].get_default_config(),
+        ondelete='restrict',
+        help="GoCardless configuration this event belongs to"
+    )
+    company_id = fields.Many2one(
+        'res.company', 
+        string='Company', 
+        related='config_id.company_id', 
+        store=True,
+        readonly=True,
+        index=True
+    )
+
     event_id        = fields.Char(string="GoCardless Event ID")
     action          = fields.Char(string="Action")
     created_at      = fields.Datetime(string="Event Date")
@@ -425,94 +483,107 @@ class GC_Event(models.Model):
         self.process_events(date_cutoff)
 
     def process_events(self, date_cutoff=None):
-        # Here we go with one huge-ass batch run...
-        # It's about here that I started to lose my mind ;-)
-
-        ICPSudo = self.env['ir.config_parameter'].sudo()
-        gctoken = ICPSudo.get_param('gocardless.gc_access_token')
-        gcenv = ICPSudo.get_param('gocardless.gc_environment')
-
-        client = gocardless_pro.Client(
-            access_token = gctoken,
-            environment = gcenv
-        )
-
-        events = client.events.list(
-            params = {
-                "created_at[gte]": date_cutoff
-            } if date_cutoff else {
-                "limit": 500
-            }
-        ).records
+        # Traiter les événements pour chaque configuration active
+        active_configs = self.env['gocardless.config'].search([('is_active', '=', True)])
         
-        count = 0
-        for event in events:
-            # Heavy lifting loop. Should probably look at refactoring this into an event dispatcher.
-            # Actually yeah, that's a good idea.
-            # Edit: we did it.
+        total_count = 0
+        for config in active_configs:
+            if not config.gc_access_token:
+                _logger.warning("Skipping config %s - no access token", config.name)
+                continue
+                
+            _logger.info("Processing events for config: %s", config.name)
             
-            # anyway, to business.
+            client = gocardless_pro.Client(
+                access_token=config.gc_access_token,
+                environment=config.gc_environment
+            )
 
-            existing_event = False
+            try:
+                events = client.events.list(
+                    params = {
+                        "created_at[gte]": date_cutoff
+                    } if date_cutoff else {
+                        "limit": 500
+                    }
+                ).records
+                
+                count = 0
+                for event in events:
+                    # Heavy lifting loop. Should probably look at refactoring this into an event dispatcher.
+                    # Actually yeah, that's a good idea.
+                    # Edit: we did it.
+                    
+                    # anyway, to business.
 
-            # first, make sure we don't already have the event ID in the database.
-            if len(self.search([('event_id','=',event.id)])._ids) > 0:
-                # event already exists (length of search result > 0),
-                # so get on with the next one
-                existing_event = self.env['gocardless.event'].sudo().search([('event_id','=',event.id)], limit=1)
+                    existing_event = False
 
-            # parse the date into a format Python (and thus Odoo) actually likes:
-            eventDate = datetime.datetime.strptime(event.created_at, "%Y-%m-%dT%H:%M:%S.%fZ")
+                    # first, make sure we don't already have the event ID in the database.
+                    if len(self.search([('event_id','=',event.id)])._ids) > 0:
+                        # event already exists (length of search result > 0),
+                        # so get on with the next one
+                        existing_event = self.env['gocardless.event'].sudo().search([('event_id','=',event.id)], limit=1)
 
-            if not existing_event:
-            # let's go ahead and create the event
-                self.env['gocardless.event'].sudo().create({
-                    'event_id':         event.id,
-                    'action':           event.action,
-                    'created_at':       eventDate,
-                    'cause':            event.details.cause,
-                    'ev_description':   event.details.description,
-                    'ev_origin':        event.details.origin,
-                    'ev_reason_code':   event.details.reason_code,
-                    'ev_scheme':        event.details.scheme,
-                    'resource_type':    event.resource_type,
-                    'mandate_id':       self.env['gocardless.mandate'].search([('gc_mandate_id','=',event.links.mandate)], limit=1).id if event.resource_type == 'mandates' else None,
-                    'payment_id':       self.env['gocardless.payment'].search([('gc_payment_id','=',event.links.payment)], limit=1).id if event.resource_type == 'payments' else None                
-                })
-            else:
-                # event already exists
-                # are we in a reprocess? let's work this out from what we know
-                if date_cutoff:
-                    # there's a cutoff date specified, so no we're not
-                    continue
-                else:
-                    # we're in a reprocess, update the event
-                    existing_event.write({
-                        'event_id':         event.id,
-                        'action':           event.action,
-                        'created_at':       eventDate,
-                        'cause':            event.details.cause,
-                        'ev_description':   event.details.description,
-                        'ev_origin':        event.details.origin,
-                        'ev_reason_code':   event.details.reason_code,
-                        'ev_scheme':        event.details.scheme,
-                        'resource_type':    event.resource_type,
-                        'mandate_id':       self.env['gocardless.mandate'].search([('gc_mandate_id','=',event.links.mandate)], limit=1).id if event.resource_type == 'mandates' else None,
-                        'payment_id':       self.env['gocardless.payment'].search([('gc_payment_id','=',event.links.payment)], limit=1).id if event.resource_type == 'payments' else None                
-                    })
+                    # parse the date into a format Python (and thus Odoo) actually likes:
+                    eventDate = datetime.datetime.strptime(event.created_at, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+                    if not existing_event:
+                    # let's go ahead and create the event
+                        self.env['gocardless.event'].sudo().create({
+                            'event_id':         event.id,
+                            'action':           event.action,
+                            'created_at':       eventDate,
+                            'cause':            event.details.cause,
+                            'ev_description':   event.details.description,
+                            'ev_origin':        event.details.origin,
+                            'ev_reason_code':   event.details.reason_code,
+                            'ev_scheme':        event.details.scheme,
+                            'resource_type':    event.resource_type,
+                            'config_id':        config.id,  # Assigner la configuration
+                            'mandate_id':       self.env['gocardless.mandate'].search([('gc_mandate_id','=',event.links.mandate)], limit=1).id if event.resource_type == 'mandates' else None,
+                            'payment_id':       self.env['gocardless.payment'].search([('gc_payment_id','=',event.links.payment)], limit=1).id if event.resource_type == 'payments' else None                
+                        })
+                    else:
+                        # event already exists
+                        # are we in a reprocess? let's work this out from what we know
+                        if date_cutoff:
+                            # there's a cutoff date specified, so no we're not
+                            continue
+                        else:
+                            # we're in a reprocess, update the event
+                            existing_event.write({
+                                'event_id':         event.id,
+                                'action':           event.action,
+                                'created_at':       eventDate,
+                                'cause':            event.details.cause,
+                                'ev_description':   event.details.description,
+                                'ev_origin':        event.details.origin,
+                                'ev_reason_code':   event.details.reason_code,
+                                'ev_scheme':        event.details.scheme,
+                                'resource_type':    event.resource_type,
+                                'config_id':        config.id,  # Mettre à jour la configuration
+                                'mandate_id':       self.env['gocardless.mandate'].search([('gc_mandate_id','=',event.links.mandate)], limit=1).id if event.resource_type == 'mandates' else None,
+                                'payment_id':       self.env['gocardless.payment'].search([('gc_payment_id','=',event.links.payment)], limit=1).id if event.resource_type == 'payments' else None                
+                            })
 
 
 
-            if event.resource_type == 'payments':
-                self.dispatchPaymentEvents(event)
-            elif event.resource_type == 'mandates':
-                self.dispatchMandateEvents(event)
-            #endif
+                    if event.resource_type == 'payments':
+                        self.dispatchPaymentEvents(event)
+                    elif event.resource_type == 'mandates':
+                        self.dispatchMandateEvents(event)
+                    #endif
 
-            count += 1
+                    count += 1
+                    total_count += 1
 
-        #rof
-        _logger.info('Processed {} events'.format(count))
+                _logger.info('Processed {} events for config {}'.format(count, config.name))
+                
+            except Exception as e:
+                _logger.error("Error processing events for config %s: %s", config.name, str(e))
+                continue
+
+        _logger.info('Total processed {} events'.format(total_count))
     #end doEvents
 
     def dispatchPaymentEvents(self, event):
@@ -625,32 +696,26 @@ class GC_Partner(models.Model):
         # })
 
     def send_partner_email(self, partner, batch_run = False):
-        ICPSudo = self.env['ir.config_parameter'].sudo()
-
-        proceed = (ICPSudo.get_param('gocardless.gc_access_token') not in ['', False, None])
-
-        if not proceed:
+        # Obtenir la configuration GoCardless de la société du partenaire
+        config = self.env['gocardless.config'].get_active_config(partner.company_id.id)
+        if not config or not config.gc_access_token:
             raise exceptions.UserError(
-                "Connect to your GoCardless account first!"
+                "No active GoCardless configuration found for this company. "
+                "Please configure GoCardless in the company settings."
             )
 
-        gc_url = ICPSudo.get_param('gocardless.gc_custom_domain')
+        gc_url = config.gc_custom_domain
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         
-        base_url = ICPSudo.get_param('web.base.url') # default: use Odoo base URL
-        
-        # check sanity of our custom domain setting - if it passes, use that.
-        # because we've already set the Odoo base URL it'll fall back if one of these fails
-        if type(gc_url) is str:
+        # Vérifier le domaine personnalisé
+        if type(gc_url) is str and gc_url:
             if urls.url_parse(url=gc_url).scheme in ['http', 'https']:
                 base_url = gc_url
-            #endif
-        #endif
 
         _logger.debug("Got something to do: {}".format(partner.name))
         count = partner.invoice_ids.search_count([('partner_id','=',partner.id),('state','!=','draft')])
         if count <= 0 and batch_run:
             return
-        #endif
 
         gc_token = str(uuid.uuid4())
         redirect_url = urls.url_join(base_url, '/gocardless/activate/?gc_access_token={}'.format(gc_token))

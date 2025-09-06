@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "GoCardless Direct Debit Payment Processing - Single-Company",
+    'name': "GoCardless Direct Debit Payment Processing - Multi-Company",
 
     'summary': """
         Enables Odoo to take payments using Direct Debit schemes such as Bacs, SEPA, ACH, BECS, and more via GoCardless.""",
@@ -19,7 +19,9 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Accounting',
-    'version': '2.6',
+    'version': '3.0',
+    
+    # Add migration script for multi-company support
     'images': ['static/description/gc-jot.png'],
 
     # Commercial information
@@ -32,8 +34,7 @@
     'depends': ['base', 'account'],
     
     # Python packages required for this module
-    # 'external_dependencies': {'python': ['gocardless_pro']},
-
+    'external_dependencies': {'python': ['gocardless_pro']},
 
     # always loaded
     'data': [
@@ -41,6 +42,7 @@
         'views/views.xml',
         'views/ui.xml',
         'views/templates.xml',
+        'views/gocardless_config_views.xml',
         'data/gocardless_data.xml',
         'wizard/wizard.xml'
         
