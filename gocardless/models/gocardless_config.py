@@ -12,7 +12,11 @@ class GocardlessConfig(models.Model):
     _check_company_auto = True
     _rec_name = 'display_name'
 
-    name = fields.Char(string='Configuration Name', required=True, help="Internal name for this GoCardless configuration")
+    name = fields.Char(
+        string='Configuration Name', 
+        required=True, 
+        default='GoCardless',
+        help="Internal name for this GoCardless configuration")
     display_name = fields.Char(string='Display Name', compute='_compute_display_name', store=True)
     company_id = fields.Many2one(
         'res.company', 
@@ -31,8 +35,8 @@ class GocardlessConfig(models.Model):
         default='sandbox',
         help="Choose between Sandbox (testing) and Live (production) environments"
     )
-    gc_client_id = fields.Char(string='Client ID', help="GoCardless OAuth client ID")
-    gc_client_secret = fields.Char(string='Client Secret', help="GoCardless OAuth client secret")
+    gc_client_id = fields.Char(string='Client ID', required=True, help="GoCardless OAuth client ID")
+    gc_client_secret = fields.Char(string='Client Secret', required=True, help="GoCardless OAuth client secret")
     
     # Configuration générale
     gc_description = fields.Char(
@@ -84,7 +88,7 @@ class GocardlessConfig(models.Model):
     def _compute_display_name(self):
         for config in self:
             if config.company_id:
-                config.display_name = f"{config.name} ({config.company_id.name})"
+                config.display_name = f"{config.name} [{config.company_id.name}]"
             else:
                 config.display_name = config.name
 
