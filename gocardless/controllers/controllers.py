@@ -110,7 +110,8 @@ class Gocardless(http.Controller):
                 except Exception as e:
                     _logger.error("Error checking creditor status: %s", str(e))
         
-        return werkzeug.utils.redirect("/web#action=gocardless.config_action&view_type=form&id={}".format(config.id))
+        return werkzeug.utils.redirect("/web")
+        # return werkzeug.utils.redirect("/web#action=gocardless.config_action&view_type=form&id={}".format(config.id))
 
     @http.route('/gocardless/return/', auth='public')
     def gc_return(self, **kw):

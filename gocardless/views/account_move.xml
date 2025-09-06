@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gocardless_invoice_tree" model="ir.ui.view">
+        <field name="name">account.invoice.tree.gocardless</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="gc_payment_attempted" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="gocardless_invoice_view" model="ir.ui.view">
+        <field name="name">account.move.form.gocardless</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <field invisible="1" name="gc_display_gc"/>
+                <field invisible="1" name="gc_payment_attempted"/>
+                <field invisible="1" name="gc_enable_payment_recreate"/>
+                <field invisible="1" name="payment_state"/>
+                <button class="oe_highlight" groups="account.group_account_invoice"
+                        invisible="gc_display_gc == False or state not in 'posted' or payment_state not in ['not_paid'] or gc_payment_attempted == True"
+                        name="action_gocardless_take_payment" string="Take Payment by GoCardless" type="object"/>
+                <button groups="account.group_account_invoice"
+                        invisible="gc_display_gc == False or state not in 'posted' or payment_state not in ['not_paid'] or gc_payment_attempted == False"
+                        name="action_gocardless_retry_payment" string="Retry GoCardless Payment" type="object"/>
+                <button confirm="You are about to attempt an entirely new payment. This should ONLY be done if the original mandate failed, and a new mandate has been set up. Misuse of this feature may result in double charging. Do you wish to continue?"
+                        groups="account.group_account_manager"
+                        invisible="gc_display_gc == False or state not in 'posted' or payment_state not in 'not_paid' or gc_payment_attempted == False or gc_enable_payment_recreate == False"
+                        name="action_gocardless_recreate_payment" string="Recreate GoCardless Payment" type="object"/>
+            </header>
+            <notebook position="inside">
+                <page invisible="state in ['draft']" string="GoCardless">
+                    <h2>
+                        GoCardless
+                    </h2>
+                    <div invisible="gc_display_gc == False">
+                        <div class="row mt16">
+                            <div class="col-md-6 col-xs-12">
+                                <h3 modifiers="{}">
+                                    Payment Info
+                                </h3>
+                                <label for="gc_last_payment_attempt"/>
+                                <field name="gc_last_payment_attempt" readonly="1"/>
+                            </div>
+                        </div>
+                        <div class="row mt16">
+                            <div class="col-md-12 col-xs-12" invisible="state in ['draft']">
+                                <h3 modifiers="{}">
+                                    Payments
+                                </h3>
+                                <group>
+                                    <field name="gc_payments"><list create="false" delete="false" edit="false">
+                                        <field name="claim_date"/>
+                                        <field name="gc_payment_id"/>
+                                        <field name="gc_payment_state"/>
+                                        <field name="post_date"/>
+                                        <field name="payout_date"/>
+                                    </list></field>
+                                </group>
+                            </div>
+                        </div>
+                    </div>
+                    <div invisible="gc_display_gc == True">
+                        <div class="row mt16">
+                            <div class="col-md-12 col xs-12">
+                                <h3>
+                                    GoCardless is not available for this partner
+                                </h3>
+                                <p>
+                                    Ensure GoCardless is enabled on this partner's record, and that their status is
+                                    'Confirmed'
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

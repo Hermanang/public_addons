@@ -39,13 +39,14 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
-        'views/views.xml',
+        'views/account_move.xml',
+        # 'views/res_config_settings_views.xml',
+        'views/res_partner.xml',
         'views/ui.xml',
         'views/templates.xml',
         'views/gocardless_config_views.xml',
         'data/gocardless_data.xml',
         'wizard/wizard.xml'
-        
     ],
     # only loaded in demonstration mode
     'demo': [

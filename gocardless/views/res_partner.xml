@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="gocardless_partner_view" model="ir.ui.view">
+        <field name="name">res.partner.gocardless</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page groups="account.group_account_invoice" string="GoCardless">
+                    <field invisible="1" name="use_gc"/>
+                    <div class="row mt16">
+                        <div class="col-xs-12 col-md-6">
+                            <group string="GoCardless Information">
+                                <field name="gc_state" readonly="1"/>
+                                <field name="mandate_id" readonly="1"/>
+                            </group>
+                            <button class="oe_highlight" groups="account.group_account_invoice"
+                                    invisible="gc_state not in ['setup']" name="action_send_partner_email"
+                                    string="Send Setup Email" type="object"/>
+                            <button confirm="Are you sure you want to resend the setup email?"
+                                    groups="account.group_account_invoice" invisible="gc_state not in ['pending']"
+                                    name="action_send_partner_email" string="Resend Setup Email" type="object"/>
+                            <button confirm="Are you sure you want to restart the setup process? (This will disable GoCardless payments for this partner until they respond)"
+                                    groups="account.group_account_manager" invisible="gc_state not in ['complete']"
+                                    name="action_send_partner_email" string="Recreate Mandate" type="object"/>
+                        </div>
+                    </div>
+                    <br/>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

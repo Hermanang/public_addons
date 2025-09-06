@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="config_settings_view_gocardless" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.gocardless</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app name="gocardless" data-string="GoCardless" string="GoCardless">
+                    <div style="padding-top: 1rem;">
+                        <h1 style="padding-left: 1rem;">
+                            GoCardless Integration
+                        </h1>
+                        <div class="row mt16">
+                            <div class="col-xs-12 col-md-6">
+                                <block title="Connection">
+                                    <setting invisible="gc_access_token in ['', False, None]">
+                                        <field name="gc_access_token" readonly="1"/>
+                                    </setting>
+                                    <setting
+                                            help="Choose between the Live and Sandbox environments. Use Live when you are ready to take real payments.">
+                                        <field name="gc_environment"/>
+                                    </setting>
+                                </block>
+                                <block col="1">
+                                    <!-- <button class="oe_highlight" type="object" name="gocardless_disconnect" string="Disconnect from GoCardless" attrs="{'invisible':[('gc_access_token','in',['',False,None])]}" /> -->
+                                    <setting>
+                                        <button class="oe_highlight"
+                                                invisible="gc_access_token not in ['', False, None]"
+                                                name="gocardless_connect" string="Connect to GoCardless" type="object"/>
+                                        <button invisible="gc_access_token in ['', False, None]"
+                                                name="gocardless_connect" string="Reconnect to GoCardless"
+                                                type="object"/>
+                                    </setting>
+                                </block>
+                                <block title="OAuth Configuration" invisible="gc_access_token not in ['', False, None]">
+                                    <setting>
+                                        <field name="gc_client_id"/>
+                                    </setting>
+                                    <setting>
+                                        <field name="gc_client_secret"/>
+                                    </setting>
+                                </block>
+                                <block title="General Settings">
+                                    <setting
+                                            help="This is the description which will appear at the top of the GoCardless customer forms.">
+                                        <field name="gc_description"/>
+                                        <p>
+                                            <b>
+                                                Please note: Odoo must be accessible from the outside world in order for
+                                                the GoCardless mandate setup to work!
+                                            </b>
+                                        </p>
+                                    </setting>
+                                    <setting
+                                            help="This is the URL given to customers in the GoCardless invite email. You can override the default by specifying a top-level URL here (e.g. https://odoo.contoso.com).">
+                                        <field name="gc_custom_domain"/>
+                                        <p>
+                                            <b>
+                                                Odoo
+                                                <u>
+                                                    must
+                                                </u>
+                                                be accessible via the domain you enter here, otherwise customers will
+                                                not be able to complete the GoCardless setup flow! If in any doubt,
+                                                leave this field blank to use Odoo's usual access URL.
+                                            </b>
+                                        </p>
+                                    </setting>
+                                </block>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <block title="Journaling">
+                                    <setting>
+                                        <field name="gc_keep_journal"/>
+                                    </setting>
+                                    <setting
+                                            help="This journal should be of type 'Bank' in order to function as intended">
+                                        <field name="gc_journal_id"
+                                               options="{'no_quick_create': True,'no_create_edit':True}"/>
+                                    </setting>
+                                </block>
+                                <block col="4" title="Maintenance">
+                                    <setting groups="base.group_system"
+                                             invisible="gc_access_token in ['', False, None]">
+                                        <p>Intended for debugging purposes only. Please do not touch unless directed to
+                                            by your system administrator</p>
+                                        <button confirm="This will re-scan your GoCardless account for up to the last 500 events from all time.                                         This may take some time. Are you sure you wish to continue?"
+                                                name="do_full_event_refresh" string="Refresh All Events" type="object"/>
+                                    </setting>
+                                </block>
+                                <block title="Help &amp; Support">
+                                    <p>
+                                        For more information, please visit
+                                        <a href="https://www.yourcompany.com">
+                                            Your Company.
+                                        </a>
+                                    </p>
+                                    <p/>
+                                    <p>
+                                        For technical support, please feel free to email
+                                        <a href="mailto:support@yourcompany.com">
+                                            support@yourcompany.com
+                                        </a>
+                                    </p>
+                                </block>
+                            </div>
+                        </div>
+                    </div>
+                </app>
+            </xpath></field>
+    </record>
+    <record id="gocardless_settings_action" model="ir.actions.act_window">
+        <field name="name">GoCardless Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="config_settings_view_gocardless"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+    </record>
+</odoo>
