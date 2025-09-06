@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Règles de sécurité multi-société pour GoCardless -->
+    
+    <!-- Règle pour gocardless.config - Seulement sa propre société -->
+    <record id="gocardless_config_company_rule" model="ir.rule">
+        <field name="name">GoCardless Config: Multi-Company Security</field>
+        <field name="model_id" ref="model_gocardless_config"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_multi_company'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Règle pour gocardless.payment - Seulement sa propre société -->
+    <record id="gocardless_payment_company_rule" model="ir.rule">
+        <field name="name">GoCardless Payment: Multi-Company Security</field>
+        <field name="model_id" ref="model_gocardless_payment"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_multi_company'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Règle pour gocardless.mandate - Seulement sa propre société -->
+    <record id="gocardless_mandate_company_rule" model="ir.rule">
+        <field name="name">GoCardless Mandate: Multi-Company Security</field>
+        <field name="model_id" ref="model_gocardless_mandate"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_multi_company'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Règle pour gocardless.event - Seulement sa propre société -->
+    <record id="gocardless_event_company_rule" model="ir.rule">
+        <field name="name">GoCardless Event: Multi-Company Security</field>
+        <field name="model_id" ref="model_gocardless_event"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_multi_company'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</odoo>

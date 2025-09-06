@@ -8,6 +8,7 @@ _logger = logging.getLogger(__name__)
 class GCPayment(models.Model):
     _name = 'gocardless.payment'
     _description = 'GoCardless Payment'
+    _check_company_auto = True
     
     _rec_name   = 'gc_payment_id'
 

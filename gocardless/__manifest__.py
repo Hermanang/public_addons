@@ -39,6 +39,7 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'security/gocardless_security.xml',
         'views/account_move.xml',
         # 'views/res_config_settings_views.xml',
         'views/res_partner.xml',

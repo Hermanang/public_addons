@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 class GC_Mandate(models.Model):
     _name = 'gocardless.mandate'
     _description = 'GoCardless Mandate'
+    _check_company_auto = True
 
     _rec_name = 'gc_mandate_id'
 

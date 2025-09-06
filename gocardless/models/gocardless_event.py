@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 class GC_Event(models.Model):
     _name = 'gocardless.event'
     _description = 'GoCardless Event'
+    _check_company_auto = True
     _rec_name = 'event_id'
 
     config_id = fields.Many2one(
