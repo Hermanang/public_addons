@@ -3,8 +3,10 @@
 from odoo import models, fields
 import logging
 import datetime
+import gocardless_pro
 
 _logger = logging.getLogger(__name__)
+
 
 
 class GC_Event(models.Model):
@@ -88,8 +90,11 @@ class GC_Event(models.Model):
                 continue
 
             _logger.info("Processing events for config: %s", config.name)
-
-            client = self.env['gocardless_pro.client'].get_client(config)
+            
+            client = gocardless_pro.Client(
+                access_token=config.gc_access_token,
+                environment=config.gc_environment
+            )
 
             try:
                 events = client.events.list(

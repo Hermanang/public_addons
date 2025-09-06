@@ -8,14 +8,10 @@ import json
 import hmac
 import hashlib
 import datetime
+import gocardless_pro
 
 _logger = logging.getLogger(__name__)
 
-try:
-    from .. import gocardless_pro
-except ImportError as err:
-    _logger.debug(err)    
-#endtry
 
 from werkzeug import urls
 

@@ -2,8 +2,10 @@
 
 from odoo import models, fields, exceptions
 import logging
+import gocardless_pro
 
 _logger = logging.getLogger(__name__)
+
 
 class GCPayment(models.Model):
     _name = 'gocardless.payment'
@@ -77,12 +79,15 @@ class GCPayment(models.Model):
         if not config or not config.gc_access_token:
             raise exceptions.UserError("No active GoCardless configuration found")
             
-        client = self.env['gocardless_pro.client'].get_client(config)
+        client = gocardless_pro.Client(
+            access_token=config.gc_access_token,
+            environment=config.gc_environment
+        )
 
         ret = False
         try:
             ret = client.payments.retry(self.gc_payment_id)
-        except self.env['gocardless_pro.errors'].ApiError as inst:
+        except gocardless_pro.errors.ApiError as inst:
             raise exceptions.UserError(
                 "The payment retry could not be completed for the following reason: {}"
                 .format(
@@ -101,11 +106,14 @@ class GCPayment(models.Model):
         if not config or not config.gc_access_token:
             raise exceptions.UserError("No active GoCardless configuration found")
             
-        client = self.env['gocardless_pro.client'].get_client(config)
+        client = gocardless_pro.Client(
+            access_token=config.gc_access_token,
+            environment=config.gc_environment
+        )
 
         try:
             client.payments.cancel(self.gc_payment_id)
-        except self.env['gocardless_pro.errors'].ApiError as inst:
+        except gocardless_pro.errors.ApiError as inst:
             raise exceptions.UserError(
                 "The payment could not be cancelled for the following reason: {}"
                 .format(

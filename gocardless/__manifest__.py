@@ -5,12 +5,12 @@
     'summary': """
         Enables Odoo to take payments using Direct Debit schemes such as Bacs, SEPA, ACH, BECS, and more via GoCardless.""",
 
-#    'description': """
-#        Enables Odoo invoices to handle Direct Debit schemes such as Bacs, SEPA, ACH, BECS, and more via GoCardless.
-#        This application transmits the following data to GoCardless Ltd for the purpose of setting up a Direct Debit mandate and taking payments: 
-#        Customer email address, invoice number, invoice amount
-#        No customer information is shared with Jötnar Systems at any time.
-#    """,
+   'description': """
+       Enables Odoo invoices to handle Direct Debit schemes such as Bacs, SEPA, ACH, BECS, and more via GoCardless.
+       This application transmits the following data to GoCardless Ltd for the purpose of setting up a Direct Debit mandate and taking payments: 
+       Customer email address, invoice number, invoice amount
+       No customer information is shared with Jötnar Systems at any time.
+   """,
 
     'author': "Your Company",
     'website': "https://www.yourcompany.com",

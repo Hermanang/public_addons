@@ -4,8 +4,10 @@ from odoo import models, fields, api, exceptions
 import logging
 import datetime
 import time
+import gocardless_pro
 
 _logger = logging.getLogger(__name__)
+
 
 
 class Invoice(models.Model):
@@ -91,8 +93,11 @@ class Invoice(models.Model):
                 "No active GoCardless configuration found for this company. "
                 "Please configure GoCardless in the company settings."
             )
-
-        client = self.env['gocardless_pro.client'].get_client(config)
+        
+        client = gocardless_pro.Client(
+            access_token=config.gc_access_token,
+            environment=config.gc_environment
+        )
 
         try:
             payment = client.payments.create(
@@ -117,10 +122,10 @@ class Invoice(models.Model):
                     # - making sure we don't accidentally bill a partner twice
                 }
             )
-        except self.env['gocardless_pro.errors'].ApiError as inst:
-            raise exceptions.Warning(
+        except gocardless_pro.errors.ApiError as inst:
+            raise exceptions.ValidationError(
                 "Payment could not be submitted to GoCardless for the following reason: {}"
-                    .format(inst.message)
+                    .format(inst)
             )
 
         invoice.write({
