@@ -145,7 +145,7 @@ class GocardlessConfig(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/gocardless/oauth-begin',
+            'url': f'/gocardless/oauth-begin?company_id={self.company_id.id}',
             'target': 'self',
         }
 

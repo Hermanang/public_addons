@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 from odoo import http, models
 from odoo.http import Response
+from odoo.exceptions import ValidationError
 
 import logging
 import werkzeug
 import json
-import hmac
-import hashlib
 import datetime
 import gocardless_pro
 
@@ -20,11 +19,15 @@ class Gocardless(http.Controller):
     @http.route('/gocardless/oauth-begin', auth='user')
     def gc_oauth(self, **kw):
         # Obtenir la configuration GoCardless de la société de l'utilisateur
-        user_company = http.request.env.user.company_id
-        config = http.request.env['gocardless.config'].sudo().get_active_config(user_company.id)
+        company_id = kw.get('company_id')
+        if not company_id:
+            raise Exception("No company_id parameter found in OAuth begin")
         
+        company = http.request.env['res.company'].browse(int(company_id))
+        config = http.request.env['gocardless.config'].sudo().get_active_config(company.id)
+
         if not config:
-            raise Exception("No active GoCardless configuration found for company: {}".format(user_company.name))
+            raise Exception("No active GoCardless configuration found for company: {}".format(company.name))
         
         # Configuration directe avec GoCardless
         if config.gc_environment == 'sandbox':
@@ -35,13 +38,13 @@ class Gocardless(http.Controller):
         # Paramètres pour l'authentification OAuth directe
         params = {
             'client_id': config.gc_client_id,
-            'redirect_uri': urls.url_join(http.request.env['ir.config_parameter'].sudo().get_param('web.base.url'), '/gocardless/auth-return?company_id={}'.format(user_company.id)),
+            'redirect_uri': urls.url_join(http.request.env['ir.config_parameter'].sudo().get_param('web.base.url'), '/gocardless/auth-return?company_id={}'.format(company.id)),
             'response_type': 'code',
             'scope': 'read_write',
-            'state': 'gocardless_oauth_{}'.format(user_company.id),
+            'state': 'gocardless_oauth_{}'.format(company.id),
             'prefill': json.dumps({
-                'company_name': user_company.display_name,
-                'email': user_company.email
+                'company_name': company.display_name,
+                'email': company.email
             })
         }
         
@@ -50,6 +53,7 @@ class Gocardless(http.Controller):
 
     @http.route('/gocardless/auth-return', auth='user')
     def gc_oauth_return(self, **kw):
+        _logger.info("OAuth return called with params: %s", kw)
         # Récupérer l'ID de la société depuis les paramètres de la requête
         company_id = kw.get('company_id')
         if not company_id:
