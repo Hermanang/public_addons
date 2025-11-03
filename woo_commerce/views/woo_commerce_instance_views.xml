@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form view of Woocommerce Instance -->
+    <record id="woo_commerce_instance_view_form" model="ir.ui.view">
+        <field name="name">woo.commerce.instance.view.form</field>
+        <field name="model">woo.commerce.instance</field>
+        <field name="arch" type="xml">
+            <form string="Instance" duplicate="0">
+                <header>
+                    <field name="state" widget="statusbar" invisible="1"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Not Connected"
+                            bg_color="bg-danger"
+                            invisible="state == 'connected'"/>
+                    <widget name="web_ribbon" title="Connected"
+                            bg_color="bg-success"
+                            invisible="state == 'not_connected'"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Instance Details">
+                            <field name="store_url"/>
+                            <field name="consumer_key" password="1"/>
+                            <field name="consumer_secret" password="1"/>
+                            <field name="api_key" password="1"/>
+                        </group>
+                        <group string="Currency Details">
+                            <field name="currency"/>
+                            <field name="company_id"/>
+                        </group>
+                        <notebook>
+                            <page string="Workflow Options">
+                                <group>
+                                    <field name="delete_orders"/>
+                                </group>
+                                <group>
+                                    <field name="stage_change_orders"/>
+                                </group>
+                                <group>
+                                    <field name="product_delete"/>
+                                </group>
+                                <group>
+                                    <field name="customer_delete"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of Woocommerce Instance -->
+    <record id="woo_commerce_instance_view_tree" model="ir.ui.view">
+        <field name="name">woo.commerce.instance.view.tree</field>
+        <field name="model">woo.commerce.instance</field>
+        <field name="arch" type="xml">
+            <list string="Instances">
+                <field name="name"/>
+                <field name="store_url"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'connected'"
+                       decoration-danger="state == 'not_connected'"/>
+                <field name="company_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <!-- Kanban view of Woocommerce Instance -->
+    <record id="woo_commerce_instance_view_kanban" model="ir.ui.view">
+        <field name="name">woo.commerce.instance.view.kanban</field>
+        <field name="model">woo.commerce.instance</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard o_emphasize_colors o_stock_kanban" create="0">
+                <field name="name"/>
+                <field name="color"/>
+                <field name="store_url"/>
+                <field name="consumer_key"/>
+                <field name="consumer_secret"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}"
+                             name="woo_commerce">
+                            <div>
+                                <div t-attf-class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary" t-if="!selection_mode">
+                                            <a type="object" name="get_instance">
+                                                <field name="name"/>
+                                            </a>
+                                        </div>
+                                        <div class="o_primary" t-if="selection_mode">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container o_kanban_card_content" t-if="!selection_mode">
+                                    <div class="row">
+                                        <div class="col-6 o_kanban_primary_left">
+                                            <button class="btn btn-primary" name="get_wizard" type="object">
+                                                <span>Operation</span>
+                                            </button>
+                                        </div>
+                                        <div class="col-6 o_kanban_primary_right">
+                                            <div t-if="record.pending_count_logs.raw_value > 0" class="row">
+                                                <div class="col-12">
+                                                    <a name="get_pending_instance_woo_logs" type="object">
+                                                        <field name="pending_count_logs"/>
+                                                        Pending Logs
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div t-if="record.completed_count_logs.raw_value > 0" class="row">
+                                                <div class="col-12">
+                                                    <a name="get_completed_instance_woo_logs" type="object">
+                                                        <field name="completed_count_logs"/>
+                                                        Completed Logs
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div t-if="record.failed_count_logs.raw_value > 0" class="row">
+                                                <div class="col-12">
+                                                    <a name="get_failed_instance_woo_logs" type="object">
+                                                        <field name="failed_count_logs"/>
+                                                        Failed Logs
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="kanban-menu">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                                        <div class="col-8" role="menuitem" aria-haspopup="true">
+                                            <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!-- Action for Woocommerce Instance -->
+    <record id="action_woo_commerce_instance" model="ir.actions.act_window">
+        <field name="name">WooCommerce</field>
+        <field name="res_model">woo.commerce.instance</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Create a WooCommerce Instance
+            </p>
+        </field>
+    </record>
+    <!-- Action for Woocommerce Overview -->
+    <record id="action_woo_commerce_instance_overview" model="ir.actions.act_window">
+        <field name="name">Overview</field>
+        <field name="res_model">woo.commerce.instance</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Create a WooCommerce Instance
+            </p>
+        </field>
+    </record>
+    <!-- Client action of the dashboard -->
+    <record id="action_woo_commerce_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">woocommerce_dashboard_tag</field>
+        <field name="target">current</field>
+    </record>
+    <!-- Main menu of WooCommerce -->
+    <menuitem id="woo_commerce_menu" name="WooCommerce"
+              groups="base.group_user"
+              web_icon="woo_commerce,static/description/icon.png"/>
+    <!-- Menu for Woocommerce Dashboard -->
+    <menuitem id="woo_dashboard_submenu" name="Dashboard"
+              parent="woo_commerce_menu"
+              sequence="1"
+              action="action_woo_commerce_dashboard"
+              groups="base.group_user"/>
+    <!-- Menu for Woocommerce Overview -->
+    <menuitem id="woo_overview_submenu" name="Overview"
+              parent="woo_commerce_menu"
+              sequence="2"
+              action="action_woo_commerce_instance_overview"
+              groups="base.group_user"/>
+    <!-- Menu for Woocommerce Instance -->
+    <menuitem id="woo_commerce_submenu" name="Instance"
+              parent="woo_commerce_menu"
+              sequence="100"
+              action="action_woo_commerce_instance"
+              groups="base.group_user"/>
+</odoo>

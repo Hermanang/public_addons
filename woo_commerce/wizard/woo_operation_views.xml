@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--  Form view of Woo Operation  -->
+    <record id="woo_operation_view_form" model="ir.ui.view">
+        <field name="name">woo.operation.view.form</field>
+        <field name="model">woo.operation</field>
+        <field name="arch" type="xml">
+            <form string="Instance" create="0">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Instance Details">
+                            <field name="store_url"/>
+                            <field name="consumer_key" password="1"/>
+                            <field name="consumer_secret" password="1"/>
+                        </group>
+                        <group string="Currency Details">
+                            <field name="currency"/>
+                        </group>
+                    </group>
+                    <group string="Import/Export">
+                        <group>
+                            <field name="product_check" widget="boolean_toggle"
+                                   invisible="order_check == True"/>
+                            <field name="customer_check"
+                                   widget="boolean_toggle"
+                                   invisible="order_check == True"/>
+                            <field name="order_check" widget="boolean_toggle"/>
+                            <field name="start_date"
+                                   invisible="order_check == False"/>
+                            <field name="end_date"
+                                   invisible="order_check == False"/>
+                            <field name="sync_fun" invisible="1"/>
+                        </group>
+                        <group string="Sync Details">
+                            <button name="sync_details" type="object"
+                                    class="btn btn-secondary fa fa-refresh"
+                                    aria-label="Sync Order Details"
+                                    title="Sync Details" role="img"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <field name="order_check" widget="boolean_toggle"
+                           invisible="1"/>
+                    <button name="get_woo_import" type="object" string="Import"
+                            class="btn-info"/>
+                    <button name="get_woo_export" type="object" string="Export"
+                            class="btn-info"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

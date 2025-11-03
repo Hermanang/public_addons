@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_woo_commerce_instance,access.woo.commerce.instance,model_woo_commerce_instance,base.group_user,1,1,1,1
+access_woo_operation,access.woo.operation,model_woo_operation,base.group_user,1,1,1,1
+access_woo_update,access.woo.update,model_woo_update,base.group_user,1,1,1,1
+access_woo_logs,access.woo.logs,model_woo_logs,base.group_user,1,1,1,1
+access_job_cron,access.job.cron,model_job_cron,base.group_user,1,1,1,1

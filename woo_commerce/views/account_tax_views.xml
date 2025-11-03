@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inheriting from the form view of the account_tax model to extend it -->
+    <record id="view_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.view.form.inherit.woo.commerce.connector</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <!-- Inserting additional fields within the existing notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="WooCommerce Info" name="woo_info">
+                    <group string="Primary Details">
+                        <field name="woo_id"/>
+                        <field name="instance_id"/>
+                        <field name="tax_class"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

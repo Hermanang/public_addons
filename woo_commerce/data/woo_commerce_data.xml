@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Service product for fixed rate shipping -->
+        <record id="product_product_flat_delivery" model="product.product">
+            <field name="name">Flat rate</field>
+            <field name="default_code">flat_rate</field>
+            <field name="description">Lets you charge a fixed rate for shipping.</field>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="woo_id">flat_rate</field>
+        </record>
+        <!-- Service product for free shipping -->
+        <record id="product_product_local_pickup" model="product.product">
+            <field name="name">Local pickup</field>
+            <field name="default_code">local_pickup</field>
+            <field name="description">Free shipping is a special method which can be triggered</field>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="woo_id">local_pickup</field>
+        </record>
+        <!-- Service product for free shipping -->
+        <record id="product_product_local_delivery" model="product.product">
+            <field name="name">Local rate</field>
+            <field name="default_code">local_rate</field>
+            <field name="description">Free shipping is a special method which can be triggered</field>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="woo_id">local_rate</field>
+        </record>
+        <!-- Service product for local rate shipping -->
+        <record id="product_product_woocommerce_free_delivery" model="product.product">
+            <field name="name">Free Shipping</field>
+            <field name="default_code">local_rate</field>
+            <field name="type">service</field>
+            <field name="description">Allow customers to pick up orders
+                themselves. By default, when using local pickup store base
+                taxes will apply regardless of customer address.</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="woo_id">free_shipping</field>
+        </record>
+        <!-- Service Product for other Woocommerce options -->
+        <record id="product_product_woocommerce_other" model="product.product">
+            <field name="name">Woocommerce Other</field>
+            <field name="default_code">woocommerce_other</field>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="invoice_policy">order</field>
+            <field name="woo_id">woocommerce_other</field>
+        </record>
+        <!-- Record for Woocommerce guest user -->
+        <record id="woocommerce_guest" model="res.partner">
+            <field name="name">Guest User Woocommerce</field>
+            <field name="woo_id">default</field>
+        </record>
+        <!-- Basic product template for Woocommerce coupons -->
+        <record id="woocommerce_coupons" model="product.template">
+            <field name="name">Coupons Woocommerce</field>
+            <field name="type">service</field>
+            <field name="purchase_ok" eval="False"/>
+            <field name="woo_id">coupon</field>
+        </record>
+        <!-- Basic product template for Woocommerce fee lines -->
+        <record id="woocommerce_fee_lines" model="product.template">
+            <field name="name">Fee Lines Woocommerce</field>
+            <field name="type">service</field>
+            <field name="purchase_ok" eval="False"/>
+            <field name="woo_id">fee_line</field>
+        </record>
+    </data>
+</odoo>

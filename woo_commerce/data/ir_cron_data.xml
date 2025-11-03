@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cron job for periodic synchronization with Woocommerce -->
+        <record id="ir_cron_woocommerce_sync" model="ir.cron">
+            <field name="name">Woocommerce: Sync</field>
+            <field name="model_id" ref="model_woo_commerce_instance"/>
+            <field name="state">code</field>
+            <field name="code">model.sync_cron()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+        <!-- Cron job for automatic job completion in Woocommerce -->
+        <record id="ir_cron_job_cron_woocommerce" model="ir.cron">
+            <field name="name">WooCommerce:Automatic Job Completion</field>
+            <field name="model_id" ref="woo_commerce.model_job_cron"/>
+            <field name="state">code</field>
+            <field name="code">model._do_job()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherited form view of sale_order to add fields related to Woocommerce -->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.view.form.inherit.woo.commerce.connector</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_cancel']" position="after">
+                <button name="action_delete_from_woo"
+                        type="object"
+                        string="Delete from WooCommerce"
+                        class="btn-danger"
+                        invisible="state  != 'cancel'"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="woo_order_status"
+                       invisible="woo_id == False"/>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="before">
+                <page string="WooCommerce Info" name="woo_info">
+                    <group string="Primary Details">
+                        <field name="woo_id"/>
+                        <field name="woo_order_key"/>
+                        <field name="instance_id"/>
+                        <field name="woo_order_status"/>
+                        <field name="state_check"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- Action for Woocommerce Sale Order -->
+    <record id="action_woo_order_menu" model="ir.actions.act_window">
+        <field name="name">WooCommerce Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('woo_id', '!=', False)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Woo-commerce Orders.
+            </p>
+        </field>
+    </record>
+    <!-- Menu item for Woocommerce Sale Orders -->
+    <menuitem id="woo_order_submenu" name="Orders"
+              parent="woo_commerce_menu"
+              action="action_woo_order_menu"
+              groups="base.group_user"/>
+</odoo>

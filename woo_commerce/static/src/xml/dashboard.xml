@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Woocommerce dashboard templates. Contains template for graph and dashboard.-->
+<templates id="template" xml:space="preserve">
+    <t t-name="Woocommercedashboard" owl="1">
+         <div class="oh_dashboards">
+            <div class="container-fluid my-5 o_hr_dashboard">
+                <t t-call="WooDashboard"/>
+                <t t-call="WooGraphs"/>
+            </div>
+        </div>
+    </t>
+    <t t-name="WooDashboard" owl="1">
+        <div class="owl-carousel owl-theme o_hr_dashboard2" t-ref="root">
+            <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                <div class="accounts-dashboard-wrap">
+                    <div class="row" style="margin:0px">
+                        <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+                            <div class="">
+                                <div class="row account-details"
+                                     style="margin:0px" id="set">
+                                    <div class="col-md-3"
+                                         id="' + result_1 +  '">
+                                        <div class="tile wide invoice box-1"
+                                             id="instance_main">
+                                            <div class="headers"
+                                                 id="instance_div"
+                                                 t-on-click="onclick_instance">
+                                                <div class="left-head">
+                                                    <img src="/woo_commerce/static/description/assets/icons/2.png"
+                                                         style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div class="right-head">
+                                                <img src="/woo_commerce/static/description/assets/icons/instance-line.png"
+                                                     style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div id="monthly_income"
+                                                     class="instance_count">
+                                                    <div class="main-title"
+                                                         id="tit_instance">Instance</div>
+                                                    <div class="instance_right">
+                                                        <div class="count-container"
+                                                             t-esc="this.state.instance_count"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile wide invoice box-1"
+                                             id="products_main">
+                                            <div class="headers"
+                                                 id="product_div"
+                                                 t-on-click="onclick_product">
+                                                <div class="left-head">
+                                                    <img src="/woo_commerce/static/description/assets/icons/pro1.png"
+                                                         style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div class="right-head">
+                                                <img src="/woo_commerce/static/description/assets/icons/instance-line.png"
+                                                     style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div id="monthly_income"
+                                                     class="instance_count">
+                                                    <div class="main-title"
+                                                         id="tit_instance">Products</div>
+                                                    <div class="product_right">
+                                                        <div class="count-container"
+                                                             t-esc="this.state.products_count"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile wide invoice box-1"
+                                             id="customers_main">
+                                            <div class="headers"
+                                                 id="partner_div"
+                                                 t-on-click="onclick_customer">
+                                                <div class="left-head">
+                                                    <img src="/woo_commerce/static/description/assets/icons/cust.png"
+                                                         style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div class="right-head">
+                                                <img src="/woo_commerce/static/description/assets/icons/instance-line.png"
+                                                     style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div id="monthly_income"
+                                                     class="instance_count">
+                                                    <div class="main-title"
+                                                         id="tit_instance">Customers</div>
+                                                    <div class="partner_right">
+                                                        <div class="count-container"
+                                                             t-esc="this.state.customers_count"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="tile wide invoice box-1"
+                                             id="orders_main">
+                                            <div class="headers" id="order_div"
+                                                 t-on-click="onclick_orders">
+                                                <div class="left-head">
+                                                    <img src="/woo_commerce/static/description/assets/icons/5.png"
+                                                         style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div class="right-head">
+                                                <img src="/woo_commerce/static/description/assets/icons/instance-line.png"
+                                                     style="height: 48px; width: 48px;"/>
+                                                </div>
+                                                <div id="monthly_income"
+                                                     class="instance_count">
+                                                    <div class="main-title"
+                                                         id="tit_instance">Orders</div>
+                                                    <div class="order_right">
+                                                        <div class="count-container"
+                                                             t-esc="this.state.orders_count"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</t>
+    <t t-name="WooGraphs" owl="1">
+        <div class="row mt-5 px-4" id="" t-ref="graph">
+            <div class="year_to_date_graph_div col-sm-12 col-md-6 my-4">
+                <div class="chart-container card-shadow" id="tiles">
+                    <div style="height: 20px; max-height: 20px;"
+                         class="d-flex justify-content-between align-items-center">
+                        <h2>Instance</h2>
+                    </div>
+                    <hr/>
+                    <div class="graph_canvas" style="margin-top: 30px;">
+                        <canvas id="customers_canvas" height="500px"
+                                width="150px"/>
+                    </div>
+                </div>
+            </div>
+            <div class="year_to_date_graph_div col-sm-12 col-md-6 my-4">
+                <div class="chart-container card-shadow" id="tiles">
+                    <div style="height: 20px; max-height: 20px;"
+                         class="d-flex justify-content-between align-items-center">
+                        <h2>Categories</h2>
+                    </div>
+                    <hr/>
+                    <div class="graph_canvas" style="margin-top: 30px;">
+                        <canvas id="category_canvas" height="500px"
+                                width="150px"/>
+                        <div id="no_data_message"
+                             style="display: none; text-align: center; padding: 20px; font-size: 18px; color: #888;">
+                            No data available
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="year_to_date_graph_div col-sm-12 col-md-6 my-4">
+                <div class="chart-container card-shadow" id="tiles">
+                    <div style="height: 20px; max-height: 20px;"
+                         class="d-flex justify-content-between align-items-center">
+                    </div>
+                    <h2>Products</h2>
+                    <div>
+                           <div class="search">
+                              <input id="product_search" type="text"
+                                     class="searchTerm"
+                                     placeholder="Search.....">
+                              </input>
+                               <button type="submit" class="searchButton"
+                                       id="product_se_btn"
+                                       t-on-click="onclick_product_search">
+                                <i class="fa fa-search"/>
+                             </button>
+                           </div>
+                        </div>
+                    <div class="aaa"
+                         style='height:543px;display:block;overflow:scroll; margin-top: 16px;'>
+                         <table class="table table-hover"
+                                id="product_table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <h2>Product Name</h2>
+                                </th>
+                                <th>
+                                    <h2>Quantity</h2>
+                                </th>
+                                <th>
+                                    <h2>Price</h2>
+                                </th>
+                            </tr>
+                        </thead>
+                             <t t-foreach="this.state.product_outputs"
+                                t-as="product_tab" t-key="product_tab.id">
+                            <tbody class="product_body">
+                                <tr class="pr_tb_row" id="product_tab.id">
+                                    <td><t t-esc="product_tab.name"/></td>
+                                    <td><t t-esc="product_tab.quantity"/></td>
+                                    <td><t t-esc="product_tab.price"/></td>
+                                </tr>
+                            </tbody>
+                             </t>
+                    </table>
+                    </div>
+                </div>
+            </div>
+            <div class="year_to_date_graph_div col-sm-12 col-md-6 my-4">
+                <div class="chart-container card-shadow" id="tiles">
+                    <div style="height: 20px; max-height: 20px;"
+                         class="d-flex justify-content-between align-items-center">
+                    </div>
+                    <h2>Recent Orders</h2>
+                    <div>
+                        <t t-if="this.state.order_outputs.length > 0">
+                            <div class="search">
+                                <input id="order_search" type="text"
+                                       class="searchTerm"
+                                       placeholder="Search....."/>
+                                <button type="submit" class="searchButton"
+                                        id="orders_se_btn"
+                                        t-on-click="onclick_order_search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="order_table" style='height:543px;display:block;overflow:scroll; margin-top: 16px;'>
+                        <t t-if="this.state.order_outputs.length > 0">
+                            <!-- Table displaying the orders -->
+                            <table class="table table-hover" id="orders_table">
+                                <thead>
+                                    <tr>
+                                        <th><h2>Number</h2></th>
+                                        <th><h2>Order Date</h2></th>
+                                        <th><h2>Customer</h2></th>
+                                        <th><h2>Total</h2></th>
+                                        <th><h2>Status</h2></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="orders_body">
+                                    <t t-foreach="this.state.order_outputs"
+                                       t-as="order_tab" t-key="order_tab.name">
+                                        <tr class="or_tb_row"
+                                            id="order_tab.name"
+                                            t-on-click="onclick_order_row">
+                                            <td><t t-esc="order_tab.name"/></td>
+                                            <td><t t-esc="order_tab.date_order"/></td>
+                                            <td><t t-esc="order_tab.customer"/></td>
+                                            <td><t t-esc="order_tab.total"/></td>
+                                            <td><t t-esc="order_tab.status"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <!-- Message when no orders are available -->
+                            <div class="no-orders-message"
+                                 style="text-align: center; margin-top: 20px;color: #888;">
+                                <h3>Currently there is no orders now!!!!!!!</h3>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

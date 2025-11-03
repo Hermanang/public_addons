@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inheriting product_template_only_form_view to add fields related to Woocommerce -->
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.woo.commerce.connector</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Inserting a new page after the 'general_information' page and adding fields -->
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="WooCommerce Info" name="woo_info">
+                    <group string="Primary Details">
+                        <field name="woo_id"/>
+                        <field name="instance_id"/>
+                        <field name="woo_variant_check"/>
+                        <field name="is_grouped_product" invisible="1"/>
+                        <field name="woo_product_values" invisible="1"/>
+                        <field name="woo_grouped_var_ids"
+                               widget="many2many_tags"
+                               invisible="is_grouped_product == False"/>
+                        <field name="external_url_product"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inheriting product_normal_form_view to add fields related to Woocommerce -->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.inherit.woo.commerce.connector</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="WooCommerce Info" name="woo_info">
+                    <group string="Primary Details">
+                        <field name="woo_var_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inheriting product_variant_easy_edit_view to add fields related to Woocommerce -->
+    <record id="product_variant_easy_edit_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.inherit.woo.commerce.connector</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lst_price']" position="after">
+                <field name="woo_price" invisible="1"/>
+                <field name="woo_var_id"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Action for Woocommerce products -->
+    <record id="action_woo_product_menu" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('woo_id', '!=', False)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Woo-commerce Products.
+            </p>
+        </field>
+    </record>
+    <!-- Menu for Woocommerce Products -->
+    <menuitem id="woo_product_submenu" name="Products"
+              parent="woo_commerce_menu"
+              action="action_woo_product_menu"
+              groups="base.group_user"/>
+</odoo>

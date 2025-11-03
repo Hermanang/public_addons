@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inheriting from the form view of res_partner to add fields related to Woocommerce -->
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.woo.commerce.connector</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="before">
+                <page string="WooCommerce Info" name="woo_info">
+                    <group string="Primary Details">
+                        <field name="woo_id"/>
+                        <field name="woo_user_name"/>
+                        <field name="instance_id"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <!-- Action for Woocommerce partners -->
+    <record id="action_woo_customer_menu" model="ir.actions.act_window">
+        <field name="name">Partners</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('woo_id', '!=', False)]</field>
+        <field name="context">{'create': False, 'edit': False, 'delete': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                Woo-commerce Customers.
+            </p>
+        </field>
+    </record>
+    <!-- Menu item for Woocommerce Partners -->
+    <menuitem id="woo_customer_submenu" name="Partners"
+              parent="woo_commerce_menu"
+              action="action_woo_customer_menu"
+              groups="base.group_user"/>
+</odoo>

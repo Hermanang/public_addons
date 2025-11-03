@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form view of Woocommerce Logs -->
+    <record id="woo_logs_view_form" model="ir.ui.view">
+        <field name="name">woo.logs.view.form</field>
+        <field name="model">woo.logs</field>
+        <field name="arch" type="xml">
+            <form string="Instance" duplicate="0" create="false">
+                <header>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group string="Woo logs">
+                        <field name="status"/>
+                        <field name="description"/>
+                        <field name="trigger"/>
+                        <field name="create_date"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Tree view of Woocommerce Logs -->
+    <record id="woo_logs_view_tree" model="ir.ui.view">
+        <field name="name">woo.logs.view.tree</field>
+        <field name="model">woo.logs</field>
+        <field name="arch" type="xml">
+            <list string="Woo logs" create="false" default_order="create_date desc">
+                <field name="description"/>
+                <field name="trigger" widget="badge"
+                       decoration-info="trigger in ['import', 'export']"
+                       decoration-warning="trigger == 'queue'"/>
+                <field name="create_date"/>
+                <field name="status" widget="badge"
+                       decoration-danger="status == 'failed'"
+                       decoration-success="status == 'success'"/>
+            </list>
+        </field>
+    </record>
+    <!-- Action for Woocommerce Logs -->
+    <record id="action_woo_logs" model="ir.actions.act_window">
+        <field name="name">WooLogs</field>
+        <field name="res_model">woo.logs</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+    </record>
+    <!-- Menu item for Woocommerce logs -->
+    <menuitem id="woo_log_submenu" name="Woo logs"
+              parent="woo_commerce_menu"
+              sequence="101"
+              action="action_woo_logs"
+              groups="base.group_user"/>
+</odoo>
