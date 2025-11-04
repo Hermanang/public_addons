@@ -10,7 +10,7 @@
 #    It is forbidden to publish, distribute, sublicense, or sell copies of the
 #    Software or modified copies of the Software.
 #
-#    THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 #    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 #    FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
 #    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,DAMAGES OR OTHER
@@ -19,15 +19,19 @@
 #    DEALINGS IN THE SOFTWARE.
 #
 ###############################################################################
-from . import account_tax
-from . import job_cron
-from . import product
-from . import product_attribute
-from . import product_category
-from . import product_image
-from . import product_tag
-from . import product_template
-from . import res_partner
-from . import sale_order
-from . import woo_commerce_instance
-from . import woo_logs
+from odoo import fields, models
+
+
+class ProductImage(models.Model):
+    """
+    Class for the inherited model product.image.
+    Adds WooCommerce-specific fields for image tracking.
+    """
+    _inherit = 'product.image'
+
+    woo_image_id = fields.Char(
+        string='WooCommerce Image ID',
+        readonly=True,
+        copy=False,
+        help='Image ID in WooCommerce for tracking and avoiding duplicates'
+    )

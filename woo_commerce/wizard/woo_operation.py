@@ -21,9 +21,10 @@
 ###############################################################################
 import requests
 import base64
+import logging
 from datetime import datetime
 from woocommerce import API
-from odoo import fields, models, _
+from odoo import fields, models, _, SUPERUSER_ID
 from odoo.tests import common
 from odoo.exceptions import UserError, ValidationError
 from xmlrpc.client import ServerProxy, ProtocolError
@@ -32,6 +33,8 @@ category_ids = False
 attribute_ids = False
 api_res = False
 auth_vals = False
+
+_logger = logging.getLogger(__name__)
 
 
 class WooOperation(models.TransientModel):
@@ -219,11 +222,13 @@ class WooOperation(models.TransientModel):
                     'image_1920': base64.b64encode(
                         requests.get(data['images'][0]['src']).content)}
             else:
+                # Ajouter woo_image_id lors de l'import pour éviter les doublons futurs
                 product_template_image_ids.append((0, 0,
                                                    {'name': data.get('name'),
                                                     'image_1920': base64.b64encode(
                                                         requests.get(value[
-                                                                         'src']).content)}))
+                                                                         'src']).content),
+                                                    'woo_image_id': str(value.get('id'))}))
         data_list['product_template_image_ids'] = product_template_image_ids
         return data_list
 
@@ -1749,15 +1754,17 @@ class WooOperation(models.TransientModel):
             val_list.update({
                 "categories": categories
             })
-            if product_id.image_1920:
-                image_url = self.image_upload(product_id)
+
+            _logger.info("******************************************")
+            # Utiliser prepare_woo_images pour gérer toutes les images
+            images_list = self.prepare_woo_images(product_id)
+            if images_list:
                 val_list.update({
-                    "images": [
-                        {
-                            "src": image_url
-                        },
-                    ],
+                    "images": images_list,
                 })
+
+            _logger.info(val_list)
+            _logger.info("******************************************")
             if product_id.attribute_line_ids:
                 attribute_val = []
                 for item in product_id.attribute_line_ids:
@@ -1786,6 +1793,7 @@ class WooOperation(models.TransientModel):
                               item is not False and item.isdigit()]
                 val_list['upsell_ids'] = upsell_ids
             res = app.post("products", val_list).json()
+            _logger.info(res)
             if res.get('code'):
                 self.env['woo.logs'].sudo().create([{
                     'status': 'failed',
@@ -1902,15 +1910,17 @@ class WooOperation(models.TransientModel):
             val_list.update({
                 "categories": categories
             })
-            if product_id.image_1920:
-                image_url = self.image_upload(product_id)
+
+            _logger.info("******************************************")
+            # Utiliser prepare_woo_images pour gérer toutes les images
+            images_list = self.prepare_woo_images(product_id)
+            if images_list:
                 val_list.update({
-                    "images": [
-                        {
-                            "src": image_url
-                        },
-                    ],
+                    "images": images_list,
                 })
+
+            _logger.info(val_list)
+            _logger.info("******************************************")
             if product_id.attribute_line_ids:
                 attribute_val = []
                 for item in product_id.attribute_line_ids:
@@ -1940,6 +1950,8 @@ class WooOperation(models.TransientModel):
                 val_list['upsell_ids'] = upsell_ids
             if not product_id.woo_id:
                 res = app.post("products", val_list).json()
+                _logger.info(val_list)
+                _logger.info(res)
                 if res.get('code') == 'woocommerce_product_image_upload_error':
                     val_list['images'] = False
                     res = app.post("products", val_list).json()
@@ -2026,6 +2038,13 @@ class WooOperation(models.TransientModel):
                             "Product has been exported to WooCommerce with"
                             "WooCommerce ID: %s." % res.get(
                                 'id')))
+                    # Mettre à jour les woo_image_id après création
+                    if res.get('images') and product_id.product_template_image_ids:
+                        for index, woo_image in enumerate(res['images']):
+                            if index < len(product_id.product_template_image_ids):
+                                image_record = product_id.product_template_image_ids[index]
+                                if not image_record.woo_image_id:
+                                    image_record.woo_image_id = str(woo_image['id'])
             else:
                 res = app.put(f"products/{product_id.woo_id}", val_list).json()
                 if res.get('code'):
@@ -2047,6 +2066,13 @@ class WooOperation(models.TransientModel):
                             "Product has been exported to WooCommerce with"
                             "WooCommerce ID: %s." % res.get(
                                 'id')))
+                    # Mettre à jour les woo_image_id après mise à jour
+                    if res.get('images') and product_id.product_template_image_ids:
+                        for index, woo_image in enumerate(res['images']):
+                            if index < len(product_id.product_template_image_ids):
+                                image_record = product_id.product_template_image_ids[index]
+                                if not image_record.woo_image_id:
+                                    image_record.woo_image_id = str(woo_image['id'])
 
     def get_product_tag_list(self, product_id):
         """
@@ -2063,24 +2089,99 @@ class WooOperation(models.TransientModel):
             })
         return tag_list
 
-    def image_upload(self, product):
+    def image_upload(self, product, res_field='image_1920', res_id=None):
         """
         Uploads image into WordPress media to get a public link.
         :param product: Dictionary of product data.
+        :param res_field: Field name for the image (default: 'image_1920')
+        :param res_id: ID for product.image records (used for additional images)
         :return: Returns product url
         """
-        attachment_id = self.env['ir.attachment'].sudo().search(
-            domain=[('res_model', '=', 'product.template'),
-                    ('res_id', '=', product.id),
-                    ('res_field', '=', 'image_1920')]
-        )
+        # Utiliser SUPERUSER_ID pour bypasser tous les ACL
+        Attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID)
+
+        if res_id:
+            # Pour les images supplémentaires (product.image)
+            attachment_id = Attachment.search(
+                domain=[('res_model', '=', 'product.image'),
+                        ('res_id', '=', res_id),
+                        ('res_field', '=', res_field)],
+                limit=1
+            )
+        else:
+            # Pour l'image principale (product.template)
+            attachment_id = Attachment.search(
+                domain=[('res_model', '=', 'product.template'),
+                        ('res_id', '=', product.id),
+                        ('res_field', '=', res_field)],
+                limit=1
+            )
+
         product_image_url = False
         if attachment_id:
-            attachment_id.write({'public': True})
+            # Écrire avec SUPERUSER_ID pour garantir les droits
+            try:
+                attachment_id.write({'public': True})
+                # Commit explicite pour forcer l'écriture en DB immédiatement
+                self.env.cr.commit()
+                # Vérifier que le write a fonctionné
+                attachment_id.invalidate_recordset(['public'])
+            except Exception as e:
+                _logger.error(f"[IMAGE_UPLOAD] Erreur lors du write sur attachment {attachment_id.id}: {e}")
+
             base_url = self.env['ir.config_parameter'].sudo().get_param(
                 'web.base.url')
             product_image_url = f"{base_url}{attachment_id.image_src}.jpg"
+        else:
+            _logger.warning(f"[IMAGE_UPLOAD] Aucun attachment trouvé pour res_model={'product.image' if res_id else 'product.template'}, res_id={res_id or product.id}")
         return product_image_url
+
+    def prepare_woo_images(self, product):
+        """
+        Prépare toutes les images d'un produit pour l'export vers WooCommerce.
+        Étape 1 : Vérifie si le produit a des images supplémentaires (product_template_image_ids)
+        Étape 2 : Si oui, upload toutes ces images ; sinon, fallback sur image_1920
+        Étape 3 : Évite les doublons en vérifiant woo_image_id
+
+            :param product: Record set of product.template
+            :return: List of image dictionaries for WooCommerce API
+        """
+        images_list = []
+
+        # Étape 1 : Vérifier s'il y a des images supplémentaires
+        if product.product_template_image_ids:
+            # Upload toutes les images de la galerie
+            for image_record in product.product_template_image_ids:
+                # Étape 4 : Éviter les doublons - vérifier si l'image a déjà un woo_image_id
+                if image_record.woo_image_id:
+                    # L'image existe déjà sur WooCommerce, utiliser l'ID existant
+                    images_list.append({
+                        "id": int(image_record.woo_image_id),
+                        "name": image_record.name or ""
+                    })
+                else:
+                    # Uploader la nouvelle image
+                    image_url = self.image_upload(
+                        product,
+                        res_field='image_1920',
+                        res_id=image_record.id
+                    )
+                    if image_url:
+                        images_list.append({
+                            "src": image_url,
+                            "name": image_record.name or ""
+                        })
+
+        # Étape 2 : Fallback sur image_1920 si aucune image supplémentaire
+        elif product.image_1920:
+            image_url = self.image_upload(product)
+            if image_url:
+                images_list.append({
+                    "src": image_url,
+                    "name": product.name
+                })
+
+        return images_list
 
     def fetch_address(self, vals):
         """

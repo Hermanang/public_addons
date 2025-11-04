@@ -20,7 +20,7 @@
 #
 ###############################################################################
 from woocommerce import API
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 
 
 class ProductTemplate(models.Model):
@@ -104,23 +104,88 @@ class ProductTemplate(models.Model):
                             woo_products]
         return products_details
 
-    def image_upload(self, product):
+    def image_upload(self, product, res_field='image_1920', res_id=None):
         """
         Method to Upload product image into WordPress media to get a public
         link.
             :param product: Record set of product.
+            :param res_field: Field name for the image (default: 'image_1920')
+            :param res_id: ID for product.image records (used for additional images)
             :return: Returns product image url.
         """
-        attachment_id = self.env['ir.attachment'].sudo().search(
-            [('res_model', '=', 'product.template'),
-             ('res_id', '=', product.id), ('res_field', '=', 'image_1920')])
+        # Utiliser SUPERUSER_ID pour bypasser tous les ACL
+        Attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID)
+
+        if res_id:
+            # Pour les images supplémentaires (product.image)
+            attachment_id = Attachment.search(
+                [('res_model', '=', 'product.image'),
+                 ('res_id', '=', res_id),
+                 ('res_field', '=', res_field)],
+                limit=1)
+        else:
+            # Pour l'image principale (product.template)
+            attachment_id = Attachment.search(
+                [('res_model', '=', 'product.template'),
+                 ('res_id', '=', product.id),
+                 ('res_field', '=', res_field)],
+                limit=1)
+
         product_image_url = False
         if attachment_id:
+            # Écrire avec SUPERUSER_ID pour garantir les droits
             attachment_id.write({'public': True})
             base_url = self.env['ir.config_parameter'].sudo().get_param(
                 'web.base.url')
             product_image_url = f"{base_url}{attachment_id.image_src}.jpg"
         return product_image_url
+
+    def prepare_woo_images(self, product):
+        """
+        Prépare toutes les images d'un produit pour l'export vers WooCommerce.
+        Étape 1 : Vérifie si le produit a des images supplémentaires (product_template_image_ids)
+        Étape 2 : Si oui, upload toutes ces images ; sinon, fallback sur image_1920
+        Étape 3 : Évite les doublons en vérifiant woo_image_id
+
+            :param product: Record set of product.template
+            :return: List of image dictionaries for WooCommerce API
+        """
+        images_list = []
+
+        # Étape 1 : Vérifier s'il y a des images supplémentaires
+        if product.product_template_image_ids:
+            # Upload toutes les images de la galerie
+            for image_record in product.product_template_image_ids:
+                # Étape 4 : Éviter les doublons - vérifier si l'image a déjà un woo_image_id
+                if image_record.woo_image_id:
+                    # L'image existe déjà sur WooCommerce, utiliser l'ID existant
+                    images_list.append({
+                        "id": int(image_record.woo_image_id),
+                        "name": image_record.name or ""
+                    })
+                else:
+                    # Uploader la nouvelle image
+                    image_url = self.image_upload(
+                        product,
+                        res_field='image_1920',
+                        res_id=image_record.id
+                    )
+                    if image_url:
+                        images_list.append({
+                            "src": image_url,
+                            "name": image_record.name or ""
+                        })
+
+        # Étape 2 : Fallback sur image_1920 si aucune image supplémentaire
+        elif product.image_1920:
+            image_url = self.image_upload(product)
+            if image_url:
+                images_list.append({
+                    "src": image_url,
+                    "name": product.name
+                })
+
+        return images_list
 
     def sync_products(self):
         """
@@ -137,7 +202,9 @@ class ProductTemplate(models.Model):
                     version="wc/v3",  # WooCommerce WP REST API version
                     timeout=500,
                 )
-                image_url = self.image_upload(product_id)
+                # Utiliser la nouvelle méthode prepare_woo_images pour gérer toutes les images
+                images_list = self.prepare_woo_images(product_id)
+
                 val_list = {
                     "name": product_id.name,
                     "regular_price": str(product_id.list_price),
@@ -145,12 +212,12 @@ class ProductTemplate(models.Model):
                     "sku": product_id.default_code if product_id.default_code else "",
                     'manage_stock': True if product_id.type == 'consu' else False,
                     'stock_quantity': int(product_id.qty_available),
-                    "images": [
-                        {
-                            "src": image_url,
-                        }
-                    ],
                 }
+
+                # Ajouter les images seulement si la liste n'est pas vide
+                if images_list:
+                    val_list["images"] = images_list
+
                 categories = [{
                     'id': product_id.categ_id.woo_id,
                     'name': product_id.categ_id.name,
@@ -159,7 +226,18 @@ class ProductTemplate(models.Model):
                 val_list.update({
                     "categories": categories
                 })
-                app.put(f"products/{product_id.woo_id}", val_list).json()
+
+                # Envoyer la requête et récupérer la réponse
+                response = app.put(f"products/{product_id.woo_id}", val_list).json()
+
+                # Étape 3 : Mettre à jour les woo_image_id après la réponse
+                if response.get('images') and product_id.product_template_image_ids:
+                    for index, woo_image in enumerate(response['images']):
+                        if index < len(product_id.product_template_image_ids):
+                            image_record = product_id.product_template_image_ids[index]
+                            if not image_record.woo_image_id:
+                                image_record.woo_image_id = str(woo_image['id'])
+
         return {
             'name': _('Sync Products'),
             'view_mode': 'form',
