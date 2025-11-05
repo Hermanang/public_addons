@@ -27,6 +27,7 @@ from woocommerce import API
 from odoo import fields, models, _, SUPERUSER_ID
 from odoo.tests import common
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import html_sanitize
 from xmlrpc.client import ServerProxy, ProtocolError
 
 category_ids = False
@@ -191,7 +192,8 @@ class WooOperation(models.TransientModel):
         return {
             'name': data.get('name'),
             'type': 'consu',
-            'description': data.get('description'),
+            'description_ecommerce': html_sanitize(data.get('description') or '') or False,
+            'description_sale': html_sanitize(data.get('short_description') or '') or False,
             'list_price': data.get('price'),
             'sale_ok': True if data.get('status') == 'publish' else False,
             'default_code': data.get('sku'),
@@ -632,7 +634,7 @@ class WooOperation(models.TransientModel):
                     requests.get(data['image']['src']).content) if data[
                     'image'] else False,
                 'woo_var_id': data['id'],
-                'description': data['description'],
+                'description_sale': html_sanitize(data.get('description') or '') or False,
                 'default_code': data['sku'],
                 'weight': data['weight'],
                 'combination': vals if vals else False,
@@ -1720,7 +1722,6 @@ class WooOperation(models.TransientModel):
             else:
                 product_id = product
             product_type = 'variable' if product_id.attribute_line_ids else 'simple'
-            description = product_id.description
             tag_list = self.get_product_tag_list(product_id)
             val_list = {
                 "name": product_id.name,
@@ -1729,7 +1730,8 @@ class WooOperation(models.TransientModel):
                     product_id.list_price, 2)),
                 "sku": product_id.default_code if product_id.default_code else "",
                 "tags": tag_list,
-                "description": description if description else "",
+                "description": product_id.description_ecommerce or "",
+                "short_description": product_id.description_sale or "",
             }
             stock_check = True if product_id.type == 'product' else False
             if stock_check:
@@ -1876,7 +1878,6 @@ class WooOperation(models.TransientModel):
             else:
                 product_id = product
             product_type = 'variable' if product_id.attribute_line_ids else 'simple'
-            description = product_id.description
             tag_list = self.get_product_tag_list(product_id)
             val_list = {
                 "name": product_id.name,
@@ -1884,7 +1885,8 @@ class WooOperation(models.TransientModel):
                 "regular_price": str(self.calc_currency_rate(
                     product_id.list_price, 2)),
                 "sku": product_id.default_code if product_id.default_code else "",
-                "description": description if description else "",
+                "description": product_id.description_ecommerce or "",
+                "short_description": product_id.description_sale or "",
                 "tags": tag_list,
             }
             stock_check = True if product_id.type == 'product' else False
