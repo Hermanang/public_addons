@@ -1,0 +1,68 @@
+<div>
+    <h1>Analytic Plans by Company</h1>
+    
+
+
+    <h3>Overview</h3>
+    <p>
+        Enhance your Odoo Accounting module with the <strong>Analytic Plans by Company</strong> module! 
+        This lightweight module adds a <code>company_id</code> field to analytic plans, ensuring that users 
+        can only view plans associated with their specific company. Perfect for multi-company setups, it 
+        streamlines data access and improves privacy.
+    </p>
+
+    <h3>Key Features</h3>
+    <ul>
+        <li><strong>Company-Based Filtering:</strong> Automatically filters analytic plans by the user's company, ensuring data relevance and security.</li>
+        <li><strong>Seamless Integration:</strong> Integrates with the Odoo Accounting module, adding a <code>company_id</code> field to analytic plans.</li>
+        <li><strong>Record Rule for Filtration:</strong> Implements a domain filter to restrict visibility of analytic plans to the respective <code>company_id</code>.</li>
+        <li><strong>Multi-Company Support:</strong> Ideal for businesses managing multiple companies in Odoo.</li>
+    </ul>
+
+    <h3>Screenshots</h3>
+    <div>
+        <div>
+            <h4>Screenshot 1: Record Rule Configuration</h4>
+            <p>
+                The module sets up a record rule to filter analytic plans by <code>company_id</code>. The domain filter 
+                <code>[('company_id', 'in', company_ids + [False])]</code> ensures that only relevant plans are visible to users.
+            </p>
+            <img src="screenshot2.png" alt="Record Rule Configuration" style="max-width: 100%;"/>
+        </div>
+        <div>
+            <h4>Screenshot 2: Analytic Plans in Action</h4>
+            <p>
+                View analytic plans filtered by company in the Accounting module. The dropdown menu allows users to select 
+                plans specific to their company, such as "My Company (Chicago)" or "My Company (San Francisco)".
+            </p>
+            <img src="screenshot1.png" alt="Analytic Plans by Company" style="max-width: 100%;"/>
+        </div>
+    </div>
+
+    <h3>Benefits</h3>
+    <ul>
+        <li><strong>Enhanced Data Privacy:</strong> Restrict analytic plans visibility to the respective company, reducing data leakage risks.</li>
+        <li><strong>Improved User Experience:</strong> Users only see relevant analytic plans, simplifying navigation and decision-making.</li>
+        <li><strong>Simplified Multi-Company Management:</strong> Perfect for businesses operating with multiple companies in Odoo.</li>
+    </ul>
+
+    <h3>Compatibility</h3>
+    <ul>
+        <li><strong>Odoo Version:</strong> 17.0 (Community Edition)</li>
+        <li><strong>Module Dependency:</strong> Accounting</li>
+    </ul>
+
+    <h3>Installation</h3>
+    <ol>
+        <li>Download and install the module from the Odoo Apps store.</li>
+        <li>Navigate to the Accounting module and configure the analytic plans as needed.</li>
+        <li>The module automatically applies the record rule for company-based filtering.</li>
+    </ol>
+
+    <h3>Support</h3>
+    <p>
+        For any questions or assistance, contact us via the Odoo Apps store support channel or reach out to the author, 
+        <strong>Muhammad Wael</strong>
+        <strong>+201110002767</strong>.
+    </p>
+</div>
