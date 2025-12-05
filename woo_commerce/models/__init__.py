@@ -23,7 +23,7 @@ from . import account_tax
 from . import job_cron
 from . import product
 from . import product_attribute
-from . import product_category
+from . import product_public_category
 from . import product_image
 from . import product_tag
 from . import product_template

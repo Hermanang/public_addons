@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <!-- Inheriting from the form view of the product_category model to extend it -->
-    <record id="product_category_form_view" model="ir.ui.view">
-        <field name="name">product.category.view.form.inherit.woo.commerce.connector</field>
-        <field name="model">product.category</field>
-        <field name="inherit_id" ref="product.product_category_form_view"/>
+    <!-- Inheriting from the form view of the product.public.category model to extend it -->
+    <record id="product_public_category_form_view" model="ir.ui.view">
+        <field name="name">product.public.category.view.form.inherit.woo.commerce.connector</field>
+        <field name="model">product.public.category</field>
+        <field name="inherit_id" ref="website_sale.product_public_category_form_view"/>
         <field name="arch" type="xml">
             <!-- Inserting additional elements within the existing sheet -->
             <xpath expr="//sheet" position="inside">

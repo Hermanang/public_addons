@@ -203,7 +203,7 @@ class WooOperation(models.TransientModel):
             'company_id': self.env.company.id if self.env.company else False,
             'volume': dimensions_single,
             'external_url_product': data.get('permalink'),
-            'categ_id': category_id,
+            'public_categ_ids': [(6, 0, [category_id])] if category_id else [],
             'optional_product_ids': upsell_ids,
             'alternative_product_ids': cross_sell_ids,
             'product_tag_ids': tag_ids or [],
@@ -419,11 +419,14 @@ class WooOperation(models.TransientModel):
         # Set category information if available
         categories_value = data.get('categories')
         if categories_value:
-            category_woo_id = categories_value[0].get('id')
-            category_id = self.env['product.category'].search(
-                [('woo_id', '=', category_woo_id)], limit=1)
-            if category_id:
-                val_list['categ_id'] = category_id.id
+            category_ids = []
+            for cat in categories_value:
+                category = self.env['product.public.category'].search(
+                    [('woo_id', '=', str(cat.get('id')))], limit=1)
+                if category:
+                    category_ids.append(category.id)
+            if category_ids:
+                val_list['public_categ_ids'] = [(6, 0, category_ids)]
         # Update product template with image details
         if image.get('main_image'):
             val_list.update(image.get('main_image'))
@@ -454,12 +457,6 @@ class WooOperation(models.TransientModel):
                                'successfully.' % (
                                    new_product_id.name, new_product_id.woo_id)
             }])
-            # Set product template category if available
-            if new_product_id and categories_value:
-                category_id = self.env['product.category'].search(
-                    [('woo_id', '=', category_woo_id)], limit=1)
-                if category_id:
-                    new_product_id.categ_id = category_id.id
             # Create stock if manage_stock is enabled and stock_quantity is >= 1
             if data.get('stock_quantity') is not None:
                 if new_product_id and data.get('manage_stock') and data.get(
@@ -487,11 +484,14 @@ class WooOperation(models.TransientModel):
         # Set category information
         categories_value = data.get('categories')
         if categories_value:
-            category_woo_id = categories_value[0].get('id')
-            category_id = self.env['product.category'].search(
-                [('woo_id', '=', category_woo_id)], limit=1)
-            if category_id:
-                val_list['categ_id'] = category_id.id
+            category_ids = []
+            for cat in categories_value:
+                category = self.env['product.public.category'].search(
+                    [('woo_id', '=', str(cat.get('id')))], limit=1)
+                if category:
+                    category_ids.append(category.id)
+            if category_ids:
+                val_list['public_categ_ids'] = [(6, 0, category_ids)]
         # Update product values with main image and additional images
         if image.get('main_image'):
             val_list.update(image.get('main_image'))
@@ -1187,12 +1187,12 @@ class WooOperation(models.TransientModel):
         """
         Method to fetch/create category.
         :param category_data: Dictionary of Woocommerce category data.
-        :param categories: Record set of product_category
+        :param categories: Record set of product.public.category
         :returns: The object of category.
         """
         # Check if the category_data exists in Odoo
         try:
-            category = self.env['product.category'].search([]).filtered(
+            category = self.env['product.public.category'].search([]).filtered(
                 lambda r: r.woo_id == str(category_data.get('id')))
             if not category:
                 # The category does not exist, so create it
@@ -1218,11 +1218,11 @@ class WooOperation(models.TransientModel):
                     'woo_id': woo_id,
                     'instance_id': active_id if active_id else False
                 }
-                category = self.env['product.category'].create(vals)
+                category = self.env['product.public.category'].create(vals)
                 self.env['woo.logs'].sudo().create([{
                     'status': 'success',
                     'trigger': 'import',
-                    'description': 'Product Category %s with woo_id - %s '
+                    'description': 'Product Public Category %s with woo_id - %s '
                                    'created successfully.' % (
                                        category.name, category.woo_id)}])
             return category
@@ -1232,7 +1232,7 @@ class WooOperation(models.TransientModel):
             self.env['woo.logs'].sudo().create([{
                 'status': 'failed',
                 'trigger': 'import',
-                'description': 'Product Category " %s " with woo_id - %s '
+                'description': 'Product Public Category " %s " with woo_id - %s '
                                'creation failed. Reason - %s' % (
                                    category_data.get('name'),
                                    category_data.get('woo_id'),
@@ -1257,7 +1257,7 @@ class WooOperation(models.TransientModel):
                 break
             categories += category_data
         if categories:
-            woo_ids = self.env['product.category'].search([]).mapped('woo_id')
+            woo_ids = self.env['product.public.category'].search([]).mapped('woo_id')
             for category_data in categories:
                 if str(category_data.get('id')) not in woo_ids:
                     self.create_or_get_category(category_data, categories)
@@ -1742,17 +1742,21 @@ class WooOperation(models.TransientModel):
                 })
             else:
                 val_list['manage_stock'] = stock_check
+            # Build categories list from public_categ_ids (Many2many)
             categories = []
-            parent = True
-            category_id = product_id.categ_id
-            while parent:
-                categories.append({
-                    'id': category_id.woo_id,
-                    'name': category_id.name,
-                    'slug': category_id.name
-                })
-                parent = category_id.parent_id
-                category_id = parent
+            seen_ids = set()
+            for pub_categ in product_id.public_categ_ids:
+                # Add the category and its parent hierarchy
+                current_cat = pub_categ
+                while current_cat:
+                    if current_cat.id not in seen_ids and current_cat.woo_id:
+                        categories.append({
+                            'id': current_cat.woo_id,
+                            'name': current_cat.name,
+                            'slug': current_cat.name
+                        })
+                        seen_ids.add(current_cat.id)
+                    current_cat = current_cat.parent_id
             val_list.update({
                 "categories": categories
             })
@@ -1898,17 +1902,21 @@ class WooOperation(models.TransientModel):
                 })
             else:
                 val_list['manage_stock'] = stock_check
+            # Build categories list from public_categ_ids (Many2many)
             categories = []
-            parent = True
-            category_id = product_id.categ_id
-            while parent:
-                categories.append({
-                    'id': category_id.woo_id,
-                    'name': category_id.name,
-                    'slug': category_id.name
-                })
-                parent = category_id.parent_id
-                category_id = parent
+            seen_ids = set()
+            for pub_categ in product_id.public_categ_ids:
+                # Add the category and its parent hierarchy
+                current_cat = pub_categ
+                while current_cat:
+                    if current_cat.id not in seen_ids and current_cat.woo_id:
+                        categories.append({
+                            'id': current_cat.woo_id,
+                            'name': current_cat.name,
+                            'slug': current_cat.name
+                        })
+                        seen_ids.add(current_cat.id)
+                    current_cat = current_cat.parent_id
             val_list.update({
                 "categories": categories
             })
@@ -2863,13 +2871,16 @@ class WooOperation(models.TransientModel):
         image = self.get_product_image(data)
         # Get categories from the data
         categories_value = data.get('categories')
-        # Set product category in the values
+        # Set product public categories in the values (Many2many)
         if categories_value:
-            category_woo_id = categories_value[0].get('id')
-            category_id = self.env['product.category'].search(
-                [('woo_id', '=', category_woo_id)], limit=1)
-            if category_id:
-                val_list['categ_id'] = category_id.id
+            category_ids = []
+            for cat in categories_value:
+                category = self.env['product.public.category'].search(
+                    [('woo_id', '=', str(cat.get('id')))], limit=1)
+                if category:
+                    category_ids.append(category.id)
+            if category_ids:
+                val_list['public_categ_ids'] = [(6, 0, category_ids)]
         # Set main image in the values
         if image.get('main_image'):
             val_list.update(image.get('main_image'))
@@ -2909,13 +2920,16 @@ class WooOperation(models.TransientModel):
             'active_id') if self._context.get('active_id') else False
         image = self.get_product_image(data)
         categories_value = data.get('categories')
-        # Set product category in the values
+        # Set product public categories in the values (Many2many)
         if categories_value:
-            category_woo_id = categories_value[0].get('id')
-            category_id = self.env['product.category'].search(
-                [('woo_id', '=', category_woo_id)], limit=1)
-            if category_id:
-                val_list['categ_id'] = category_id.id
+            category_ids = []
+            for cat in categories_value:
+                category = self.env['product.public.category'].search(
+                    [('woo_id', '=', str(cat.get('id')))], limit=1)
+                if category:
+                    category_ids.append(category.id)
+            if category_ids:
+                val_list['public_categ_ids'] = [(6, 0, category_ids)]
         if image.get('main_image'):
             val_list.update(image.get('main_image'))
         if image.get('product_template_image_ids'):
@@ -3187,7 +3201,7 @@ class WooOperation(models.TransientModel):
         """
         Method to add category export tasks to the job queue in chunks.
         """
-        categories = self.env['product.category'].search(
+        categories = self.env['product.public.category'].search(
             [('woo_id', '=', False)])
         # Split categories into chunks of 50
         chunks = [categories[i:i + 50] for i in range(0, len(categories), 50)]
@@ -3206,49 +3220,80 @@ class WooOperation(models.TransientModel):
             # Log the addition of categories to the queue
             self.env['woo.logs'].sudo().create({
                 'status': 'success',
-                'description': 'Export - %s categories have been added to the queue.' % len(
+                'description': 'Export - %s public categories have been added to the queue.' % len(
                     chunk.ids),
                 'trigger': 'queue',
             })
 
+    def _export_single_category(self, app, category, instance_id):
+        """
+        Helper method to export a single category to WooCommerce.
+        Recursively exports parent categories first if needed.
+        Returns the woo_id (as string) if successful, None otherwise.
+        """
+        # Skip if already exported
+        if category.woo_id:
+            return category.woo_id
+
+        # Export parent first if exists and not yet exported
+        parent_woo_id = None
+        if category.parent_id:
+            if not category.parent_id.woo_id:
+                # Parent needs to be exported first
+                parent_woo_id = self._export_single_category(app, category.parent_id, instance_id)
+                if not parent_woo_id:
+                    # Parent export failed, cannot export child with invalid parent
+                    self.env['woo.logs'].sudo().create({
+                        'status': 'failed',
+                        'trigger': 'export',
+                        'description': f"Cannot export category '{category.name}' (ID {category.id}): "
+                                       f"parent '{category.parent_id.name}' export failed.",
+                    })
+                    return None
+            else:
+                # Parent already has a woo_id
+                parent_woo_id = category.parent_id.woo_id
+
+        # Prepare category data
+        val = {"name": category.name}
+        if parent_woo_id:
+            val["parent"] = int(parent_woo_id)
+
+        # Post to WooCommerce
+        res = app.post("products/categories", val).json()
+        if not res.get('code'):
+            category.woo_id = str(res.get('id'))
+            category.instance_id = instance_id
+            self.env['woo.logs'].sudo().create({
+                'status': 'success',
+                'trigger': 'export',
+                'description': f"Public Category '{res.get('name')}' with woo_id {res.get('id')} exported successfully.",
+            })
+            return str(res.get('id'))
+        else:
+            self.env['woo.logs'].sudo().create({
+                'status': 'failed',
+                'trigger': 'export',
+                'description': f"Public Category '{category.name}' (ID {category.id}) export failed. "
+                               f"Reason: {res.get('message')}",
+            })
+            if res.get('code') == 'term_exists':
+                resource_id = res.get('data', {}).get('resource_id')
+                if resource_id:
+                    category.instance_id = instance_id
+                    category.woo_id = str(resource_id)
+                    return str(resource_id)
+        return None
+
     def category_data_post(self, category_ids, instance_id):
         """
         Method for create/post categories from Odoo to Woocommerce.
+        Exports parent categories first recursively.
         """
         app = self.get_api()
-        categories = self.env['product.category'].browse(category_ids)
-        for category_id in categories:
-            if category_id.parent_id:
-                val = {
-                    "name": category_id.name,
-                    "parent": category_id.parent_id.woo_id
-                }
-            else:
-                val = {
-                    "name": category_id.name,
-                }
-            res = app.post("products/categories", val).json()
-            if not res.get('code'):
-                category_id.woo_id = res.get('id')
-                category_id.instance_id = instance_id
-                self.env['woo.logs'].sudo().create({
-                    'status': 'success',
-                    'trigger': 'export',
-                    'description': 'Category with name - %s and id - %s has been exported successfully.' % (
-                        res.get('name'), res.get('id')),
-                })
-            elif res.get('code'):
-                self.env['woo.logs'].sudo().create({
-                    'status': 'failed',
-                    'trigger': 'export',
-                    'description': 'Category with name - %s and id - %s exporting failed. Reason - %s' % (
-                        category_id.name, category_id.id, res.get('message')),
-                })
-                if res.get('code') == 'term_exists':
-                    category_id.instance_id = instance_id if res['data'][
-                        'resource_id'] else False
-                    category_id.woo_id = res['data']['resource_id'] if \
-                    res['data']['resource_id'] else False
+        categories = self.env['product.public.category'].browse(category_ids)
+        for category in categories:
+            self._export_single_category(app, category, instance_id)
                     
     def create_attributes_woo_in_chunks(self):
         """
@@ -3726,41 +3771,18 @@ class WooOperation(models.TransientModel):
 
     def export_selected_product_categories(self, chuck, instance_id):
         """
-        Export categories of selected products from Odoo to WooCommerce.
+        Export public categories of selected products from Odoo to WooCommerce.
+        Uses recursive export to handle parent categories first.
         """
         app = self.get_api()
+        # Get all public categories from selected products (Many2many field)
         category_ids = self.env['product.template'].browse(chuck).mapped(
-            'categ_id').ids
-        categories_to_export = self.env['product.category'].browse(
+            'public_categ_ids').ids
+        categories_to_export = self.env['product.public.category'].browse(
             category_ids).filtered(lambda cat: not cat.woo_id)
         for category in categories_to_export:
-            category_data = {"name": category.name}
-            if category.parent_id:
-                category_data["parent"] = category.parent_id.woo_id
-            response = app.post("products/categories", category_data).json()
-            woo_logs_vals = {
-                'status': '',
-                'trigger': 'export',
-                'description': ''
-            }
-            if not response.get('code'):
-                category.woo_id = response.get('id')
-                category.instance_id = instance_id
-                woo_logs_vals.update({
-                    'status': 'success',
-                    'description': f"Category '{response.get('name')}' with ID {response.get('id')} exported successfully."
-                })
-            else:
-                woo_logs_vals.update({
-                    'status': 'failed',
-                    'description': f"Failed to export category '{category.name}' (ID {category.id}). Reason: {response.get('message')}"
-                })
-                if response.get('code') == 'term_exists':
-                    resource_id = response['data'].get('resource_id')
-                    if resource_id:
-                        category.woo_id = resource_id
-                        category.instance_id = instance_id
-            self.env['woo.logs'].sudo().create(woo_logs_vals)
+            # Use recursive helper to ensure parents are exported first
+            self._export_single_category(app, category, instance_id)
 
     def export_selected_product_attributes(self, chunk, instance_id):
         """
@@ -3881,7 +3903,11 @@ class WooOperation(models.TransientModel):
             }
             for line in order_id.order_line:
                 product_id = line.product_id
-                if not product_id.categ_id.woo_id:
+                # Check if any public category needs to be exported
+                needs_category_export = any(
+                    not cat.woo_id for cat in product_id.product_tmpl_id.public_categ_ids
+                )
+                if needs_category_export:
                     self.export_selected_product_categories(
                         product_id.product_tmpl_id.ids, instance_id)
                 for attribute in product_id.attribute_line_ids.mapped(

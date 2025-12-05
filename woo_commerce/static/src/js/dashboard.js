@@ -79,11 +79,11 @@ class WooDashBoard extends Component {
             });
           }
           /**
-     * Fetches and renders the product category chart (doughnut) by calling the 'product.category' model.
+     * Fetches and renders the product category chart (doughnut) by calling the 'product.public.category' model.
      * It handles showing or hiding the chart based on the availability of product data.
      */
           render_product_category(){
-            this.orm.call('product.category','get_product_category_graph',[]
+            this.orm.call('product.public.category','get_product_category_graph',[]
             ).then((result) => {
             var canvasElement = this.graph.el.querySelector("#category_canvas");
         var messageDiv = this.graph.el.querySelector("#no_data_message");

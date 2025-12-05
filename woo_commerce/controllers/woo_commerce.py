@@ -508,15 +508,18 @@ class Webhooks(http.Controller):
                         if image.get('product_template_image_ids'):
                             val_list['product_template_image_ids'] = image.get(
                                 'product_template_image_ids')
-                        # Update the Product Category
+                        # Update the Product Public Categories
                         categories_value = response.get('categories')
                         if categories_value:
-                            category_woo_id = categories_value[0].get('id')
-                            category_id = request.env[
-                                'product.category'].sudo().search(
-                                [('woo_id', '=', category_woo_id)], limit=1)
-                            if category_id:
-                                val_list['categ_id'] = category_id.id
+                            category_ids = []
+                            for cat in categories_value:
+                                category = request.env[
+                                    'product.public.category'].sudo().search(
+                                    [('woo_id', '=', str(cat.get('id')))], limit=1)
+                                if category:
+                                    category_ids.append(category.id)
+                            if category_ids:
+                                val_list['public_categ_ids'] = [(6, 0, category_ids)]
                         # Update the product
                         product_id.sudo().write(val_list)
                         _logger.info(

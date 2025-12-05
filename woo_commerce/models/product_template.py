@@ -218,11 +218,21 @@ class ProductTemplate(models.Model):
                 if images_list:
                     val_list["images"] = images_list
 
-                categories = [{
-                    'id': product_id.categ_id.woo_id,
-                    'name': product_id.categ_id.name,
-                    'slug': product_id.categ_id.name
-                }]
+                # Build categories list from public_categ_ids (Many2many)
+                categories = []
+                seen_ids = set()
+                for pub_categ in product_id.public_categ_ids:
+                    # Add the category and its parent hierarchy
+                    current_cat = pub_categ
+                    while current_cat:
+                        if current_cat.id not in seen_ids and current_cat.woo_id:
+                            categories.append({
+                                'id': current_cat.woo_id,
+                                'name': current_cat.name,
+                                'slug': current_cat.name
+                            })
+                            seen_ids.add(current_cat.id)
+                        current_cat = current_cat.parent_id
                 val_list.update({
                     "categories": categories
                 })

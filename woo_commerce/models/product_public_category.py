@@ -10,7 +10,7 @@
 #    It is forbidden to publish, distribute, sublicense, or sell copies of the
 #    Software or modified copies of the Software.
 #
-#    THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 #    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 #    FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL
 #    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,DAMAGES OR OTHER
@@ -22,21 +22,21 @@
 from odoo import api, fields, models
 
 
-class ProductCategory(models.Model):
+class ProductPublicCategory(models.Model):
     """
-    Class for the inherited model product_category. Contains fields
-    and method related to Woocommerce product categories.
+    Class for the inherited model product.public.category. Contains fields
+    and method related to Woocommerce product categories (eCommerce).
     Methods:
         get_product_category_graph(self):Method to return  product category
         names and count of products into module dashboard.
     """
-    _inherit = 'product.category'
+    _inherit = 'product.public.category'
 
     woo_id = fields.Char(string='WooCommerce ID', copy=False, readonly=True,
                          help='Id in WooCommerce')
     instance_id = fields.Many2one('woo.commerce.instance',
                                   copy=False, readonly=True, string='Instance',
-                                  help='Id in WooCommerce')
+                                  help='WooCommerce Instance')
 
     @api.model
     def get_product_category_graph(self):
@@ -45,10 +45,10 @@ class ProductCategory(models.Model):
         module dashboard.
             :return: Returns dictionary of category names and product count.
         """
-        categories = self.env['product.category'].search([
+        categories = self.env['product.public.category'].search([
             ('woo_id', '!=', False)])
         products_count = [self.env['product.template'].search_count(
-            [('categ_id', '=', category.id)]) for category in categories]
+            [('public_categ_ids', 'in', [category.id])]) for category in categories]
         return {
             'categories_name': categories.mapped('name'),
             'products_count': products_count
