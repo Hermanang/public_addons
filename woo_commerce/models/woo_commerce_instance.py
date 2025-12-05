@@ -91,6 +91,22 @@ class WooCommerceInstance(models.Model):
                                        compute='_compute_logs_count',
                                        help='Failed logs count')
 
+    # Attribute export configuration
+    attribute_export_mode = fields.Selection([
+        ('classic', 'Classic (Odoo Variants)'),
+        ('mapped', 'Mapped Many2many Fields'),
+    ], string='Attribute Export Mode',
+       default='classic',
+       help='Choose how product attributes are exported to WooCommerce:\n'
+            '- Classic: Use Odoo product variants and attribute lines\n'
+            '- Mapped: Use configured Many2many field mappings')
+    attribute_mapping_ids = fields.One2many(
+        'woo.attribute.mapping',
+        'instance_id',
+        string='Attribute Mappings',
+        help='Configure which Many2many fields to export as WooCommerce attributes'
+    )
+
     def _compute_logs_count(self):
         """
         Compute the count of pending, completed, and failed Woo logs for

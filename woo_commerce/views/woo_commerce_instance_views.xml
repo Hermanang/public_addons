@@ -48,6 +48,39 @@
                                     <field name="customer_delete"/>
                                 </group>
                             </page>
+                            <page string="Attribute Export">
+                                <group>
+                                    <group string="Export Mode">
+                                        <field name="attribute_export_mode" widget="radio"/>
+                                    </group>
+                                </group>
+                                <separator string="Attribute Mappings"
+                                           invisible="attribute_export_mode != 'mapped'"/>
+                                <field name="attribute_mapping_ids"
+                                       invisible="attribute_export_mode != 'mapped'"
+                                       nolabel="1">
+                                    <list string="Attribute Mappings" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="source_field_id" options="{'no_create': True}"/>
+                                        <field name="field_type" readonly="1"/>
+                                        <field name="woo_attribute_name"/>
+                                        <field name="display_field"/>
+                                        <field name="woo_attribute_id" readonly="1"/>
+                                        <field name="visible_on_product"/>
+                                        <field name="active" column_invisible="1"/>
+                                    </list>
+                                </field>
+                                <div class="alert alert-info" role="alert"
+                                     invisible="attribute_export_mode != 'mapped'">
+                                    <b>How to configure:</b>
+                                    <ol class="mb-0">
+                                        <li>Select a Many2many or Selection field from product.template</li>
+                                        <li>Enter the WooCommerce attribute name (e.g., "Frame Color")</li>
+                                        <li>For Many2many: set the display field (usually "name")</li>
+                                        <li>For Selection: display field is ignored, the label is used automatically</li>
+                                    </ol>
+                                </div>
+                            </page>
                         </notebook>
                     </group>
                 </sheet>
@@ -203,5 +236,10 @@
               parent="woo_commerce_menu"
               sequence="100"
               action="action_woo_commerce_instance"
+              groups="base.group_user"/>
+    <!-- Configuration menu -->
+    <menuitem id="woo_commerce_configuration_menu" name="Configuration"
+              parent="woo_commerce_menu"
+              sequence="200"
               groups="base.group_user"/>
 </odoo>

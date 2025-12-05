@@ -1316,14 +1316,32 @@ class WooOperation(models.TransientModel):
     def product_data_export(self):
         """
         Method to export products to Woocommerce.
+        Supports both classic (Odoo variants) and mapped (Many2many) attribute modes.
         """
         app = self.get_api()
         global api_res
         api_res = requests.get(
             'https://api.exchangerate-api.com/v4/latest/' + self.currency + '').json()
+
+        instance_id = self._context.get('active_id')
+        instance = self.env['woo.commerce.instance'].browse(instance_id)
+        export_mode = instance.attribute_export_mode or 'classic'
+
+        # Export categories and tags (always)
         self.create_categories_woo_in_chunks()
-        self.create_attributes_woo_in_chunks()
         self.create_product_tag_woo()
+
+        _logger.info("-------------------------------------")
+        _logger.info(export_mode)
+        _logger.info("-------------------------------------")
+        # Export attributes based on mode
+        if export_mode == 'classic':
+            # Export Odoo product.attribute records
+            self.create_attributes_woo_in_chunks()
+        elif export_mode == 'mapped':
+            # Export mapped Many2many attributes
+            self.mapped_attribute_data_post(instance)
+
         domain = [('woo_id', '=', False)]
         product_ids = self.list_records_in_chunks(self.env['product.template'],
                                                   domain)
@@ -1712,16 +1730,31 @@ class WooOperation(models.TransientModel):
     def product_data_post(self, data, instance_id):
         """
         Method for posting product datas from Odoo to Woocommerce.
+        Supports both classic (Odoo variants) and mapped (Many2many) attribute modes.
         :param data: Dictionary of product data.
         :param instance_id: Record set of woo_instance.
         """
         app = self.get_api()
+
+        # Get instance and export mode
+        if isinstance(instance_id, int):
+            instance = self.env['woo.commerce.instance'].browse(instance_id)
+        else:
+            instance = instance_id
+        export_mode = instance.attribute_export_mode or 'classic'
+
         for product in data:
             if type(product) == int:
                 product_id = self.env['product.template'].browse(product)
             else:
                 product_id = product
-            product_type = 'variable' if product_id.attribute_line_ids else 'simple'
+
+            # Determine product type based on export mode
+            if export_mode == 'classic':
+                product_type = 'variable' if product_id.attribute_line_ids else 'simple'
+            else:  # mapped mode - always simple
+                product_type = 'simple'
+
             tag_list = self.get_product_tag_list(product_id)
             val_list = {
                 "name": product_id.name,
@@ -1771,8 +1804,12 @@ class WooOperation(models.TransientModel):
 
             _logger.info(val_list)
             _logger.info("******************************************")
-            if product_id.attribute_line_ids:
-                attribute_val = []
+
+            # Build attributes based on export mode
+            attribute_val = []
+
+            if export_mode == 'classic' and product_id.attribute_line_ids:
+                # Classic mode: use Odoo product attributes
                 for item in product_id.attribute_line_ids:
                     if item.attribute_id.woo_id:
                         attribute_val.append({
@@ -1780,9 +1817,30 @@ class WooOperation(models.TransientModel):
                             'name': item.attribute_id.name,
                             'position': 0,
                             'visible': True,
-                            'variation': False,
+                            'variation': True,
                             'options': item.value_ids.mapped('name')
                         })
+            elif export_mode == 'mapped':
+                # Mapped mode: use Many2many field mappings
+                mappings = self.env['woo.attribute.mapping'].search([
+                    ('instance_id', '=', instance.id),
+                    ('active', '=', True),
+                    ('woo_attribute_id', '!=', False)
+                ], order='sequence')
+
+                for idx, mapping in enumerate(mappings):
+                    values = self._get_mapped_attribute_values(product_id, mapping)
+                    if values:
+                        attribute_val.append({
+                            'id': mapping.woo_attribute_id,
+                            'name': mapping.woo_attribute_name,
+                            'position': idx,
+                            'visible': mapping.visible_on_product,
+                            'variation': False,  # Never create variations with mapped attributes
+                            'options': values
+                        })
+
+            if attribute_val:
                 val_list.update({
                     'attributes': attribute_val
                 })
@@ -1814,7 +1872,7 @@ class WooOperation(models.TransientModel):
                 res = app.post("products", val_list).json()
                 if res.get('id'):
                     product_id.woo_id = res.get('id')
-                    product_id.instance_id = instance_id.id
+                    product_id.instance_id = instance.id
                     product_id.woo_variant_check = True
                     self.env['woo.logs'].sudo().create({
                         'status': 'success',
@@ -1825,7 +1883,7 @@ class WooOperation(models.TransientModel):
                     })
             elif res.get('id'):
                 product_id.woo_id = res.get('id')
-                product_id.instance_id = instance_id.id
+                product_id.instance_id = instance.id
                 product_id.woo_variant_check = True
                 self.env['woo.logs'].sudo().create({
                     'status': 'success',
@@ -1872,16 +1930,31 @@ class WooOperation(models.TransientModel):
     def product_data_woo_update(self, data, instance_id):
         """
         Method to update/export product data to Woocommerce.
+        Supports both classic (Odoo variants) and mapped (Many2many) attribute modes.
             :param data: Dictionary of product data.
             :param instance_id: Record set of woo_instance.
         """
         app = self.get_api()
+
+        # Get instance and export mode
+        if isinstance(instance_id, int):
+            instance = self.env['woo.commerce.instance'].browse(instance_id)
+        else:
+            instance = instance_id
+        export_mode = instance.attribute_export_mode or 'classic'
+
         for product in data:
             if type(product) == int:
                 product_id = self.env['product.template'].browse(product)
             else:
                 product_id = product
-            product_type = 'variable' if product_id.attribute_line_ids else 'simple'
+
+            # Determine product type based on export mode
+            if export_mode == 'classic':
+                product_type = 'variable' if product_id.attribute_line_ids else 'simple'
+            else:  # mapped mode - always simple
+                product_type = 'simple'
+
             tag_list = self.get_product_tag_list(product_id)
             val_list = {
                 "name": product_id.name,
@@ -1931,8 +2004,12 @@ class WooOperation(models.TransientModel):
 
             _logger.info(val_list)
             _logger.info("******************************************")
-            if product_id.attribute_line_ids:
-                attribute_val = []
+
+            # Build attributes based on export mode
+            attribute_val = []
+
+            if export_mode == 'classic' and product_id.attribute_line_ids:
+                # Classic mode: use Odoo product attributes
                 for item in product_id.attribute_line_ids:
                     if item.attribute_id.woo_id:
                         attribute_val.append({
@@ -1943,9 +2020,31 @@ class WooOperation(models.TransientModel):
                             "variation": True,
                             "options": item.value_ids.mapped('name')
                         })
+            elif export_mode == 'mapped':
+                # Mapped mode: use Many2many field mappings
+                mappings = self.env['woo.attribute.mapping'].search([
+                    ('instance_id', '=', instance.id),
+                    ('active', '=', True),
+                    ('woo_attribute_id', '!=', False)
+                ], order='sequence')
+
+                for idx, mapping in enumerate(mappings):
+                    values = self._get_mapped_attribute_values(product_id, mapping)
+                    if values:
+                        attribute_val.append({
+                            'id': mapping.woo_attribute_id,
+                            'name': mapping.woo_attribute_name,
+                            'position': idx,
+                            'visible': mapping.visible_on_product,
+                            'variation': False,  # Never create variations with mapped attributes
+                            'options': values
+                        })
+
+            if attribute_val:
                 val_list.update({
                     'attributes': attribute_val
                 })
+
             if product_id.optional_product_ids:
                 cross_sell_ids = [int(item) for item in
                                   product_id.optional_product_ids.mapped(
@@ -3415,7 +3514,189 @@ class WooOperation(models.TransientModel):
                         attribute_id.name, attribute_id.id, error_message),
                 })
 
+    def mapped_attribute_data_post(self, instance):
+        """
+        Export mapped Many2many fields as WooCommerce attributes.
+        Creates global attributes in WooCommerce based on the mapping configuration.
+        :param instance: woo.commerce.instance record
+        """
+        app = self.get_api()
+        if not app:
+            self.env['woo.logs'].sudo().create({
+                'status': 'failed',
+                'trigger': 'export',
+                'description': 'WooCommerce API connection failed for mapped attributes.',
+            })
+            return
 
+        # Get active mappings for this instance that haven't been exported yet
+        mappings = self.env['woo.attribute.mapping'].search([
+            ('instance_id', '=', instance.id),
+            ('active', '=', True),
+            ('woo_attribute_id', '=', False)
+        ])
+
+        for mapping in mappings:
+            # Create attribute in WooCommerce
+            data = {
+                "name": mapping.woo_attribute_name,
+                "slug": mapping.woo_attribute_slug,
+                "type": "select",
+                "order_by": "menu_order",
+                "has_archives": True,
+            }
+
+            try:
+                res = app.post("products/attributes", data).json()
+
+                if res and not res.get('code'):
+                    mapping.write({'woo_attribute_id': res.get('id')})
+                    self.env['woo.logs'].sudo().create({
+                        'status': 'success',
+                        'trigger': 'export',
+                        'description': 'Mapped attribute "%s" exported with WC ID %s' % (
+                            mapping.woo_attribute_name, res.get('id')
+                        ),
+                    })
+
+                    # Export all unique values for this attribute
+                    self._export_mapped_attribute_values(app, mapping)
+
+                else:
+                    error_code = res.get('code', '')
+                    error_message = res.get('message', 'Unknown error')
+
+                    # Check if attribute already exists (slug conflict)
+                    if 'slug' in str(error_code).lower() or 'exists' in str(error_code).lower():
+                        # Try to find existing attribute by slug
+                        existing_id = self._find_existing_woo_attribute(app, mapping.woo_attribute_slug)
+                        if existing_id:
+                            mapping.write({'woo_attribute_id': existing_id})
+                            self.env['woo.logs'].sudo().create({
+                                'status': 'success',
+                                'trigger': 'export',
+                                'description': 'Mapped attribute "%s" linked to existing WC ID %s' % (
+                                    mapping.woo_attribute_name, existing_id
+                                ),
+                            })
+                            self._export_mapped_attribute_values(app, mapping)
+                        else:
+                            self.env['woo.logs'].sudo().create({
+                                'status': 'failed',
+                                'trigger': 'export',
+                                'description': 'Mapped attribute "%s" export failed: %s' % (
+                                    mapping.woo_attribute_name, error_message
+                                ),
+                            })
+                    else:
+                        self.env['woo.logs'].sudo().create({
+                            'status': 'failed',
+                            'trigger': 'export',
+                            'description': 'Mapped attribute "%s" export failed: %s' % (
+                                mapping.woo_attribute_name, error_message
+                            ),
+                        })
+
+            except Exception as e:
+                self.env['woo.logs'].sudo().create({
+                    'status': 'failed',
+                    'trigger': 'export',
+                    'description': 'Exception exporting mapped attribute "%s": %s' % (
+                        mapping.woo_attribute_name, str(e)
+                    ),
+                })
+
+    def _find_existing_woo_attribute(self, app, slug):
+        """
+        Find an existing WooCommerce attribute by slug.
+        :param app: WooCommerce API instance
+        :param slug: Slug to search for
+        :return: WooCommerce attribute ID or False
+        """
+        try:
+            attributes = app.get("products/attributes").json()
+            for attr in attributes:
+                if attr.get('slug') == slug:
+                    return attr.get('id')
+        except Exception:
+            pass
+        return False
+
+    def _export_mapped_attribute_values(self, app, mapping):
+        """
+        Export all unique values for a mapped attribute.
+        Supports both many2many and selection field types.
+        :param app: WooCommerce API instance
+        :param mapping: woo.attribute.mapping record
+        """
+        if not mapping.woo_attribute_id:
+            return
+
+        slugify = self.env['ir.http']._slugify
+        values_to_export = []
+
+        if mapping.field_type == 'selection':
+            # For selection fields: export all selection options as terms
+            try:
+                field_obj = self.env['product.template']._fields.get(mapping.source_field_name)
+                if field_obj:
+                    selection_list = field_obj.selection
+                    if callable(selection_list):
+                        # Create a dummy record to get selection values
+                        selection_list = selection_list(self.env['product.template'])
+                    for idx, (key, label) in enumerate(selection_list):
+                        values_to_export.append({
+                            'name': label,
+                            'slug': slugify(label)
+                        })
+            except Exception as e:
+                _logger.warning(f"Could not get selection values for {mapping.source_field_name}: {e}")
+                return
+        else:
+            # For many2many fields: export all records from target model
+            if not mapping.target_model:
+                return
+            try:
+                all_values = self.env[mapping.target_model].search([])
+                for value_record in all_values:
+                    value_name = getattr(value_record, mapping.display_field, '')
+                    if value_name:
+                        values_to_export.append({
+                            'name': str(value_name),
+                            'slug': slugify(str(value_name))
+                        })
+            except Exception:
+                _logger.warning(f"Could not access model {mapping.target_model}")
+                return
+
+        # Export all values as terms
+        for value_data in values_to_export:
+            try:
+                value_res = app.post(
+                    f"products/attributes/{mapping.woo_attribute_id}/terms",
+                    value_data
+                ).json()
+
+                if value_res and not value_res.get('code'):
+                    _logger.info(f"Exported attribute value: {value_data['name']}")
+                elif 'exists' in str(value_res.get('code', '')).lower():
+                    _logger.info(f"Attribute value already exists: {value_data['name']}")
+                else:
+                    _logger.warning(f"Failed to export attribute value {value_data['name']}: {value_res.get('message')}")
+
+            except Exception as e:
+                _logger.warning(f"Exception exporting attribute value {value_data['name']}: {e}")
+
+    def _get_mapped_attribute_values(self, product, mapping):
+        """
+        Extract attribute values from a product based on a mapping.
+        Supports both many2many and selection field types.
+        :param product: product.template record
+        :param mapping: woo.attribute.mapping record
+        :return: list of string values
+        """
+        # Use the mapping's method which handles both types
+        return mapping.get_attribute_values_for_product(product)
 
     def create_order(self, orders, instance_id):
         """
@@ -4007,6 +4288,10 @@ class WooOperation(models.TransientModel):
         global api_res
         api_res = requests.get(
             'https://api.exchangerate-api.com/v4/latest/' + self.currency + '').json()
+
+        # Get export mode for products
+        export_mode = instance_id.attribute_export_mode or 'classic'
+
         if records:
             for chunk in records:
                 if type == 'customers':
@@ -4027,12 +4312,19 @@ class WooOperation(models.TransientModel):
                         'data': chunk.ids,
                         'instance_id': instance_id.id,
                     })
-                    self.env['job.cron'].sudo().create({
-                        'model_id': model.id,
-                        'function': "export_selected_product_attributes",
-                        'data': chunk.ids,
-                        'instance_id': instance_id.id,
-                    })
+
+                    # Export attributes based on mode
+                    if export_mode == 'classic':
+                        self.env['job.cron'].sudo().create({
+                            'model_id': model.id,
+                            'function': "export_selected_product_attributes",
+                            'data': chunk.ids,
+                            'instance_id': instance_id.id,
+                        })
+                    elif export_mode == 'mapped':
+                        # Export mapped attributes (synchronous, not via job)
+                        self.mapped_attribute_data_post(instance_id)
+
                     self.env['job.cron'].sudo().create({
                         'model_id': model.id,
                         'function': "export_selected_product_tags",

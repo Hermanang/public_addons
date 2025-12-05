@@ -46,6 +46,7 @@
         'data/ir_cron_data.xml',
         'security/ir.model.access.csv',
         'views/woo_commerce_instance_views.xml',
+        'views/woo_attribute_mapping_views.xml',
         'views/job_cron_views.xml',
         'views/woo_logs_views.xml',
         'views/product_category_views.xml',

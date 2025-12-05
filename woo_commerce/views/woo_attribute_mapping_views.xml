@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Form view for Attribute Mapping -->
+    <record id="woo_attribute_mapping_view_form" model="ir.ui.view">
+        <field name="name">woo.attribute.mapping.view.form</field>
+        <field name="model">woo.attribute.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Attribute Mapping">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="reset_woo_attribute_id" type="object"
+                                class="oe_stat_button" icon="fa-refresh"
+                                string="Reset WC ID"
+                                confirm="This will reset the WooCommerce Attribute ID. The attribute will be re-created on next export. Continue?"
+                                invisible="not woo_attribute_id"/>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group string="Source Configuration">
+                            <field name="instance_id" readonly="woo_attribute_id"/>
+                            <field name="sequence"/>
+                            <field name="source_field_id"
+                                   options="{'no_create': True}"
+                                   readonly="woo_attribute_id"/>
+                            <field name="field_type" readonly="1"/>
+                            <field name="target_model" readonly="1"
+                                   invisible="field_type != 'many2many'"/>
+                            <field name="display_field"
+                                   invisible="field_type != 'many2many'"
+                                   required="field_type == 'many2many'"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="WooCommerce Configuration">
+                            <field name="woo_attribute_name" readonly="woo_attribute_id"/>
+                            <field name="woo_attribute_slug" readonly="1"/>
+                            <field name="woo_attribute_id" readonly="1"/>
+                            <field name="visible_on_product"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view for Attribute Mapping -->
+    <record id="woo_attribute_mapping_view_tree" model="ir.ui.view">
+        <field name="name">woo.attribute.mapping.view.tree</field>
+        <field name="model">woo.attribute.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Attribute Mappings">
+                <field name="sequence" widget="handle"/>
+                <field name="instance_id"/>
+                <field name="source_field_id"/>
+                <field name="field_type"/>
+                <field name="woo_attribute_name"/>
+                <field name="woo_attribute_id" readonly="1"/>
+                <field name="visible_on_product"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action for Attribute Mapping -->
+    <record id="action_woo_attribute_mapping" model="ir.actions.act_window">
+        <field name="name">Attribute Mappings</field>
+        <field name="res_model">woo.attribute.mapping</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure fields to export as WooCommerce attributes
+            </p>
+            <p>
+                Map Odoo fields (Many2many or Selection) to WooCommerce product attributes.
+                Examples: frame_color_ids, frame_material_ids, gender, etc.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu item under WooCommerce Configuration -->
+    <menuitem id="woo_attribute_mapping_menu"
+              name="Attribute Mappings"
+              parent="woo_commerce.woo_commerce_configuration_menu"
+              sequence="50"
+              action="action_woo_attribute_mapping"/>
+</odoo>
