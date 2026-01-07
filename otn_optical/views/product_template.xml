@@ -22,6 +22,8 @@
                             <field name="lens_material"/>
                             <field name="lens_diameter"/>
                             <field name="lens_index"/>
+                            <field name="lens_thickness_ids" widget="many2many_tags"/>
+                            <field name="lens_tint_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <table class="table table-bordered">
@@ -123,6 +125,8 @@
             <xpath expr="//field[@name='product_properties']" position="after">
                 <field name="lens_type_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="lens_treatment_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="lens_thickness_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="lens_tint_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="frame_material_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="frame_usage_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </xpath>
@@ -145,6 +149,8 @@
             <field name="name" position="after">
                 <field name="lens_type_ids"/>
                 <field name="lens_treatment_ids"/>
+                <field name="lens_thickness_ids"/>
+                <field name="lens_tint_ids"/>
                 <field name="lens_od_sphere"/>
                 <field name="lens_od_cylinder"/>
                 <field name="frame_material_ids"/>

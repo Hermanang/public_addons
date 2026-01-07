@@ -5,3 +5,5 @@ access_lens_type,product.lens.type,model_product_lens_type,base.group_user,1,1,1
 access_product_frame_material,product.frame.material,model_product_frame_material,base.group_user,1,1,1,1
 access_product_frame_usage,product.frame.usage,model_product_frame_usage,base.group_user,1,1,1,1
 access_product_frame_color,product.product.frame.color,model_product_frame_color,base.group_user,1,1,1,1
+access_lens_thickness,product.lens.thickness,model_product_lens_thickness,base.group_user,1,1,1,1
+access_lens_tint,product.lens.tint,model_product_lens_tint,base.group_user,1,1,1,1

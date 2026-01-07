@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<odoo>
+    <!--
+        product.lens.tint views
+    -->
+    <record id="product_lens_tint_view_form" model="ir.ui.view">
+        <field name="name">product.lens.tint.view.form</field>
+        <field name="model">product.lens.tint</field>
+        <field name="arch" type="xml">
+            <form string="Teinte de verre">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Gris"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="color" required="True" widget="color_picker"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_lens_tint_view_tree" model="ir.ui.view">
+        <field name="name">product.lens.tint.view.list</field>
+        <field name="model">product.lens.tint</field>
+        <field name="arch" type="xml">
+            <list string="Teintes de verre" editable="bottom" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Teinte de verre Configuration -->
+    <record id="product_lens_tint_action" model="ir.actions.act_window">
+        <field name="name">Teinte de verre</field>
+        <field name="res_model">product.lens.tint</field>
+        <field name="view_id" ref="product_lens_tint_view_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Créer une teinte de verre</p>
+        </field>
+    </record>
+
+    <menuitem
+        name="Teinte de verre"
+        id="menu_lens_tint"
+        action="product_lens_tint_action"
+        parent="sale.prod_config_main"
+    />
+</odoo>

@@ -33,6 +33,8 @@ class ProductTemplate(models.Model):
     ], string='Matière')
     lens_diameter = fields.Float('Diamètre')
     lens_index = fields.Float('Indice')
+    lens_thickness_ids = fields.Many2many('product.lens.thickness', string='Épaisseur du verre')
+    lens_tint_ids = fields.Many2many('product.lens.tint', string='Teinte du verre')
 
     # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     frame_shape = fields.Selection([
@@ -119,6 +121,24 @@ class FrameColor(models.Model):
 
     def _get_default_color(self):
         return 5
+
+
+class LensThickness(models.Model):
+    _name = 'product.lens.thickness'
+    _inherit = 'optical.product.attribute.mixin'
+    _description = 'Épaisseur de verre'
+
+    def _get_default_color(self):
+        return 6
+
+
+class LensTint(models.Model):
+    _name = 'product.lens.tint'
+    _inherit = 'optical.product.attribute.mixin'
+    _description = 'Teinte de verre'
+
+    def _get_default_color(self):
+        return 7
 
 
 

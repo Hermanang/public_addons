@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2017 LasLabs Inc.
+    License LGPL-3 or later (http://www.gnu.org/licenses/lgpl.html).
+-->
+<odoo>
+    <data noupdate="1">
+        <!-- Épaisseurs de verre -->
+        <record id="lens_thickness_base" model="product.lens.thickness">
+            <field name="name">Épaisseur de base</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="lens_thickness_aminci" model="product.lens.thickness">
+            <field name="name">Aminci (conseillé)</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="lens_thickness_super_aminci" model="product.lens.thickness">
+            <field name="name">Super Aminci</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="lens_thickness_extra_aminci" model="product.lens.thickness">
+            <field name="name">Extra Aminci</field>
+            <field name="sequence">40</field>
+        </record>
+
+        <!-- Teintes de verre -->
+        <record id="lens_tint_blanc" model="product.lens.tint">
+            <field name="name">Blanc</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="lens_tint_gris" model="product.lens.tint">
+            <field name="name">Gris</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="lens_tint_marron" model="product.lens.tint">
+            <field name="name">Marron</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="lens_tint_vert" model="product.lens.tint">
+            <field name="name">Vert</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="lens_tint_jaune" model="product.lens.tint">
+            <field name="name">Jaune</field>
+            <field name="sequence">50</field>
+        </record>
+    </data>
+</odoo>
