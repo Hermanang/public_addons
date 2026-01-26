@@ -155,10 +155,12 @@ class SaleOrder(models.Model):
         Delete the order from WooCommerce and remove it from Odoo.
         """
         for order in self:
+            if not order.instance_id or not order.woo_id:
+                continue
             wcapi = API(
-                url="" + self.instance_id.store_url + "/index.php/",
-                consumer_key=self.instance_id.consumer_key,
-                consumer_secret=self.instance_id.consumer_secret,
+                url="" + order.instance_id.store_url + "/index.php/",
+                consumer_key=order.instance_id.consumer_key,
+                consumer_secret=order.instance_id.consumer_secret,
                 wp_api=True,
                 version="wc/v3"
             )
@@ -170,7 +172,8 @@ class SaleOrder(models.Model):
         Cancel the order in WooCommerce and then call Odoo's default
         cancel action.
         """
-        self.action_cancel_from_woo()
+        if self.instance_id and self.woo_id:
+            self.action_cancel_from_woo()
         return super(SaleOrder, self).action_cancel()
 
     def action_cancel_from_woo(self):
@@ -178,13 +181,15 @@ class SaleOrder(models.Model):
         Update the order status to 'cancelled' in WooCommerce.
         """
         for order in self:
+            if not order.instance_id or not order.woo_id:
+                continue
             data = {
                 "status": "cancelled"
             }
             wcapi = API(
-                url="" + self.instance_id.store_url + "/index.php/",
-                consumer_key=self.instance_id.consumer_key,
-                consumer_secret=self.instance_id.consumer_secret,
+                url="" + order.instance_id.store_url + "/index.php/",
+                consumer_key=order.instance_id.consumer_key,
+                consumer_secret=order.instance_id.consumer_secret,
                 wp_api=True,
                 version="wc/v3"
             )
