@@ -63,7 +63,9 @@ class SaleOrder(models.Model):
         """
         if self.woo_order_status != 'completed':
             for order in self.order_line:
-                order.qty_invoiced = 0
+                # Ne pas toucher les lignes d'acompte
+                if not order.is_downpayment:
+                    order.qty_invoiced = 0
         self.state_check = True
 
     @api.model
