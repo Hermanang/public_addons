@@ -11,7 +11,7 @@
     "license": "LGPL-3",
     "application": False,
     "installable": True,
-    "depends": ["sale_management", "contacts"],
+    "depends": ["sale_management", "contacts", "partner_multi_relation"],
     "data": [
         "security/ir.model.access.csv",
 
@@ -20,6 +20,7 @@
 
         "data/ir_sequence_data.xml",
         "data/partner_category_data.xml",
+        "data/partner_relation_type_data.xml",
         "data/product_lens_data.xml",
         "views/prescription_views.xml",
         "views/res_partner.xml",
@@ -32,6 +33,7 @@
         "views/product_lens_thickness_views.xml",
         "views/product_lens_tint_views.xml",
         "views/product_frame_material_views.xml",
+        "views/optical_sale_report_views.xml",
     ],
     "images": ["static/description/icon.png"],
 }

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =====================================================
+         RAPPORT PRODUIT - Analyse par propriétés produit
+         ===================================================== -->
+
+    <!-- Vue Pivot - Produit -->
+    <record id="view_optical_sale_product_report_pivot" model="ir.ui.view">
+        <field name="name">report.optical.sale.product.pivot</field>
+        <field name="model">report.optical.sale.product</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse par produit" sample="1">
+                <field name="invoice_date" type="row" interval="month"/>
+                <field name="frame_shape" type="col"/>
+                <field name="price_subtotal" type="measure"/>
+                <field name="quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vue Graph - Produit -->
+    <record id="view_optical_sale_product_report_graph" model="ir.ui.view">
+        <field name="name">report.optical.sale.product.graph</field>
+        <field name="model">report.optical.sale.product</field>
+        <field name="arch" type="xml">
+            <graph string="Analyse par produit" type="bar" sample="1">
+                <field name="frame_shape"/>
+                <field name="price_subtotal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue Liste - Produit -->
+    <record id="view_optical_sale_product_report_list" model="ir.ui.view">
+        <field name="name">report.optical.sale.product.list</field>
+        <field name="model">report.optical.sale.product</field>
+        <field name="arch" type="xml">
+            <list string="Analyse par produit" create="0" edit="0" delete="0">
+                <field name="invoice_date"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="optical_product_type"/>
+                <field name="frame_shape"/>
+                <field name="frame_gender"/>
+                <field name="frame_rim_type"/>
+                <field name="lens_material"/>
+                <field name="quantity" sum="Total"/>
+                <field name="price_subtotal" sum="Total CA HT"/>
+                <field name="price_total" sum="Total CA TTC"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue Search - Produit -->
+    <record id="view_optical_sale_product_report_search" model="ir.ui.view">
+        <field name="name">report.optical.sale.product.search</field>
+        <field name="model">report.optical.sale.product</field>
+        <field name="arch" type="xml">
+            <search string="Analyse par produit">
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <filter name="filter_montures" string="Montures" domain="[('optical_product_type', '=', 'frames')]"/>
+                <filter name="filter_verres" string="Verres" domain="[('optical_product_type', '=', 'lenses')]"/>
+                <filter name="filter_lentilles" string="Lentilles" domain="[('optical_product_type', '=', 'contact_lenses')]"/>
+                <separator/>
+                <filter name="filter_date" string="Date facture" date="invoice_date"/>
+                <group expand="1" string="Grouper par">
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'invoice_date:month'}"/>
+                    <filter name="groupby_product_type" string="Type produit" context="{'group_by': 'optical_product_type'}"/>
+                    <filter name="groupby_frame_shape" string="Forme monture" context="{'group_by': 'frame_shape'}"/>
+                    <filter name="groupby_frame_gender" string="Genre" context="{'group_by': 'frame_gender'}"/>
+                    <filter name="groupby_frame_rim" string="Type cercle" context="{'group_by': 'frame_rim_type'}"/>
+                    <filter name="groupby_lens_material" string="Matière verre" context="{'group_by': 'lens_material'}"/>
+                    <filter name="groupby_partner" string="Client" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Filtres prédéfinis - Produit -->
+    <record id="filter_optical_product_by_shape" model="ir.filters">
+        <field name="name">Par forme de monture</field>
+        <field name="model_id">report.optical.sale.product</field>
+        <field name="domain">[('optical_product_type', '=', 'frames')]</field>
+        <field name="context">{'group_by': ['frame_shape']}</field>
+        <field name="is_default">False</field>
+    </record>
+
+    <record id="filter_optical_product_this_month" model="ir.filters">
+        <field name="name">Montures ce mois</field>
+        <field name="model_id">report.optical.sale.product</field>
+        <field name="domain">[('optical_product_type', '=', 'frames')]</field>
+        <field name="context">{'group_by': ['frame_shape']}</field>
+        <field name="is_default">False</field>
+    </record>
+
+    <!-- Action - Produit -->
+    <record id="action_optical_sale_product_report" model="ir.actions.act_window">
+        <field name="name">Analyse par produit</field>
+        <field name="res_model">report.optical.sale.product</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Pas de données de ventes optiques
+            </p>
+            <p>
+                Ce rapport analyse les ventes par propriétés des produits optiques
+                (forme, matière, genre des montures).
+            </p>
+        </field>
+    </record>
+
+    <!-- =====================================================
+         RAPPORT ASSURANCE - Analyse par assurance/IPM
+         ===================================================== -->
+
+    <!-- Vue Pivot - Assurance -->
+    <record id="view_optical_sale_insurance_report_pivot" model="ir.ui.view">
+        <field name="name">report.optical.sale.insurance.pivot</field>
+        <field name="model">report.optical.sale.insurance</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse par assurance" sample="1">
+                <field name="invoice_date" type="row" interval="month"/>
+                <field name="insurance_id" type="col"/>
+                <field name="price_subtotal" type="measure"/>
+                <field name="nbr_customers" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vue Graph - Assurance -->
+    <record id="view_optical_sale_insurance_report_graph" model="ir.ui.view">
+        <field name="name">report.optical.sale.insurance.graph</field>
+        <field name="model">report.optical.sale.insurance</field>
+        <field name="arch" type="xml">
+            <graph string="Analyse par assurance" type="bar" sample="1">
+                <field name="insurance_id"/>
+                <field name="price_subtotal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue Liste - Assurance -->
+    <record id="view_optical_sale_insurance_report_list" model="ir.ui.view">
+        <field name="name">report.optical.sale.insurance.list</field>
+        <field name="model">report.optical.sale.insurance</field>
+        <field name="arch" type="xml">
+            <list string="Analyse par assurance" create="0" edit="0" delete="0">
+                <field name="invoice_date"/>
+                <field name="partner_id"/>
+                <field name="insurance_id"/>
+                <field name="quantity" sum="Total"/>
+                <field name="price_subtotal" sum="Total CA HT"/>
+                <field name="price_total" sum="Total CA TTC"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue Search - Assurance -->
+    <record id="view_optical_sale_insurance_report_search" model="ir.ui.view">
+        <field name="name">report.optical.sale.insurance.search</field>
+        <field name="model">report.optical.sale.insurance</field>
+        <field name="arch" type="xml">
+            <search string="Analyse par assurance">
+                <field name="partner_id"/>
+                <field name="insurance_id"/>
+                <filter name="filter_with_insurance" string="Avec assurance" domain="[('insurance_id', '!=', False)]"/>
+                <filter name="filter_no_insurance" string="Sans assurance" domain="[('insurance_id', '=', False)]"/>
+                <separator/>
+                <filter name="filter_date" string="Date facture" date="invoice_date"/>
+                <group expand="1" string="Grouper par">
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'invoice_date:month'}"/>
+                    <filter name="groupby_insurance" string="Assurance/IPM" context="{'group_by': 'insurance_id'}"/>
+                    <filter name="groupby_partner" string="Client" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action - Assurance -->
+    <record id="action_optical_sale_insurance_report" model="ir.actions.act_window">
+        <field name="name">Analyse par assurance</field>
+        <field name="res_model">report.optical.sale.insurance</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Pas de données de ventes optiques
+            </p>
+            <p>
+                Ce rapport analyse les ventes par assurance ou IPM du patient.
+            </p>
+        </field>
+    </record>
+
+    <!-- =====================================================
+         RAPPORT PRESCRIPTEUR - Analyse par prescripteur/cabinet
+         ===================================================== -->
+
+    <!-- Vue Pivot - Prescripteur -->
+    <record id="view_optical_sale_prescriber_report_pivot" model="ir.ui.view">
+        <field name="name">report.optical.sale.prescriber.pivot</field>
+        <field name="model">report.optical.sale.prescriber</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse par prescripteur" sample="1">
+                <field name="clinic_id" type="row"/>
+                <field name="prescriber_id" type="row"/>
+                <field name="invoice_date" type="col" interval="month"/>
+                <field name="price_subtotal" type="measure"/>
+                <field name="nbr_customers" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vue Graph - Prescripteur -->
+    <record id="view_optical_sale_prescriber_report_graph" model="ir.ui.view">
+        <field name="name">report.optical.sale.prescriber.graph</field>
+        <field name="model">report.optical.sale.prescriber</field>
+        <field name="arch" type="xml">
+            <graph string="Analyse par prescripteur" type="bar" sample="1">
+                <field name="prescriber_id"/>
+                <field name="price_subtotal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue Liste - Prescripteur -->
+    <record id="view_optical_sale_prescriber_report_list" model="ir.ui.view">
+        <field name="name">report.optical.sale.prescriber.list</field>
+        <field name="model">report.optical.sale.prescriber</field>
+        <field name="arch" type="xml">
+            <list string="Analyse par prescripteur" create="0" edit="0" delete="0">
+                <field name="invoice_date"/>
+                <field name="partner_id"/>
+                <field name="prescriber_id"/>
+                <field name="clinic_id"/>
+                <field name="quantity" sum="Total"/>
+                <field name="price_subtotal" sum="Total CA HT"/>
+                <field name="price_total" sum="Total CA TTC"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue Search - Prescripteur -->
+    <record id="view_optical_sale_prescriber_report_search" model="ir.ui.view">
+        <field name="name">report.optical.sale.prescriber.search</field>
+        <field name="model">report.optical.sale.prescriber</field>
+        <field name="arch" type="xml">
+            <search string="Analyse par prescripteur">
+                <field name="partner_id"/>
+                <field name="prescriber_id"/>
+                <field name="clinic_id"/>
+                <filter name="filter_with_prescriber" string="Avec prescripteur" domain="[('prescriber_id', '!=', False)]"/>
+                <filter name="filter_no_prescriber" string="Sans prescripteur" domain="[('prescriber_id', '=', False)]"/>
+                <separator/>
+                <filter name="filter_date" string="Date facture" date="invoice_date"/>
+                <group expand="1" string="Grouper par">
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'invoice_date:month'}"/>
+                    <filter name="groupby_clinic" string="Cabinet" context="{'group_by': 'clinic_id'}"/>
+                    <filter name="groupby_prescriber" string="Prescripteur" context="{'group_by': 'prescriber_id'}"/>
+                    <filter name="groupby_partner" string="Client" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action - Prescripteur -->
+    <record id="action_optical_sale_prescriber_report" model="ir.actions.act_window">
+        <field name="name">Analyse par prescripteur</field>
+        <field name="res_model">report.optical.sale.prescriber</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Pas de données de ventes optiques
+            </p>
+            <p>
+                Ce rapport analyse les ventes par médecin prescripteur et cabinet.
+            </p>
+        </field>
+    </record>
+
+    <!-- =====================================================
+         RAPPORT SOUSCRIPTEUR - Analyse par souscripteur
+         ===================================================== -->
+
+    <!-- Vue Pivot - Souscripteur -->
+    <record id="view_optical_sale_subscriber_report_pivot" model="ir.ui.view">
+        <field name="name">report.optical.sale.subscriber.pivot</field>
+        <field name="model">report.optical.sale.subscriber</field>
+        <field name="arch" type="xml">
+            <pivot string="Analyse par souscripteur" sample="1">
+                <field name="invoice_date" type="row" interval="month"/>
+                <field name="subscriber_id" type="col"/>
+                <field name="price_subtotal" type="measure"/>
+                <field name="nbr_customers" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vue Graph - Souscripteur -->
+    <record id="view_optical_sale_subscriber_report_graph" model="ir.ui.view">
+        <field name="name">report.optical.sale.subscriber.graph</field>
+        <field name="model">report.optical.sale.subscriber</field>
+        <field name="arch" type="xml">
+            <graph string="Analyse par souscripteur" type="bar" sample="1">
+                <field name="subscriber_id"/>
+                <field name="price_subtotal" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vue Liste - Souscripteur -->
+    <record id="view_optical_sale_subscriber_report_list" model="ir.ui.view">
+        <field name="name">report.optical.sale.subscriber.list</field>
+        <field name="model">report.optical.sale.subscriber</field>
+        <field name="arch" type="xml">
+            <list string="Analyse par souscripteur" create="0" edit="0" delete="0">
+                <field name="invoice_date"/>
+                <field name="partner_id"/>
+                <field name="subscriber_id"/>
+                <field name="quantity" sum="Total"/>
+                <field name="price_subtotal" sum="Total CA HT"/>
+                <field name="price_total" sum="Total CA TTC"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue Search - Souscripteur -->
+    <record id="view_optical_sale_subscriber_report_search" model="ir.ui.view">
+        <field name="name">report.optical.sale.subscriber.search</field>
+        <field name="model">report.optical.sale.subscriber</field>
+        <field name="arch" type="xml">
+            <search string="Analyse par souscripteur">
+                <field name="partner_id"/>
+                <field name="subscriber_id"/>
+                <filter name="filter_with_subscriber" string="Avec souscripteur" domain="[('subscriber_id', '!=', False)]"/>
+                <filter name="filter_no_subscriber" string="Sans souscripteur" domain="[('subscriber_id', '=', False)]"/>
+                <separator/>
+                <filter name="filter_date" string="Date facture" date="invoice_date"/>
+                <group expand="1" string="Grouper par">
+                    <filter name="groupby_date" string="Date" context="{'group_by': 'invoice_date:month'}"/>
+                    <filter name="groupby_subscriber" string="Souscripteur" context="{'group_by': 'subscriber_id'}"/>
+                    <filter name="groupby_partner" string="Client" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action - Souscripteur -->
+    <record id="action_optical_sale_subscriber_report" model="ir.actions.act_window">
+        <field name="name">Analyse par souscripteur</field>
+        <field name="res_model">report.optical.sale.subscriber</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Pas de données de ventes optiques
+            </p>
+            <p>
+                Ce rapport analyse les ventes par entreprise souscriptrice (employeur du patient).
+            </p>
+        </field>
+    </record>
+
+    <!-- =====================================================
+         MENUS
+         ===================================================== -->
+
+    <!-- Menu parent Analyse Optique sous Ventes > Analyse -->
+    <menuitem
+        id="menu_optical_analysis"
+        name="Analyse Optique"
+        parent="sale.menu_sale_report"
+        sequence="30"
+        groups="sales_team.group_sale_salesman"/>
+
+    <!-- Sous-menus -->
+    <menuitem
+        id="menu_optical_analysis_product"
+        name="Par produit"
+        parent="menu_optical_analysis"
+        action="action_optical_sale_product_report"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_optical_analysis_insurance"
+        name="Par assurance"
+        parent="menu_optical_analysis"
+        action="action_optical_sale_insurance_report"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_optical_analysis_prescriber"
+        name="Par prescripteur"
+        parent="menu_optical_analysis"
+        action="action_optical_sale_prescriber_report"
+        sequence="30"/>
+
+    <menuitem
+        id="menu_optical_analysis_subscriber"
+        name="Par souscripteur"
+        parent="menu_optical_analysis"
+        action="action_optical_sale_subscriber_report"
+        sequence="40"/>
+
+</odoo>

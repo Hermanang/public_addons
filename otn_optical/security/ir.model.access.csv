@@ -7,3 +7,7 @@ access_product_frame_usage,product.frame.usage,model_product_frame_usage,base.gr
 access_product_frame_color,product.product.frame.color,model_product_frame_color,base.group_user,1,1,1,1
 access_lens_thickness,product.lens.thickness,model_product_lens_thickness,base.group_user,1,1,1,1
 access_lens_tint,product.lens.tint,model_product_lens_tint,base.group_user,1,1,1,1
+access_report_optical_sale_product,report.optical.sale.product,model_report_optical_sale_product,base.group_user,1,0,0,0
+access_report_optical_sale_insurance,report.optical.sale.insurance,model_report_optical_sale_insurance,base.group_user,1,0,0,0
+access_report_optical_sale_prescriber,report.optical.sale.prescriber,model_report_optical_sale_prescriber,base.group_user,1,0,0,0
+access_report_optical_sale_subscriber,report.optical.sale.subscriber,model_report_optical_sale_subscriber,base.group_user,1,0,0,0

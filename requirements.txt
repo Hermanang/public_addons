@@ -1,6 +1,7 @@
 dropbox
 pyncclient
 boto3
+packaging
 nextcloud-api-wrapper
 paramiko
 woocommerce

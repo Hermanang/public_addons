@@ -21,6 +21,20 @@
                         <span class="o_stat_text">Prescriptions</span>
                     </div>
                 </button>
+                <button type="object" class="oe_stat_button" icon="fa-money"
+                        name="action_view_prescriber_invoices"
+                        groups="account.group_account_invoice,account.group_account_readonly"
+                        invisible="not is_prescriber">
+                    <field name="is_prescriber" invisible="1"/>
+                    <div class="o_form_field o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="prescriber_total_ht" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                        </span>
+                        <span class="o_stat_text">CA Prescriptions</span>
+                    </div>
+                </button>
             </div>
         </field>
     </record>
