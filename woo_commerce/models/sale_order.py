@@ -58,15 +58,21 @@ class SaleOrder(models.Model):
 
     def compute_state_change(self):
         """
-        Method to compute invoiced quantity based on the
-        Woocommerce status.
+        Compute state_check based on WooCommerce status.
+
+        TODO: FIX / Le code Cybrosys original forçait qty_invoiced = 0 sur les
+        lignes de commande quand woo_order_status != 'completed', afin de
+        bloquer invoice_status. Ce hack corrompait qty_invoiced (champ
+        computed stored natif Odoo) et cassait :
+          - la facturation partielle / split-facture
+          - les acomptes (downpayment)
+          - toute recompute native (Odoo écrase le hack)
+        Solution à implémenter : bloquer la facturation via un override de
+        _create_invoices() ou _get_invoiced() au lieu de manipuler
+        qty_invoiced. Voir discussion party-mode 2026-03-16.
         """
-        if self.woo_order_status != 'completed':
-            for order in self.order_line:
-                # Ne pas toucher les lignes d'acompte
-                if not order.is_downpayment:
-                    order.qty_invoiced = 0
-        self.state_check = True
+        for order in self:
+            order.state_check = bool(order.woo_order_status)
 
     @api.model
     def get_tile_details(self):

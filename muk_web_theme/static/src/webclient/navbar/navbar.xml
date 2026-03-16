@@ -37,7 +37,7 @@
 								src="/base/static/description/icon.png"
 							/>
 							<span class="mk_app_name">
-								<t t-out="app.name"/>
+								<t t-out="app.label"/>
 							</span>
 						</a>
 					</DropdownItem>

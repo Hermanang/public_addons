@@ -7,7 +7,7 @@ patch(many2OneField, {
     extractProps({ options }) {
         let res = super.extractProps(...arguments);
         if (
-            session.disable_quick_create && 
+            session.disable_quick_create &&
             options.no_quick_create == undefined
         ) {
             res.canQuickCreate = false;
