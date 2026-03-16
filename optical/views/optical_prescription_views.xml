@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== Vue Search ===== -->
+    <record id="optical_prescription_view_search" model="ir.ui.view">
+        <field name="name">optical.prescription.search</field>
+        <field name="model">optical.prescription</field>
+        <field name="arch" type="xml">
+            <search string="Ordonnances">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="prescriber_id"/>
+                <separator/>
+                <filter name="state_draft" string="Brouillon"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="state_confirmed" string="Confirmés"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <filter name="state_expired" string="Expirés"
+                        domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_patient" string="Patient"
+                            context="{'group_by': 'patient_id'}"/>
+                    <filter name="group_prescriber" string="Prescripteur"
+                            context="{'group_by': 'prescriber_id'}"/>
+                    <filter name="group_date" string="Date"
+                            context="{'group_by': 'date'}"/>
+                    <filter name="group_state" string="État"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===== Vue Tree ===== -->
+    <record id="optical_prescription_view_tree" model="ir.ui.view">
+        <field name="name">optical.prescription.tree</field>
+        <field name="model">optical.prescription</field>
+        <field name="arch" type="xml">
+            <list string="Ordonnances"
+                  decoration-danger="state == 'expired'"
+                  decoration-success="state == 'confirmed'">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="prescriber_id"/>
+                <field name="date"/>
+                <field name="date_expiry"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"
+                       decoration-danger="state == 'expired'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ===== Vue Form ===== -->
+    <record id="optical_prescription_view_form" model="ir.ui.view">
+        <field name="name">optical.prescription.form</field>
+        <field name="model">optical.prescription</field>
+        <field name="arch" type="xml">
+            <form string="Ordonnance">
+                <header>
+                    <button name="action_confirm"
+                            string="Confirmer"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset_to_draft"
+                            string="Remettre en brouillon"
+                            type="object"
+                            invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <div class="alert alert-warning text-center"
+                     invisible="active"
+                     role="alert">
+                    <strong>Archivée</strong> — Cette ordonnance est archivée.
+                </div>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="patient_id" readonly="state != 'draft'"/>
+                            <field name="prescriber_id" readonly="state != 'draft'" context="{'default_is_prescriber': True}"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="date_expiry"/>
+                            <field name="vision_type" readonly="state != 'draft'"/>
+                            <field name="measure_type" readonly="state != 'draft'"/>
+                            <field name="measure_date" readonly="state != 'draft'"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mesures OD/OG" name="measures">
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th/>
+                                        <th>Sphère</th><th>Cylindre</th><th>Axe</th>
+                                        <th>Addition</th><th>Prisme</th><th>Base</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>OD</strong></td>
+                                        <td><field name="od_sphere" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_cylinder" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_axis" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_addition" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_prism" widget="optical_diopter" options="{'step': 0.01}" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_prism_base" readonly="state != 'draft'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>OG</strong></td>
+                                        <td><field name="og_sphere" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_cylinder" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_axis" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_addition" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_prism" widget="optical_diopter" options="{'step': 0.01}" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_prism_base" readonly="state != 'draft'"/></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <group>
+                                <group>
+                                    <field name="pd_total" readonly="state != 'draft'"/>
+                                </group>
+                                <group>
+                                    <field name="od_pd" readonly="state != 'draft'"/>
+                                    <field name="og_pd" readonly="state != 'draft'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Observations" name="notes">
+                            <field name="notes" readonly="state != 'draft'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== Action Window ===== -->
+    <record id="optical_prescription_action" model="ir.actions.act_window">
+        <field name="name">Ordonnances</field>
+        <field name="res_model">optical.prescription</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_state_confirmed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une ordonnance
+            </p>
+        </field>
+    </record>
+
+</odoo>

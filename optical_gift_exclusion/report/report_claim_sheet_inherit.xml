@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_claim_sheet_gift_filter"
+              inherit_id="optical.report_claim_sheet_document">
+
+        <!-- Le filtrage des lignes is_gift est fait via le hook Python
+             _get_invoice_product_lines() — plus besoin de xpath ici -->
+
+        <!-- Montant en lettres : utiliser le total hors cadeaux -->
+        <xpath expr="//t[@t-esc='o.amount_to_text()']" position="attributes">
+            <attribute name="t-esc">o._amount_to_text(tax_summary['amount_total'])</attribute>
+        </xpath>
+
+    </template>
+
+</odoo>

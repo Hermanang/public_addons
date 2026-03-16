@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Record Rules pour le module Optique
+            ====================================
+            Les regles de filtrage OU sont fournies par le module
+            bridge optical_operating_unit (si installe).
+        -->
+
+    </data>
+</odoo>

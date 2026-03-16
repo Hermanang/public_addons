@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Traitement de verre (optical.lens.treatment)                 -->
+    <!-- ============================================================ -->
+
+    <record id="optical_lens_treatment_view_list" model="ir.ui.view">
+        <field name="name">optical.lens.treatment.list</field>
+        <field name="model">optical.lens.treatment</field>
+        <field name="arch" type="xml">
+            <list string="Traitements verres" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="optical_lens_treatment_view_form" model="ir.ui.view">
+        <field name="name">optical.lens.treatment.form</field>
+        <field name="model">optical.lens.treatment</field>
+        <field name="arch" type="xml">
+            <form string="Traitement verre">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom du traitement"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_lens_treatment_action" model="ir.actions.act_window">
+        <field name="name">Traitements verres</field>
+        <field name="res_model">optical.lens.treatment</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un traitement de verre
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Teinte de verre (optical.lens.tint)                          -->
+    <!-- ============================================================ -->
+
+    <record id="optical_lens_tint_view_list" model="ir.ui.view">
+        <field name="name">optical.lens.tint.list</field>
+        <field name="model">optical.lens.tint</field>
+        <field name="arch" type="xml">
+            <list string="Teintes verres" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="optical_lens_tint_view_form" model="ir.ui.view">
+        <field name="name">optical.lens.tint.form</field>
+        <field name="model">optical.lens.tint</field>
+        <field name="arch" type="xml">
+            <form string="Teinte verre">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom de la teinte"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_lens_tint_action" model="ir.actions.act_window">
+        <field name="name">Teintes verres</field>
+        <field name="res_model">optical.lens.tint</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une teinte de verre
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Matériau de monture (optical.frame.material)                 -->
+    <!-- ============================================================ -->
+
+    <record id="optical_frame_material_view_list" model="ir.ui.view">
+        <field name="name">optical.frame.material.list</field>
+        <field name="model">optical.frame.material</field>
+        <field name="arch" type="xml">
+            <list string="Matériaux montures" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="optical_frame_material_view_form" model="ir.ui.view">
+        <field name="name">optical.frame.material.form</field>
+        <field name="model">optical.frame.material</field>
+        <field name="arch" type="xml">
+            <form string="Matériau monture">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom du matériau"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_frame_material_action" model="ir.actions.act_window">
+        <field name="name">Matériaux montures</field>
+        <field name="res_model">optical.frame.material</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un matériau de monture
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Couleur de monture (optical.frame.color)                     -->
+    <!-- ============================================================ -->
+
+    <record id="optical_frame_color_view_list" model="ir.ui.view">
+        <field name="name">optical.frame.color.list</field>
+        <field name="model">optical.frame.color</field>
+        <field name="arch" type="xml">
+            <list string="Couleurs montures" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="optical_frame_color_view_form" model="ir.ui.view">
+        <field name="name">optical.frame.color.form</field>
+        <field name="model">optical.frame.color</field>
+        <field name="arch" type="xml">
+            <form string="Couleur monture">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom de la couleur"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_frame_color_action" model="ir.actions.act_window">
+        <field name="name">Couleurs montures</field>
+        <field name="res_model">optical.frame.color</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une couleur de monture
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Usage de monture (optical.frame.usage)                       -->
+    <!-- ============================================================ -->
+
+    <record id="optical_frame_usage_view_list" model="ir.ui.view">
+        <field name="name">optical.frame.usage.list</field>
+        <field name="model">optical.frame.usage</field>
+        <field name="arch" type="xml">
+            <list string="Usages montures" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="optical_frame_usage_view_form" model="ir.ui.view">
+        <field name="name">optical.frame.usage.form</field>
+        <field name="model">optical.frame.usage</field>
+        <field name="arch" type="xml">
+            <form string="Usage monture">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom de l'usage"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_frame_usage_action" model="ir.actions.act_window">
+        <field name="name">Usages montures</field>
+        <field name="res_model">optical.frame.usage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un usage de monture
+            </p>
+        </field>
+    </record>
+
+</odoo>

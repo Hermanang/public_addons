@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue liste (utilisée en inline dans le form plan) -->
+    <record id="optical_coverage_rule_view_tree" model="ir.ui.view">
+        <field name="name">optical.coverage.rule.tree</field>
+        <field name="model">optical.coverage.rule</field>
+        <field name="arch" type="xml">
+            <list string="Règles de couverture">
+                <field name="sequence" widget="handle"/>
+                <field name="product_category"/>
+                <field name="coverage_rate"/>
+                <field name="reference_price"/>
+                <field name="annual_ceiling"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue formulaire (accès standalone) -->
+    <record id="optical_coverage_rule_view_form" model="ir.ui.view">
+        <field name="name">optical.coverage.rule.form</field>
+        <field name="model">optical.coverage.rule</field>
+        <field name="arch" type="xml">
+            <form string="Règle de couverture">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="plan_id"/>
+                            <field name="product_category"/>
+                            <field name="coverage_rate"/>
+                        </group>
+                        <group>
+                            <field name="reference_price"/>
+                            <field name="annual_ceiling"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action window -->
+    <record id="optical_coverage_rule_action" model="ir.actions.act_window">
+        <field name="name">Règles de couverture</field>
+        <field name="res_model">optical.coverage.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

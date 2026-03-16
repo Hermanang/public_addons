@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Colonnes disponibles pour le bordereau (report_type='claim_sheet') -->
+
+    <record id="column_date" model="report.dynamic.column">
+        <field name="name">Date</field>
+        <field name="technical_name">date</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">10</field>
+        <field name="figure_type">date</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="True"/>
+        <field name="default_ipm" eval="True"/>
+    </record>
+
+    <record id="column_reference" model="report.dynamic.column">
+        <field name="name">Reference</field>
+        <field name="technical_name">reference</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">20</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="True"/>
+        <field name="default_ipm" eval="True"/>
+    </record>
+
+    <record id="column_subscriber" model="report.dynamic.column">
+        <field name="name">Souscripteur</field>
+        <field name="technical_name">subscriber</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">30</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="True"/>
+        <field name="default_ipm" eval="False"/>
+    </record>
+
+    <record id="column_participant" model="report.dynamic.column">
+        <field name="name">Participant</field>
+        <field name="technical_name">participant</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">35</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="False"/>
+        <field name="default_ipm" eval="True"/>
+    </record>
+
+    <record id="column_beneficiary" model="report.dynamic.column">
+        <field name="name">Beneficiaire</field>
+        <field name="technical_name">beneficiary</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">40</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="True"/>
+        <field name="default_ipm" eval="True"/>
+    </record>
+
+    <record id="column_partner_ref" model="report.dynamic.column">
+        <field name="name">Ref. organisme</field>
+        <field name="technical_name">partner_ref</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">45</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="False"/>
+        <field name="default_ipm" eval="True"/>
+    </record>
+
+    <record id="column_pec_number" model="report.dynamic.column">
+        <field name="name">N° PEC</field>
+        <field name="technical_name">pec_number</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">50</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="False"/>
+        <field name="default_ipm" eval="False"/>
+    </record>
+
+    <record id="column_policy_number" model="report.dynamic.column">
+        <field name="name">N° Police</field>
+        <field name="technical_name">policy_number</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">55</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="True"/>
+        <field name="default_ipm" eval="False"/>
+    </record>
+
+    <record id="column_product_name" model="report.dynamic.column">
+        <field name="name">Denomination</field>
+        <field name="technical_name">product_name</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">60</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="True"/>
+        <field name="default_ipm" eval="True"/>
+    </record>
+
+    <record id="column_optical_type" model="report.dynamic.column">
+        <field name="name">Type optique</field>
+        <field name="technical_name">optical_type</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">65</field>
+        <field name="figure_type">text</field>
+        <field name="alignment">left</field>
+        <field name="default_insurance" eval="False"/>
+        <field name="default_ipm" eval="False"/>
+    </record>
+
+    <record id="column_amount_untaxed" model="report.dynamic.column">
+        <field name="name">Montant HT</field>
+        <field name="technical_name">amount_untaxed</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">70</field>
+        <field name="figure_type">monetary</field>
+        <field name="alignment">right</field>
+        <field name="is_subtotalable" eval="True"/>
+        <field name="default_insurance" eval="False"/>
+        <field name="default_ipm" eval="False"/>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="column_amount_total" model="report.dynamic.column">
+        <field name="name">Montant</field>
+        <field name="technical_name">amount_total</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">80</field>
+        <field name="figure_type">monetary</field>
+        <field name="alignment">right</field>
+        <field name="is_subtotalable" eval="True"/>
+        <field name="default_insurance" eval="True"/>
+        <field name="default_ipm" eval="True"/>
+    </record>
+
+    <record id="column_amount_tax" model="report.dynamic.column">
+        <field name="name">Dont TVA</field>
+        <field name="technical_name">amount_tax</field>
+        <field name="report_type">claim_sheet</field>
+        <field name="sequence">85</field>
+        <field name="figure_type">monetary</field>
+        <field name="alignment">right</field>
+        <field name="is_subtotalable" eval="True"/>
+        <field name="default_insurance" eval="False"/>
+        <field name="default_ipm" eval="False"/>
+        <field name="active" eval="False"/>
+    </record>
+
+</odoo>

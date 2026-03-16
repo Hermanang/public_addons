@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Declaration du rapport -->
+    <record id="action_report_claim_sheet" model="ir.actions.report">
+        <field name="name">Bordereau</field>
+        <field name="model">optical.claim.sheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">optical.report_claim_sheet_document</field>
+        <field name="report_file">optical.report_claim_sheet_document</field>
+        <field name="print_report_name">
+            'Bordereau%s_%s_%s_%s_%s' % (
+                '_COMP' if object.type == 'complementary' else '_RECT' if object.type == 'rectificative' else '',
+                object.name.replace('/', '-'),
+                object.insurer_id.name,
+                object.date_from,
+                object.date_to,
+            )
+        </field>
+    </record>
+
+    <!-- Template QWeb -->
+    <template id="report_claim_sheet_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">
+                            BORDEREAU
+                            <t t-if="o.type == 'complementary'"> COMPLEMENTAIRE</t>
+                            <t t-if="o.type == 'rectificative'"> RECTIFICATIF</t>
+                        </h2>
+                        <t t-if="o.parent_id">
+                            <p class="text-center"><strong>Ref. bordereau d'origine :</strong> <t t-esc="o.parent_id.name"/></p>
+                        </t>
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <strong>Assureur / IPM :</strong> <t t-esc="o.insurer_id.name"/>
+                            </div>
+                            <div class="col-3 text-center">
+                                <strong>Reference :</strong> <t t-esc="o.name"/>
+                            </div>
+                            <div class="col-3 text-end">
+                                <strong>Periode :</strong>
+                                <t t-out="o.date_from" t-options='{"widget": "date"}'/>
+                                au
+                                <t t-out="o.date_to" t-options='{"widget": "date"}'/>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <strong>Date d'edition :</strong>
+                                <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                            </div>
+                        </div>
+
+                        <!-- Tableau principal -->
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>DATE</th>
+                                    <th>REFERENCE</th>
+                                    <th t-if="o.insurer_id.insurer_type == 'insurance'">SOUSCRIPTEUR</th>
+                                    <th t-else="">PARTICIPANT</th>
+                                    <th>BENEFICIAIRE</th>
+                                    <th>DENOMINATION</th>
+                                    <th class="text-end">MONTANT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="currency" t-value="o.invoice_ids[:1].currency_id or o.env.company.currency_id"/>
+                                <t t-set="groups" t-value="o._get_invoices_grouped()"/>
+                                <t t-set="grand_total" t-value="0"/>
+                                <t t-foreach="groups" t-as="group">
+                                    <t t-foreach="group['invoices']" t-as="invoice">
+                                        <t t-foreach="o._get_invoice_product_lines(invoice)" t-as="line">
+                                            <tr>
+                                                <td><t t-esc="invoice.invoice_date" t-options='{"widget": "date"}'/></td>
+                                                <td><t t-esc="invoice.name"/></td>
+                                                <td><t t-esc="group['group_label']"/></td>
+                                                <td><t t-esc="invoice.pec_id.patient_id.name"/></td>
+                                                <td><t t-esc="line.product_id.name"/></td>
+                                                <td class="text-end">
+                                                    <span t-out="line.price_total" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                                    <t t-if="line.product_id.optical_type == 'frame' and line.price_total != line.price_subtotal">
+                                                        <br/><small>(DONT TVA <span t-out="line.price_total - line.price_subtotal" t-options='{"widget": "monetary", "display_currency": currency}'/>)</small>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                    <!-- Sous-total adaptatif -->
+                                    <tr class="fw-bold" style="border-bottom: 2px solid #000;">
+                                        <td colspan="5" class="text-end">
+                                            <t t-if="o.insurer_id.insurer_type == 'insurance'">SOUS TOTAL CLIENT</t>
+                                            <t t-else="">SOUS TOTAL</t>
+                                        </td>
+                                        <td class="text-end"><span t-out="group['subtotal']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                    </tr>
+                                    <t t-set="grand_total" t-value="grand_total + group['subtotal']"/>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr class="fw-bold table-dark">
+                                    <td colspan="5" class="text-end">TOTAL GENERAL</td>
+                                    <td class="text-end"><span t-out="grand_total" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!-- Ventilation fiscale dynamique -->
+                        <t t-set="tax_summary" t-value="o._get_tax_summary()"/>
+
+                        <!-- Mentions legales depuis invoice_legal_notes des taxes 0% -->
+                        <t t-foreach="tax_summary['legal_notes']" t-as="legal_note">
+                            <p class="text-center mt-3 mb-3">
+                                <strong t-out="legal_note"/>
+                            </p>
+                        </t>
+
+                        <table class="table table-sm table-bordered">
+                            <!-- Montant exonere (si applicable) -->
+                            <t t-if="tax_summary['exempt_amount'] > 0">
+                                <tr>
+                                    <td class="fw-bold">MONTANT EXONORÉ</td>
+                                    <td/>
+                                    <td class="text-end">
+                                        <span t-out="tax_summary['exempt_amount']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <!-- Par taxe : base HT + montant taxe (label dynamique) -->
+                            <t t-foreach="tax_summary['taxes']" t-as="tax_line">
+                                <tr>
+                                    <td class="fw-bold">MONTANT HT</td>
+                                    <td/>
+                                    <td class="text-end">
+                                        <span t-out="tax_line['base']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">MONTANT <t t-esc="tax_line['name']"/></td>
+                                    <td/>
+                                    <td class="text-end">
+                                        <span t-out="tax_line['tax_amount']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <!-- Total : label | montant en lettres | montant chiffre -->
+                            <tr class="fw-bold table-dark">
+                                <td>TOTAL TTC</td>
+                                <td class="text-center"><t t-esc="o.amount_to_text()"/></td>
+                                <td class="text-end">
+                                    <span t-out="tax_summary['amount_total']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

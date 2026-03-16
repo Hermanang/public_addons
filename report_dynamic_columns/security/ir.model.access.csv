@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_report_dynamic_column_user,report.dynamic.column.user,model_report_dynamic_column,base.group_user,1,0,0,0
+access_report_dynamic_column_system,report.dynamic.column.system,model_report_dynamic_column,base.group_system,1,1,1,1
+access_report_dynamic_column_profile_user,report.dynamic.column.profile.user,model_report_dynamic_column_profile,base.group_user,1,0,0,0
+access_report_dynamic_column_profile_system,report.dynamic.column.profile.system,model_report_dynamic_column_profile,base.group_system,1,1,1,1

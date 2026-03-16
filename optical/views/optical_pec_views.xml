@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- === Search view === -->
+    <record id="optical_pec_view_search" model="ir.ui.view">
+        <field name="name">optical.pec.search</field>
+        <field name="model">optical.pec</field>
+        <field name="arch" type="xml">
+            <search string="Prises en charge">
+                <field name="name"/>
+                <field name="partner_ref"/>
+                <field name="patient_id"/>
+                <field name="insurer_id"/>
+                <field name="sale_order_id"/>
+                <filter name="filter_draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_submitted" string="Soumis" domain="[('state', '=', 'submitted')]"/>
+                <filter name="filter_approved" string="Approuvé" domain="[('state', '=', 'approved')]"/>
+                <filter name="filter_refused" string="Refusé" domain="[('state', '=', 'refused')]"/>
+                <filter name="filter_invoiced" string="Facturé" domain="[('state', '=', 'invoiced')]"/>
+                <separator/>
+                <filter name="filter_active" string="Actives" domain="[('active', '=', True)]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                    <filter name="group_insurer" string="Assureur" context="{'group_by': 'insurer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- === Tree view === -->
+    <record id="optical_pec_view_tree" model="ir.ui.view">
+        <field name="name">optical.pec.tree</field>
+        <field name="model">optical.pec</field>
+        <field name="arch" type="xml">
+            <list string="Prises en charge"
+                  decoration-info="state == 'draft'"
+                  decoration-warning="state == 'submitted'"
+                  decoration-success="state in ('approved', 'invoiced')"
+                  decoration-danger="state == 'refused'">
+                <field name="name"/>
+                <field name="partner_ref" optional="show"/>
+                <field name="patient_id"/>
+                <field name="insurer_id"/>
+                <field name="sale_order_id"/>
+                <field name="amount_insurance"/>
+                <field name="amount_patient"/>
+                <field name="date_create"/>
+                <field name="state"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'submitted'"
+                       decoration-success="state in ('approved', 'invoiced')"
+                       decoration-danger="state == 'refused'"
+                       widget="badge"/>
+                <field name="payment_status" optional="show"
+                       decoration-info="payment_status == 'not_paid'"
+                       decoration-warning="payment_status == 'partial'"
+                       decoration-success="payment_status == 'paid'"
+                       widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- === Form view === -->
+    <record id="optical_pec_view_form" model="ir.ui.view">
+        <field name="name">optical.pec.form</field>
+        <field name="model">optical.pec</field>
+        <field name="arch" type="xml">
+            <form string="Prise en charge">
+                <header>
+                    <button name="action_send_to_insurer"
+                            string="Envoyer à l'assureur"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-envelope"
+                            invisible="state not in ('draft', 'submitted')"/>
+                    <button name="action_submit"
+                            string="Soumettre"
+                            type="object"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve"
+                            string="Approuver"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'submitted'"
+                            groups="optical.group_optical_manager"/>
+                    <button name="action_refuse"
+                            string="Refuser"
+                            type="object"
+                            class="btn-danger"
+                            invisible="state != 'submitted'"
+                            groups="optical.group_optical_manager"/>
+                    <button name="action_reset_draft"
+                            string="Remettre en brouillon"
+                            type="object"
+                            invisible="state != 'refused'"
+                            groups="optical.group_optical_manager"/>
+                    <button name="action_reset_to_submitted"
+                            string="Remettre en soumis"
+                            type="object"
+                            invisible="state != 'approved' or invoice_insurance_id"
+                            groups="optical.group_optical_manager"/>
+                    <button name="action_distribute_insurance"
+                            string="Répartir"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-balance-scale"
+                            invisible="state != 'approved' or amount_insurance_approved == 0"
+                            groups="optical.group_optical_manager"/>
+                    <button name="action_create_invoices"
+                            string="Générer Facture(s)"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'approved'"
+                            groups="optical.group_optical_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,submitted,approved,invoiced"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice_insurance"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                invisible="not invoice_insurance_id">
+                            <span class="o_stat_text">Fact. Assurance</span>
+                        </button>
+                        <button name="action_view_invoice_tm"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o"
+                                invisible="not invoice_tm_id">
+                            <span class="o_stat_text">Ticket Mod.</span>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archivée" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations principales">
+                            <field name="sale_order_id"
+                                   readonly="state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="policy_id"
+                                   readonly="state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="patient_id"/>
+                            <field name="insurer_id"/>
+                            <field name="partner_ref"/>
+                            <field name="prescription_id"/>
+                        </group>
+                        <group string="Montants et dates">
+                            <field name="amount_total"/>
+                            <field name="amount_insurance"/>
+                            <field name="amount_patient"/>
+                            <separator string="Montants approuvés"
+                                       invisible="state not in ('approved', 'invoiced')"/>
+                            <field name="amount_insurance_approved"
+                                   readonly="state != 'approved'"
+                                   invisible="state not in ('approved', 'invoiced')"
+                                   groups="optical.group_optical_manager"/>
+                            <field name="amount_patient_approved"
+                                   invisible="state not in ('approved', 'invoiced')"/>
+                            <field name="date_create"/>
+                            <field name="date_approved" invisible="not date_approved"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Société">
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Factures" invisible="state != 'invoiced'">
+                            <field name="invoice_insurance_id"/>
+                            <field name="invoice_tm_id"/>
+                            <field name="payment_status" widget="badge"
+                                   decoration-info="payment_status == 'not_paid'"
+                                   decoration-warning="payment_status == 'partial'"
+                                   decoration-success="payment_status == 'paid'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Observations ou commentaires..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- === Action window === -->
+    <record id="optical_pec_action" model="ir.actions.act_window">
+        <field name="name">Prises en charge</field>
+        <field name="res_model">optical.pec</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="optical_pec_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une prise en charge
+            </p>
+            <p>Les prises en charge sont créées depuis les commandes avec assurance.</p>
+        </field>
+    </record>
+
+</odoo>

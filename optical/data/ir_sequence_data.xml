@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_optical_claim_sheet" model="ir.sequence">
+        <field name="name">Bordereau mensuel optique</field>
+        <field name="code">optical.claim.sheet</field>
+        <field name="prefix">BRD/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="use_date_range">True</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

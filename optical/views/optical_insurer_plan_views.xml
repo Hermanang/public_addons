@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue recherche -->
+    <record id="optical_insurer_plan_view_search" model="ir.ui.view">
+        <field name="name">optical.insurer.plan.search</field>
+        <field name="model">optical.insurer.plan</field>
+        <field name="arch" type="xml">
+            <search string="Plans de couverture">
+                <field name="name"/>
+                <field name="insurer_id"/>
+                <separator/>
+                <filter name="filter_third_party" string="Tiers payant"
+                        domain="[('billing_mode', '=', 'third_party')]"/>
+                <filter name="filter_reimbursement" string="Remboursement"
+                        domain="[('billing_mode', '=', 'reimbursement')]"/>
+                <separator/>
+                <filter name="filter_active" string="Actifs"
+                        domain="[('active', '=', True)]"/>
+                <filter name="filter_archived" string="Archivés"
+                        domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_insurer" string="Assureur"
+                        context="{'group_by': 'insurer_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vue liste -->
+    <record id="optical_insurer_plan_view_tree" model="ir.ui.view">
+        <field name="name">optical.insurer.plan.tree</field>
+        <field name="model">optical.insurer.plan</field>
+        <field name="arch" type="xml">
+            <list string="Plans de couverture">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="insurer_id"/>
+                <field name="default_coverage_rate"/>
+                <field name="billing_mode"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue formulaire -->
+    <record id="optical_insurer_plan_view_form" model="ir.ui.view">
+        <field name="name">optical.insurer.plan.form</field>
+        <field name="model">optical.insurer.plan</field>
+        <field name="arch" type="xml">
+            <form string="Plan de couverture">
+                <sheet>
+                    <widget name="web_ribbon" title="Archivé" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Nom du plan"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Informations principales">
+                            <field name="insurer_id"/>
+                            <field name="default_coverage_rate"/>
+                            <field name="billing_mode"/>
+                        </group>
+                        <group string="Société et unité">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Règles de couverture" name="coverage_rules">
+                            <field name="coverage_rule_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_category"/>
+                                    <field name="coverage_rate"/>
+                                    <field name="reference_price"/>
+                                    <field name="annual_ceiling"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action window -->
+    <record id="optical_insurer_plan_action" model="ir.actions.act_window">
+        <field name="name">Plans de couverture</field>
+        <field name="res_model">optical.insurer.plan</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="optical_insurer_plan_view_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un plan de couverture
+            </p>
+            <p>
+                Configurez les plans de couverture avec des règles par catégorie de produit pour chaque assureur/IPM.
+            </p>
+        </field>
+    </record>
+
+</odoo>

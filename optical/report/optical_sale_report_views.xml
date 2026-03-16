@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- === Search View === -->
+    <record id="optical_sale_report_search" model="ir.ui.view">
+        <field name="name">optical.sale.report.search</field>
+        <field name="model">optical.sale.report</field>
+        <field name="arch" type="xml">
+            <search string="Rapport ventes optiques">
+                <!-- Filtres rapides -->
+                <filter name="filter_current_month" string="Mois en cours"
+                    domain="[('date', '&gt;=', (context_today()).strftime('%Y-%m-01'))]"/>
+                <filter name="filter_current_year" string="Annee en cours"
+                    domain="[('year', '=', (context_today()).year)]"/>
+                <separator/>
+                <filter name="filter_insurance" string="Factures assurance"
+                    domain="[('is_insurance_invoice', '=', True)]"/>
+                <separator/>
+                <filter name="filter_date" string="Periode" date="date"/>
+                <separator/>
+                <field name="insurer_id"/>
+                <field name="prescriber_id"/>
+                <field name="subscriber_id"/>
+                <field name="optical_type"/>
+                <field name="frame_shape"/>
+                <field name="frame_gender"/>
+                <field name="lens_design"/>
+                <field name="lens_material"/>
+                <separator/>
+                <!-- Groupements (utilises par search_default_*) -->
+                <group expand="1" string="Regrouper par">
+                    <filter name="group_insurer" string="Assureur" context="{'group_by': 'insurer_id'}"/>
+                    <filter name="group_prescriber" string="Prescripteur" context="{'group_by': 'prescriber_id'}"/>
+                    <filter name="group_subscriber" string="Souscripteur" context="{'group_by': 'subscriber_id'}"/>
+                    <filter name="group_optical_type" string="Type produit" context="{'group_by': 'optical_type'}"/>
+                    <filter name="group_frame_shape" string="Forme monture" context="{'group_by': 'frame_shape'}"/>
+                    <filter name="group_frame_gender" string="Genre monture" context="{'group_by': 'frame_gender'}"/>
+                    <filter name="group_lens_design" string="Design verre" context="{'group_by': 'lens_design'}"/>
+                    <filter name="group_lens_material" string="Materiau verre" context="{'group_by': 'lens_material'}"/>
+                    <filter name="group_date_month" string="Date (mois)" context="{'group_by': 'date:month'}"/>
+                    <filter name="group_date_quarter" string="Date (trimestre)" context="{'group_by': 'date:quarter'}"/>
+                    <filter name="group_month" string="Mois" context="{'group_by': 'month'}"/>
+                    <filter name="group_year" string="Annee" context="{'group_by': 'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- === Pivot View === -->
+    <record id="optical_sale_report_pivot" model="ir.ui.view">
+        <field name="name">optical.sale.report.pivot</field>
+        <field name="model">optical.sale.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Rapport ventes optiques">
+                <field name="amount_total" type="measure"/>
+                <field name="amount_untaxed" type="measure"/>
+                <field name="product_qty" type="measure"/>
+                <field name="nbr" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- === Graph View === -->
+    <record id="optical_sale_report_graph" model="ir.ui.view">
+        <field name="name">optical.sale.report.graph</field>
+        <field name="model">optical.sale.report</field>
+        <field name="arch" type="xml">
+            <graph string="Rapport ventes optiques" type="bar">
+                <field name="insurer_id"/>
+                <field name="amount_total" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- === List View === -->
+    <record id="optical_sale_report_list" model="ir.ui.view">
+        <field name="name">optical.sale.report.list</field>
+        <field name="model">optical.sale.report</field>
+        <field name="arch" type="xml">
+            <list string="Rapport ventes optiques" create="0" edit="0" delete="0">
+                <field name="date"/>
+                <field name="insurer_id"/>
+                <field name="prescriber_id"/>
+                <field name="subscriber_id"/>
+                <field name="patient_id"/>
+                <field name="optical_type"/>
+                <field name="frame_shape" optional="hide"/>
+                <field name="lens_design" optional="hide"/>
+                <field name="frame_materials" optional="hide"/>
+                <field name="lens_treatments" optional="hide"/>
+                <field name="product_id"/>
+                <field name="amount_total" sum="Total TTC"/>
+                <field name="amount_untaxed" sum="Total HT"/>
+                <field name="product_qty" sum="Total Qte"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- === 4 Actions existantes avec search_default_filter_insurance (retrocompatibilite) === -->
+    <record id="optical_sale_report_action_insurer" model="ir.actions.act_window">
+        <field name="name">CA par assureur / IPM</field>
+        <field name="res_model">optical.sale.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="optical_sale_report_search"/>
+        <field name="context">{'search_default_group_insurer': 1, 'search_default_filter_insurance': 1}</field>
+    </record>
+
+    <record id="optical_sale_report_action_prescriber" model="ir.actions.act_window">
+        <field name="name">CA par prescripteur</field>
+        <field name="res_model">optical.sale.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="optical_sale_report_search"/>
+        <field name="context">{'search_default_group_prescriber': 1, 'search_default_filter_insurance': 1}</field>
+    </record>
+
+    <record id="optical_sale_report_action_subscriber" model="ir.actions.act_window">
+        <field name="name">CA par souscripteur</field>
+        <field name="res_model">optical.sale.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="optical_sale_report_search"/>
+        <field name="context">{'search_default_group_subscriber': 1, 'search_default_filter_insurance': 1}</field>
+    </record>
+
+    <record id="optical_sale_report_action_product" model="ir.actions.act_window">
+        <field name="name">Ventes par produit</field>
+        <field name="res_model">optical.sale.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="optical_sale_report_search"/>
+        <field name="context">{'search_default_group_optical_type': 1, 'search_default_filter_insurance': 1}</field>
+    </record>
+
+    <!-- === Nouvelle action : Ventes par proprietes produit (sans filtre assurance) === -->
+    <record id="optical_sale_report_action_product_props" model="ir.actions.act_window">
+        <field name="name">Ventes par proprietes produit</field>
+        <field name="res_model">optical.sale.report</field>
+        <field name="view_mode">pivot,graph,list</field>
+        <field name="search_view_id" ref="optical_sale_report_search"/>
+        <field name="context">{'search_default_group_optical_type': 1, 'search_default_group_frame_shape': 1}</field>
+    </record>
+
+</odoo>

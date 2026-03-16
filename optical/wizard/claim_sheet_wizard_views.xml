@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action window pour ouvrir le wizard -->
+    <record id="action_optical_claim_sheet_wizard" model="ir.actions.act_window">
+        <field name="name">Generer Bordereau</field>
+        <field name="res_model">optical.claim.sheet.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Vue formulaire du wizard -->
+    <record id="optical_claim_sheet_wizard_form" model="ir.ui.view">
+        <field name="name">optical.claim.sheet.wizard.form</field>
+        <field name="model">optical.claim.sheet.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generer Bordereau">
+                <group>
+                    <group string="Selection">
+                        <field name="insurer_id"/>
+                        <field name="type"/>
+                        <field name="parent_id" invisible="type == 'normal'"
+                               domain="[('insurer_id', '=', insurer_id), ('state', '=', 'generated')]"/>
+                        <field name="date_from" widget="daterange" options="{'end_date_field': 'date_to'}"/>
+                        <field name="date_to" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <button name="action_search_invoices"
+                            string="Rechercher factures"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-search"/>
+                </group>
+                <field name="invoice_ids" nolabel="1" invisible="not invoice_ids">
+                    <list string="Factures eligibles" create="0" delete="0">
+                        <field name="name" string="Reference"/>
+                        <field name="patient_name" string="Beneficiaire"/>
+                        <field name="invoice_date" string="Date"/>
+                        <field name="amount_total_signed" string="Montant" sum="Total"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_generate"
+                            string="Generer"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not invoice_ids"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

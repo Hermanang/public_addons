@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- === Search view extension === -->
+    <record id="optical_product_template_search" model="ir.ui.view">
+        <field name="name">product.template.search.optical</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <!-- Champ de recherche -->
+            <field name="categ_id" position="after">
+                <field name="optical_type"/>
+            </field>
+            <!-- Filtres par type optique -->
+            <filter name="combo" position="after">
+                <separator/>
+                <filter string="Montures" name="type_frame"
+                        domain="[('optical_type', '=', 'frame')]"/>
+                <filter string="Verres" name="type_lens"
+                        domain="[('optical_type', '=', 'lens')]"/>
+                <filter string="Lentilles" name="type_contact_lens"
+                        domain="[('optical_type', '=', 'contact_lens')]"/>
+                <filter string="Accessoires" name="type_accessory"
+                        domain="[('optical_type', '=', 'accessory')]"/>
+                <filter string="Services optiques" name="type_service"
+                        domain="[('optical_type', '=', 'service')]"/>
+            </filter>
+            <!-- Groupement par type optique -->
+            <filter name="categ_id" position="after">
+                <filter string="Type optique" name="group_optical_type"
+                        context="{'group_by': 'optical_type'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- === List view extension === -->
+    <record id="optical_product_template_list" model="ir.ui.view">
+        <field name="name">product.template.list.optical</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="optical_type" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- === Form view extension === -->
+    <record id="optical_product_template_form" model="ir.ui.view">
+        <field name="name">product.template.form.optical</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Champ classification dans le formulaire -->
+            <field name="categ_id" position="after">
+                <field name="optical_type"/>
+            </field>
+
+            <!-- Onglet Monture -->
+            <page name="general_information" position="after">
+                <page string="Monture" name="optical_frame"
+                      invisible="optical_type != 'frame'">
+                    <group>
+                        <group string="Caractéristiques">
+                            <field name="frame_shape"/>
+                            <field name="frame_gender"/>
+                            <field name="frame_rim_type"/>
+                            <field name="product_brand_id"/>
+                        </group>
+                        <group string="Dimensions">
+                            <field name="lens_width"/>
+                            <field name="bridge_width"/>
+                            <field name="temple_length"/>
+                        </group>
+                    </group>
+                    <group string="Attributs">
+                        <field name="frame_material_ids" widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                        <field name="frame_color_ids" widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                        <field name="frame_usage_ids" widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                    </group>
+                </page>
+
+                <!-- Onglet Verre -->
+                <page string="Verre" name="optical_lens"
+                      invisible="optical_type not in ('lens', 'contact_lens')">
+                    <group>
+                        <group string="Caractéristiques optiques">
+                            <field name="lens_design"/>
+                            <field name="lens_surface"/>
+                            <field name="lens_material"/>
+                            <field name="lens_index"/>
+                            <field name="lens_diameter"/>
+                        </group>
+                    </group>
+                    <group string="Traitements et teintes">
+                        <field name="lens_treatment_ids" widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                        <field name="lens_tint_ids" widget="many2many_tags"
+                               options="{'color_field': 'color'}"/>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <!-- === Action Catalogue Optique === -->
+    <record id="optical_product_catalogue_action" model="ir.actions.act_window">
+        <field name="name">Catalogue optique</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('optical_type', '!=', False)]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un produit optique
+            </p>
+            <p>
+                Classifiez vos produits par type optique (monture, verre, lentille, accessoire, service)
+                et renseignez leurs attributs spécifiques.
+            </p>
+        </field>
+    </record>
+
+</odoo>

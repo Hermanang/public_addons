@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Heritage du template bordereau : remplacement du tableau statique
+         par le template dynamique report_dynamic_columns.report_dynamic_table -->
+    <template id="report_claim_sheet_dynamic"
+              inherit_id="optical.report_claim_sheet_document">
+        <!-- Remplacer le tableau statique par le rendu dynamique -->
+        <xpath expr="//table[hasclass('table')]" position="replace">
+            <t t-set="currency" t-value="o.invoice_ids[:1].currency_id or o.env.company.currency_id"/>
+            <t t-set="columns" t-value="o._get_report_columns()"/>
+            <t t-set="rows" t-value="o._get_dynamic_rows()"/>
+            <t t-if="columns and rows">
+                <t t-call="report_dynamic_columns.report_dynamic_table"/>
+            </t>
+        </xpath>
+        <!-- Supprimer le tfoot statique qui est hors du table remplace -->
+    </template>
+
+</odoo>

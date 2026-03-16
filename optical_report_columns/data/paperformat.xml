@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Format papier paysage pour le bordereau mensuel (colonnes dynamiques) -->
+    <record id="paperformat_claim_sheet_landscape" model="report.paperformat">
+        <field name="name">Bordereau Mensuel - Paysage</field>
+        <field name="default">False</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_spacing">10</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Assigner le format paysage au rapport bordereau -->
+    <record id="optical.action_report_claim_sheet" model="ir.actions.report">
+        <field name="paperformat_id" ref="paperformat_claim_sheet_landscape"/>
+    </record>
+
+</odoo>

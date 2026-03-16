@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sequence Ordonnance (ORD) -->
+        <record id="optical_sequence_prescription" model="ir.sequence">
+            <field name="name">Ordonnance Optique</field>
+            <field name="code">optical.prescription</field>
+            <field name="prefix">ORD/</field>
+            <field name="padding">5</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- Sequence Police Assurance (POL) -->
+        <record id="optical_sequence_policy" model="ir.sequence">
+            <field name="name">Police Assurance Optique</field>
+            <field name="code">optical.policy</field>
+            <field name="prefix">POL/</field>
+            <field name="padding">5</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- Sequence Prise en Charge (PEC) -->
+        <record id="optical_sequence_pec" model="ir.sequence">
+            <field name="name">Prise en Charge Optique</field>
+            <field name="code">optical.pec</field>
+            <field name="prefix">PEC/</field>
+            <field name="padding">5</field>
+            <field name="implementation">standard</field>
+        </record>
+
+    </data>
+</odoo>

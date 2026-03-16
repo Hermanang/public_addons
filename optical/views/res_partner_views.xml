@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extension du formulaire res.partner -->
+    <record id="res_partner_view_form_optical" model="ir.ui.view">
+        <field name="name">res.partner.form.optical</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_prescriptions"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        invisible="not is_patient">
+                    <field name="prescription_count" string="Ordonnances" widget="statinfo"/>
+                </button>
+                <button name="action_view_policies"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shield"
+                        invisible="not is_patient">
+                    <field name="policy_count" string="Polices" widget="statinfo"/>
+                </button>
+                <button name="action_view_subscriber_policies"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-building"
+                        invisible="subscriber_policy_count == 0">
+                    <field name="subscriber_policy_count" string="Polices souscrites" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='sale']" position="before">
+                <group string="Optique" name="optical">
+                    <field name="birthdate" invisible="not is_patient"/>
+                    <field name="is_patient"/>
+                    <field name="is_insurer"/>
+                    <field name="insurer_type" invisible="not is_insurer"/>
+                    <field name="is_prescriber"/>
+                    <field name="prescriber_registration" invisible="not is_prescriber"/>
+                    <field name="prescriber_specialty" invisible="not is_prescriber"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Historique Ordonnances" name="prescription_history"
+                      invisible="not is_patient">
+                    <field name="prescription_ids" readonly="1" nolabel="1">
+                        <list string="Ordonnances" decoration-danger="state == 'expired'"
+                              decoration-success="state == 'confirmed'"
+                              decoration-muted="state == 'draft'">
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="date_expiry"/>
+                            <field name="prescriber_id"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'confirmed'"
+                                   decoration-danger="state == 'expired'"
+                                   decoration-info="state == 'draft'"/>
+                            <field name="od_sphere" string="SPH OD"/>
+                            <field name="od_cylinder" string="CYL OD"/>
+                            <field name="od_axis" string="AXE OD"/>
+                            <field name="od_addition" string="ADD OD"/>
+                            <field name="od_pd" string="EP OD"/>
+                            <field name="og_sphere" string="SPH OG"/>
+                            <field name="og_cylinder" string="CYL OG"/>
+                            <field name="og_axis" string="AXE OG"/>
+                            <field name="og_addition" string="ADD OG"/>
+                            <field name="og_pd" string="EP OG"/>
+                            <field name="pd_total" string="EP Total"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extension de la vue recherche res.partner -->
+    <record id="res_partner_view_search_optical" model="ir.ui.view">
+        <field name="name">res.partner.search.optical</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='type_company']" position="after">
+                <separator/>
+                <filter name="filter_patients"
+                        string="Patients"
+                        domain="[('is_patient', '=', True)]"/>
+                <filter name="filter_insurers"
+                        string="Assureurs/IPM"
+                        domain="[('is_insurer', '=', True)]"/>
+                <filter name="filter_prescribers"
+                        string="Prescripteurs"
+                        domain="[('is_prescriber', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

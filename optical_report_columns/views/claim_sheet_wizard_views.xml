@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extension vue wizard : ajout selecteur de colonnes -->
+    <record id="claim_sheet_wizard_columns_form" model="ir.ui.view">
+        <field name="name">optical.claim.sheet.wizard.columns.form</field>
+        <field name="model">optical.claim.sheet.wizard</field>
+        <field name="inherit_id" ref="optical.optical_claim_sheet_wizard_form"/>
+        <field name="arch" type="xml">
+            <!-- Ajouter le champ colonnes avant le bouton Rechercher -->
+            <xpath expr="//button[@name='action_search_invoices']/.." position="before">
+                <group invisible="not insurer_id">
+                    <field name="report_column_ids" nolabel="1"
+                           widget="many2many_tags"
+                           domain="[('report_type', '=', 'claim_sheet')]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extension vue wizard : profils de colonnes sauvegardables -->
+    <record id="claim_sheet_wizard_form_profile" model="ir.ui.view">
+        <field name="name">optical.claim.sheet.wizard.form.profile</field>
+        <field name="model">optical.claim.sheet.wizard</field>
+        <field name="inherit_id" ref="claim_sheet_wizard_columns_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_column_ids']" position="after">
+                <field name="profile_id" readonly="1" invisible="not profile_id"/>
+                <field name="has_profile" invisible="1"/>
+                <div class="d-flex gap-2 mt-2">
+                    <button name="action_save_profile" string="Sauvegarder comme profil"
+                            type="object" class="btn-secondary"
+                            invisible="has_profile or not report_column_ids"/>
+                    <button name="action_update_profile" string="Mettre a jour le profil"
+                            type="object" class="btn-secondary"
+                            invisible="not has_profile"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- === Actions window === -->
+
+    <!-- Action Patients filtres -->
+    <record id="optical_patient_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_patient', '=', True)]</field>
+        <field name="context">{'default_is_patient': True, 'default_is_company': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un patient
+            </p>
+        </field>
+    </record>
+
+    <!-- Action Assurances filtres -->
+    <record id="optical_insurance_action" model="ir.actions.act_window">
+        <field name="name">Assurances</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_insurer', '=', True), ('insurer_type', '=', 'insurance')]</field>
+        <field name="context">{'default_is_insurer': True, 'default_insurer_type': 'insurance', 'default_is_company': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une assurance
+            </p>
+        </field>
+    </record>
+
+    <!-- Action IPM filtres -->
+    <record id="optical_ipm_action" model="ir.actions.act_window">
+        <field name="name">IPM</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_insurer', '=', True), ('insurer_type', '=', 'ipm')]</field>
+        <field name="context">{'default_is_insurer': True, 'default_insurer_type': 'ipm', 'default_is_company': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un IPM
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu racine Optique (visible pour tous les utilisateurs optiques) -->
+    <menuitem id="menu_optical_main"
+              name="Optique"
+              groups="group_optical_user"
+              web_icon="optical,static/description/icon.png"
+              sequence="60"/>
+
+    <!-- === Sections parents (regroupement logique Story 1-3) === -->
+
+    <menuitem id="menu_optical_ventes"
+              name="Ventes"
+              parent="menu_optical_main"
+              groups="group_optical_user"
+              sequence="20"/>
+
+    <menuitem id="menu_optical_assurances"
+              name="Assurances"
+              parent="menu_optical_main"
+              groups="group_optical_user"
+              sequence="30"/>
+
+    <menuitem id="menu_optical_suivi"
+              name="Suivi &amp; Facturation"
+              parent="menu_optical_main"
+              groups="group_optical_user"
+              sequence="40"/>
+
+    <!-- === Section Ventes (Vendeur + Responsable) === -->
+
+    <menuitem id="menu_optical_patients"
+              name="Patients"
+              parent="menu_optical_ventes"
+              action="optical_patient_action"
+              groups="group_optical_user"
+              sequence="10"/>
+
+    <menuitem id="menu_optical_ordonnances"
+              name="Ordonnances"
+              parent="menu_optical_ventes"
+              action="optical_prescription_action"
+              groups="group_optical_user"
+              sequence="20"/>
+
+    <menuitem id="menu_optical_catalogue"
+              name="Catalogue"
+              parent="menu_optical_ventes"
+              action="optical_product_catalogue_action"
+              groups="group_optical_user"
+              sequence="30"/>
+
+    <!-- === Section Assurances (Vendeur + Responsable) === -->
+
+    <menuitem id="menu_optical_assureurs"
+              name="Assurances"
+              parent="menu_optical_assurances"
+              action="optical_insurance_action"
+              groups="group_optical_user"
+              sequence="10"/>
+
+    <menuitem id="menu_optical_ipm"
+              name="IPM"
+              parent="menu_optical_assurances"
+              action="optical_ipm_action"
+              groups="group_optical_user"
+              sequence="15"/>
+
+    <menuitem id="menu_optical_polices"
+              name="Polices"
+              parent="menu_optical_assurances"
+              action="optical_policy_action"
+              groups="group_optical_user"
+              sequence="20"/>
+
+    <menuitem id="menu_optical_pec"
+              name="Prises en charge"
+              parent="menu_optical_assurances"
+              action="optical_pec_action"
+              groups="group_optical_user"
+              sequence="30"/>
+
+    <!-- === Section Suivi & Facturation === -->
+
+    <menuitem id="menu_optical_insurance_invoices"
+              name="Factures assurance"
+              parent="menu_optical_suivi"
+              action="action_optical_insurance_invoices"
+              groups="group_optical_user"
+              sequence="10"/>
+
+    <menuitem id="menu_optical_tm_invoices"
+              name="Tickets modérateurs"
+              parent="menu_optical_suivi"
+              action="action_optical_tm_invoices"
+              groups="group_optical_user"
+              sequence="20"/>
+
+    <menuitem id="menu_optical_aging_report"
+              name="Vieillissement créances"
+              parent="menu_optical_suivi"
+              action="action_optical_aging_report"
+              groups="group_optical_user"
+              sequence="30"/>
+
+    <menuitem id="menu_optical_claim_sheet_list"
+              name="Bordereaux"
+              parent="menu_optical_suivi"
+              action="action_optical_claim_sheet"
+              groups="group_optical_manager"
+              sequence="40"/>
+
+    <menuitem id="menu_optical_claim_sheet"
+              name="Generer Bordereau"
+              parent="menu_optical_suivi"
+              action="action_optical_claim_sheet_wizard"
+              groups="group_optical_manager"
+              sequence="50"/>
+
+    <!-- === Section Rapports (Vendeur + Responsable) === -->
+
+    <menuitem id="menu_optical_rapports"
+              name="Rapports"
+              parent="menu_optical_main"
+              groups="group_optical_user"
+              sequence="50"/>
+
+    <menuitem id="menu_optical_report_insurer"
+              name="CA par assureur"
+              parent="menu_optical_rapports"
+              action="optical_sale_report_action_insurer"
+              groups="group_optical_user"
+              sequence="10"/>
+
+    <menuitem id="menu_optical_report_prescriber"
+              name="CA par prescripteur"
+              parent="menu_optical_rapports"
+              action="optical_sale_report_action_prescriber"
+              groups="group_optical_user"
+              sequence="20"/>
+
+    <menuitem id="menu_optical_report_subscriber"
+              name="CA par souscripteur"
+              parent="menu_optical_rapports"
+              action="optical_sale_report_action_subscriber"
+              groups="group_optical_user"
+              sequence="30"/>
+
+    <menuitem id="menu_optical_report_product"
+              name="Ventes par produit"
+              parent="menu_optical_rapports"
+              action="optical_sale_report_action_product"
+              groups="group_optical_user"
+              sequence="40"/>
+
+    <menuitem id="menu_optical_report_product_props"
+              name="Ventes par proprietes produit"
+              parent="menu_optical_rapports"
+              action="optical_sale_report_action_product_props"
+              groups="group_optical_user"
+              sequence="50"/>
+
+    <!-- === Menu Configuration (Responsable uniquement) === -->
+
+    <menuitem id="menu_optical_config"
+              name="Configuration"
+              parent="menu_optical_main"
+              groups="group_optical_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_optical_config_plans"
+              name="Plans de couverture"
+              parent="menu_optical_config"
+              action="optical_insurer_plan_action"
+              groups="group_optical_manager"
+              sequence="10"/>
+
+    <!-- === Sous-menu Attributs (Responsable uniquement) === -->
+
+    <menuitem id="menu_optical_config_attributs"
+              name="Attributs"
+              parent="menu_optical_config"
+              groups="group_optical_manager"
+              sequence="50"/>
+
+    <!-- Verres -->
+    <menuitem id="menu_optical_config_attr_treatments"
+              name="Traitements verres"
+              parent="menu_optical_config_attributs"
+              action="optical_lens_treatment_action"
+              groups="group_optical_manager"
+              sequence="10"/>
+
+    <menuitem id="menu_optical_config_attr_tints"
+              name="Teintes verres"
+              parent="menu_optical_config_attributs"
+              action="optical_lens_tint_action"
+              groups="group_optical_manager"
+              sequence="20"/>
+
+    <!-- Montures -->
+    <menuitem id="menu_optical_config_attr_materials"
+              name="Matériaux montures"
+              parent="menu_optical_config_attributs"
+              action="optical_frame_material_action"
+              groups="group_optical_manager"
+              sequence="30"/>
+
+    <menuitem id="menu_optical_config_attr_colors"
+              name="Couleurs montures"
+              parent="menu_optical_config_attributs"
+              action="optical_frame_color_action"
+              groups="group_optical_manager"
+              sequence="40"/>
+
+    <menuitem id="menu_optical_config_attr_usages"
+              name="Usages montures"
+              parent="menu_optical_config_attributs"
+              action="optical_frame_usage_action"
+              groups="group_optical_manager"
+              sequence="50"/>
+
+
+</odoo>

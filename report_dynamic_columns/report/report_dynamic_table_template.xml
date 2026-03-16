@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sous-template : formatage d'une cellule selon le figure_type de la colonne.
+         Variables attendues :
+           - col : record report.dynamic.column
+           - cell_val : valeur de la cellule
+           - cell_rowspan : rowspan de la cellule (1 = normal, >1 = fusionnee, 0 = skip)
+           - currency : res.currency record (pour formatage monetaire)
+         Optionnel :
+           - cell_subtitle : dict {'label': str, 'amount': float} pour sous-titre monetaire
+    -->
+    <template id="report_dynamic_cell">
+        <t t-set="rs" t-value="cell_rowspan if cell_rowspan is not None else 1"/>
+        <!-- rowspan 0 = cellule couverte par une fusion precedente, ne pas rendre -->
+        <t t-if="rs != 0">
+            <td t-att-style="'text-align: %s;' % col.alignment"
+                t-att-rowspan="rs if rs &gt; 1 else None"
+                t-att-class="'align-middle' if rs &gt; 1 else None">
+                <t t-if="col.figure_type == 'monetary' and cell_val">
+                    <span t-out="cell_val" t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    <t t-if="cell_subtitle">
+                        <br/><small>(<t t-out="cell_subtitle['label']"/> <span t-out="cell_subtitle['amount']" t-options='{"widget": "monetary", "display_currency": currency}'/>)</small>
+                    </t>
+                </t>
+                <t t-elif="col.figure_type == 'date' and cell_val">
+                    <t t-out="cell_val"/>
+                </t>
+                <t t-elif="col.figure_type == 'integer' and cell_val != ''">
+                    <t t-out="int(cell_val) if cell_val else ''"/>
+                </t>
+                <t t-elif="col.figure_type == 'float' and cell_val != ''">
+                    <t t-out="'%.2f' % cell_val if cell_val else ''"/>
+                </t>
+                <t t-else="">
+                    <t t-out="cell_val"/>
+                </t>
+            </td>
+        </t>
+    </template>
+
+    <!-- Template partiel : tableau dynamique configurable pour rapports QWeb PDF.
+         Variables attendues dans le contexte :
+           - columns : recordset report.dynamic.column (triées par sequence)
+           - rows : list de dicts {'values': [...], 'rowspans': [...], 'is_subtotal': bool, 'is_total': bool}
+           - currency : res.currency record (pour formatage monetaire)
+         Optionnel : 'rowspans' (liste parallele a 'values') pour fusion cellules.
+           rowspan 1 = normal, >1 = debut fusion, 0 = cellule couverte (skip).
+    -->
+    <template id="report_dynamic_table">
+        <table class="table table-sm table-bordered">
+            <!-- En-tete -->
+            <thead>
+                <tr>
+                    <t t-foreach="columns" t-as="col">
+                        <th t-att-style="'text-align: %s;' % col.alignment">
+                            <t t-out="col.name"/>
+                        </th>
+                    </t>
+                </tr>
+            </thead>
+            <!-- Corps -->
+            <tbody>
+                <t t-foreach="rows" t-as="row">
+                    <t t-set="row_values" t-value="row.get('values', [])"/>
+                    <t t-set="row_rowspans" t-value="row.get('rowspans', [])"/>
+                    <t t-set="row_subtitles" t-value="row.get('cell_subtitles', {})"/>
+
+                    <!-- Ligne sous-total -->
+                    <t t-if="row.get('is_subtotal')">
+                        <tr style="font-weight: bold; border-bottom: 2px solid #000;">
+                            <t t-foreach="columns" t-as="col">
+                                <t t-set="cell_val" t-value="row_values[col_index] if col_index &lt; len(row_values) else ''"/>
+                                <t t-set="cell_rowspan" t-value="1"/>
+                                <t t-set="cell_subtitle" t-value="row_subtitles.get(col_index)"/>
+                                <t t-call="report_dynamic_columns.report_dynamic_cell"/>
+                            </t>
+                        </tr>
+                    </t>
+                    <!-- Ligne total general -->
+                    <t t-elif="row.get('is_total')">
+                        <tr style="font-weight: bold; border-bottom: 3px double #000;">
+                            <t t-foreach="columns" t-as="col">
+                                <t t-set="cell_val" t-value="row_values[col_index] if col_index &lt; len(row_values) else ''"/>
+                                <t t-set="cell_rowspan" t-value="1"/>
+                                <t t-set="cell_subtitle" t-value="row_subtitles.get(col_index)"/>
+                                <t t-call="report_dynamic_columns.report_dynamic_cell"/>
+                            </t>
+                        </tr>
+                    </t>
+                    <!-- Ligne normale (avec support rowspan) -->
+                    <t t-else="">
+                        <tr>
+                            <t t-foreach="columns" t-as="col">
+                                <t t-set="cell_val" t-value="row_values[col_index] if col_index &lt; len(row_values) else ''"/>
+                                <t t-set="cell_rowspan" t-value="row_rowspans[col_index] if col_index &lt; len(row_rowspans) else 1"/>
+                                <t t-set="cell_subtitle" t-value="row_subtitles.get(col_index)"/>
+                                <t t-call="report_dynamic_columns.report_dynamic_cell"/>
+                            </t>
+                        </tr>
+                    </t>
+                </t>
+            </tbody>
+        </table>
+    </template>
+
+</odoo>

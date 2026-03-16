@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extension du formulaire sale.order -->
+    <record id="view_order_form_optical" model="ir.ui.view">
+        <field name="name">sale.order.form.optical</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Champ police d'assurance apres le client -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="policy_id"
+                       options="{'no_create': True}"
+                       invisible="state == 'cancel'"
+                       readonly="state not in ('draft', 'sent')"/>
+            </xpath>
+
+            <!-- Champ ordonnance apres la police -->
+            <xpath expr="//field[@name='policy_id']" position="after">
+                <field name="prescription_id"
+                       options="{'no_create': True}"
+                       invisible="state == 'cancel'"
+                       readonly="state not in ('draft', 'sent')"/>
+            </xpath>
+
+            <!-- Onglet mesures optiques : herite du notebook de sale.order -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Mesures optiques" name="optical_measures"
+                      invisible="not prescription_id">
+                    <group>
+                        <group>
+                            <field name="prescription_vision_type"/>
+                            <field name="prescription_measure_type"/>
+                        </group>
+                        <group>
+                            <field name="prescription_measure_date"/>
+                        </group>
+                    </group>
+                    <table class="table table-bordered table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th/>
+                                <th>Sphère</th><th>Cylindre</th><th>Axe</th>
+                                <th>Addition</th><th>Prisme</th><th>Base</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>OD</strong></td>
+                                <td><field name="prescription_od_sphere" widget="optical_diopter"/></td>
+                                <td><field name="prescription_od_cylinder" widget="optical_diopter"/></td>
+                                <td><field name="prescription_od_axis"/></td>
+                                <td><field name="prescription_od_addition" widget="optical_diopter"/></td>
+                                <td><field name="prescription_od_prism" widget="optical_diopter" options="{'step': 0.01}"/></td>
+                                <td><field name="prescription_od_prism_base"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>OG</strong></td>
+                                <td><field name="prescription_og_sphere" widget="optical_diopter"/></td>
+                                <td><field name="prescription_og_cylinder" widget="optical_diopter"/></td>
+                                <td><field name="prescription_og_axis"/></td>
+                                <td><field name="prescription_og_addition" widget="optical_diopter"/></td>
+                                <td><field name="prescription_og_prism" widget="optical_diopter" options="{'step': 0.01}"/></td>
+                                <td><field name="prescription_og_prism_base"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <group>
+                        <group>
+                            <field name="prescription_pd_total"/>
+                        </group>
+                        <group>
+                            <field name="prescription_od_pd"/>
+                            <field name="prescription_og_pd"/>
+                        </group>
+                    </group>
+                    <group invisible="not prescription_notes">
+                        <field name="prescription_notes" nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+
+            <!-- Zone montants assurance : meme style que les sous-totaux -->
+            <xpath expr="//field[@name='tax_totals']" position="after">
+                <group class="oe_subtotal_footer" invisible="not has_insurance">
+                    <field name="amount_insurance"/>
+                    <field name="amount_patient" class="oe_subtotal_footer_separator"/>
+                </group>
+            </xpath>
+
+            <!-- Masquer bouton Confirmer pour dossiers assurance sans PEC (état sent) -->
+            <xpath expr="//button[@id='action_confirm']" position="attributes">
+                <attribute name="invisible">state != 'sent' or (has_insurance and not pec_id)</attribute>
+            </xpath>
+
+            <!-- Masquer bouton Confirmer pour dossiers assurance sans PEC (état draft) -->
+            <xpath expr="//button[@name='action_confirm'][not(@id)]" position="attributes">
+                <attribute name="invisible">state != 'draft' or (has_insurance and not pec_id)</attribute>
+            </xpath>
+
+            <!-- Masquer le bouton standard "Creer une facture" pour les dossiers assurance -->
+            <xpath expr="//button[@id='create_invoice']" position="attributes">
+                <attribute name="invisible">has_insurance or state != 'sale'</attribute>
+            </xpath>
+
+            <!-- Bouton Generer Facture(s) : visible uniquement si PEC approuvee -->
+            <xpath expr="//button[@id='create_invoice']" position="after">
+                <field name="pec_state" invisible="1"/>
+                <button name="action_create_split_invoices"
+                        string="Générer Facture(s)"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not has_insurance or state != 'sale' or pec_state != 'approved'"/>
+                <button name="action_create_pec"
+                        string="Créer PEC"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not has_insurance or state not in ('draft', 'sent', 'sale') or pec_id"/>
+            </xpath>
+
+            <!-- Smart button PEC -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_pec"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        invisible="pec_count == 0">
+                    <field name="pec_count" widget="statinfo" string="PEC"/>
+                </button>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Colonne part assurance dans les lignes de commande -->
+    <record id="view_order_form_optical_lines" model="ir.ui.view">
+        <field name="name">sale.order.form.optical.lines</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']//list//field[@name='price_total']" position="after">
+                <field name="amount_insurance_line" optional="hide"
+                       readonly="not parent.has_insurance or parent.state == 'cancel'"/>
+                <field name="is_insurance_manual" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extension de la vue tree sale.order -->
+    <record id="view_order_tree_optical" model="ir.ui.view">
+        <field name="name">sale.order.tree.optical</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="policy_id" optional="hide"/>
+                <field name="amount_insurance" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

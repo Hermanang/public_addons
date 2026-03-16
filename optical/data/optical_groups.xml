@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Categorie du module Optique -->
+        <record id="module_category_optical" model="ir.module.category">
+            <field name="name">Optique</field>
+            <field name="sequence">50</field>
+        </record>
+
+        <!-- Groupe Vendeur Optique -->
+        <record id="group_optical_user" model="res.groups">
+            <field name="name">Vendeur Optique</field>
+            <field name="category_id" ref="module_category_optical"/>
+        </record>
+
+        <!-- Groupe Responsable Optique (herite de Vendeur) -->
+        <record id="group_optical_manager" model="res.groups">
+            <field name="name">Responsable Optique</field>
+            <field name="category_id" ref="module_category_optical"/>
+            <field name="implied_ids" eval="[(4, ref('group_optical_user'))]"/>
+        </record>
+
+    </data>
+</odoo>

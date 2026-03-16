@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =====================================================
+         FACTURES - Extension formulaire (existant Story 6-2)
+         ===================================================== -->
+
+    <record id="view_move_form_optical" model="ir.ui.view">
+        <field name="name">account.move.form.optical</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='other_info']" position="after">
+                <page string="Assurance optique"
+                      name="optical_insurance"
+                      invisible="not is_insurance_invoice and not is_tm_invoice">
+                    <group>
+                        <group string="Type de facture">
+                            <field name="is_insurance_invoice" readonly="1"/>
+                            <field name="is_tm_invoice" readonly="1"/>
+                            <field name="insurance_sent" readonly="1"/>
+                            <field name="insurance_sent_date" readonly="1"
+                                   invisible="not insurance_sent"/>
+                            <field name="claim_sheet_id" readonly="1"
+                                   invisible="not claim_sheet_id"/>
+                        </group>
+                        <group string="Traçabilité">
+                            <field name="insurance_policy_id" readonly="1"/>
+                            <field name="insurance_sale_order_id" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- =====================================================
+         FACTURES - Bouton marquage envoi dans le header (Story 7-1)
+         ===================================================== -->
+
+    <record id="view_move_form_optical_send_button" model="ir.ui.view">
+        <field name="name">account.move.form.optical.send.button</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form//header" position="inside">
+                <button name="action_mark_insurance_sent"
+                        string="Marquer envoyé IPM"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not is_insurance_invoice or state != 'posted' or insurance_sent"
+                        groups="optical.group_optical_manager"/>
+                <button name="action_unmark_insurance_sent"
+                        string="Annuler envoi IPM"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not is_insurance_invoice or not insurance_sent or state != 'posted'"
+                        groups="optical.group_optical_manager"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- =====================================================
+         FACTURES ASSURANCE - Vues dédiées (Story 7-1, FR35)
+         ===================================================== -->
+
+    <!-- Tree : factures assurance -->
+    <record id="view_account_move_insurance_list" model="ir.ui.view">
+        <field name="name">account.move.insurance.list</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list string="Factures assurance"
+                  decoration-info="state == 'draft'"
+                  decoration-success="insurance_sent"
+                  decoration-warning="state == 'posted' and payment_state in ('not_paid', 'partial') and not insurance_sent"
+                  multi_edit="1">
+                <header>
+                    <button name="action_mark_insurance_sent"
+                            string="Marquer envoyé IPM"
+                            type="object"
+                            groups="optical.group_optical_manager"/>
+                    <button name="action_unmark_insurance_sent"
+                            string="Annuler envoi IPM"
+                            type="object"
+                            groups="optical.group_optical_manager"/>
+                </header>
+                <field name="name" string="Référence"/>
+                <field name="partner_id" string="Assureur/IPM"/>
+                <field name="pec_id" optional="show"/>
+                <field name="insurance_policy_id" optional="hide"/>
+                <field name="insurance_sale_order_id" optional="hide"/>
+                <field name="invoice_date" string="Date facture"/>
+                <field name="amount_total_signed" string="Montant TTC" sum="Total"/>
+                <field name="payment_state" string="Paiement"
+                       widget="badge"
+                       decoration-info="payment_state == 'not_paid'"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-warning="payment_state == 'partial'"/>
+                <field name="state" string="État"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'posted'"/>
+                <field name="insurance_sent" string="Envoyé IPM" widget="boolean"/>
+                <field name="insurance_sent_date" string="Date envoi" optional="show"/>
+                <field name="claim_sheet_id" string="Bordereau" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search : factures assurance -->
+    <record id="view_account_move_insurance_search" model="ir.ui.view">
+        <field name="name">account.move.insurance.search</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <search string="Factures assurance">
+                <field name="name" string="Référence"/>
+                <field name="partner_id" string="Assureur/IPM"/>
+                <field name="pec_id"/>
+                <field name="insurance_policy_id"/>
+                <field name="claim_sheet_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Brouillon"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_posted" string="Validées"
+                        domain="[('state', '=', 'posted')]"/>
+                <separator/>
+                <filter name="filter_sent" string="Envoyées"
+                        domain="[('insurance_sent', '=', True)]"/>
+                <filter name="filter_not_sent" string="Non envoyées"
+                        domain="[('insurance_sent', '=', False), ('state', '=', 'posted')]"/>
+                <separator/>
+                <filter name="filter_unpaid" string="Impayées"
+                        domain="[('payment_state', 'in', ('not_paid', 'partial')), ('state', '=', 'posted')]"/>
+                <filter name="filter_paid" string="Payées"
+                        domain="[('payment_state', '=', 'paid')]"/>
+                <separator/>
+                <filter name="filter_date" string="Date facture" date="invoice_date"/>
+                <separator/>
+                <group expand="1" string="Grouper par">
+                    <filter name="groupby_partner" string="Assureur/IPM"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_state" string="État"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="groupby_payment" string="Paiement"
+                            context="{'group_by': 'payment_state'}"/>
+                    <filter name="groupby_sent" string="Envoyé IPM"
+                            context="{'group_by': 'insurance_sent'}"/>
+                    <filter name="groupby_claim_sheet" string="Bordereau"
+                            context="{'group_by': 'claim_sheet_id'}"/>
+                    <filter name="groupby_date" string="Date"
+                            context="{'group_by': 'invoice_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action : factures assurance -->
+    <record id="action_optical_insurance_invoices" model="ir.actions.act_window">
+        <field name="name">Factures assurance</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_insurance_invoice', '=', True), ('move_type', '=', 'out_invoice')]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="search_view_id" ref="view_account_move_insurance_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune facture assurance
+            </p>
+            <p>
+                Les factures assurance sont générées automatiquement depuis les prises en charge (PEC) approuvées.
+            </p>
+        </field>
+    </record>
+
+    <!-- Bind tree view to insurance action -->
+    <record id="action_optical_insurance_invoices_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_account_move_insurance_list"/>
+        <field name="act_window_id" ref="action_optical_insurance_invoices"/>
+    </record>
+
+    <!-- =====================================================
+         TICKETS MODÉRATEURS - Vues dédiées (Story 7-1, FR37 préparation)
+         ===================================================== -->
+
+    <!-- Tree : tickets modérateurs -->
+    <record id="view_account_move_tm_list" model="ir.ui.view">
+        <field name="name">account.move.tm.list</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list string="Tickets modérateurs"
+                  decoration-info="state == 'draft'"
+                  decoration-warning="state == 'posted' and payment_state in ('not_paid', 'partial')">
+                <field name="name" string="Référence"/>
+                <field name="partner_id" string="Patient"/>
+                <field name="pec_id" optional="show"/>
+                <field name="insurance_sale_order_id" string="Commande" optional="hide"/>
+                <field name="invoice_date" string="Date facture"/>
+                <field name="amount_total_signed" string="Montant TTC" sum="Total"/>
+                <field name="payment_state" string="Paiement"
+                       widget="badge"
+                       decoration-info="payment_state == 'not_paid'"
+                       decoration-success="payment_state == 'paid'"
+                       decoration-warning="payment_state == 'partial'"/>
+                <field name="days_overdue" string="Ancienneté (jours)"/>
+                <field name="state" string="État"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'posted'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search : tickets modérateurs -->
+    <record id="view_account_move_tm_search" model="ir.ui.view">
+        <field name="name">account.move.tm.search</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <search string="Tickets modérateurs">
+                <field name="name" string="Référence"/>
+                <field name="partner_id" string="Patient"/>
+                <field name="pec_id"/>
+                <separator/>
+                <filter name="filter_draft" string="Brouillon"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_posted" string="Validées"
+                        domain="[('state', '=', 'posted')]"/>
+                <separator/>
+                <filter name="filter_unpaid" string="Impayés"
+                        domain="[('payment_state', 'in', ('not_paid', 'partial')), ('state', '=', 'posted')]"/>
+                <filter name="filter_paid" string="Payés"
+                        domain="[('payment_state', '=', 'paid')]"/>
+                <separator/>
+                <filter name="filter_date" string="Date facture" date="invoice_date"/>
+                <separator/>
+                <group expand="1" string="Grouper par">
+                    <filter name="groupby_partner" string="Patient"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_payment" string="Paiement"
+                            context="{'group_by': 'payment_state'}"/>
+                    <filter name="groupby_date" string="Date"
+                            context="{'group_by': 'invoice_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action : tickets modérateurs -->
+    <record id="action_optical_tm_invoices" model="ir.actions.act_window">
+        <field name="name">Tickets modérateurs</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_tm_invoice', '=', True), ('move_type', '=', 'out_invoice')]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="search_view_id" ref="view_account_move_tm_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun ticket modérateur
+            </p>
+            <p>
+                Les tickets modérateurs sont générés automatiquement depuis les prises en charge (PEC) approuvées.
+            </p>
+        </field>
+    </record>
+
+    <!-- Bind tree view to TM action -->
+    <record id="action_optical_tm_invoices_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_account_move_tm_list"/>
+        <field name="act_window_id" ref="action_optical_tm_invoices"/>
+    </record>
+
+    <!-- =====================================================
+         VIEILLISSEMENT CRÉANCES IPM (Story 7-2, FR38)
+         ===================================================== -->
+
+    <!-- Tree : vieillissement créances -->
+    <record id="view_account_move_aging_list" model="ir.ui.view">
+        <field name="name">account.move.aging.list</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list string="Vieillissement créances IPM"
+                  decoration-warning="aging_bucket == '61_90'"
+                  decoration-danger="aging_bucket == 'over_90'">
+                <field name="name" string="Référence"/>
+                <field name="partner_id" string="Assureur/IPM"/>
+                <field name="pec_id" optional="show"/>
+                <field name="amount_total_signed" string="Montant TTC" sum="Total"/>
+                <field name="invoice_date" string="Date facture"/>
+                <field name="days_overdue" string="Ancienneté (jours)"/>
+                <field name="aging_bucket" string="Tranche"/>
+                <field name="payment_state" string="Paiement"
+                       widget="badge"
+                       decoration-info="payment_state == 'not_paid'"
+                       decoration-warning="payment_state == 'partial'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search : vieillissement créances -->
+    <record id="view_account_move_aging_search" model="ir.ui.view">
+        <field name="name">account.move.aging.search</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <search string="Vieillissement créances IPM">
+                <field name="name" string="Référence"/>
+                <field name="partner_id" string="Assureur/IPM"/>
+                <field name="pec_id"/>
+                <separator/>
+                <filter name="filter_0_30" string="0-30 jours"
+                        domain="[('aging_bucket', '=', '0_30')]"/>
+                <filter name="filter_31_60" string="31-60 jours"
+                        domain="[('aging_bucket', '=', '31_60')]"/>
+                <filter name="filter_61_90" string="61-90 jours"
+                        domain="[('aging_bucket', '=', '61_90')]"/>
+                <filter name="filter_over_90" string="&gt; 90 jours"
+                        domain="[('aging_bucket', '=', 'over_90')]"/>
+                <separator/>
+                <filter name="filter_date" string="Date facture" date="invoice_date"/>
+                <separator/>
+                <group expand="1" string="Grouper par">
+                    <filter name="groupby_partner" string="Assureur/IPM"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="groupby_date" string="Mois"
+                            context="{'group_by': 'invoice_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Pivot : vieillissement créances -->
+    <record id="view_account_move_aging_pivot" model="ir.ui.view">
+        <field name="name">account.move.aging.pivot</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <pivot string="Vieillissement créances IPM">
+                <field name="partner_id" type="row"/>
+                <field name="invoice_date" interval="month" type="col"/>
+                <field name="amount_total_signed" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action : vieillissement créances IPM -->
+    <record id="action_optical_aging_report" model="ir.actions.act_window">
+        <field name="name">Vieillissement créances</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="domain">[('is_insurance_invoice', '=', True), ('move_type', '=', 'out_invoice'), ('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="search_view_id" ref="view_account_move_aging_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucune créance impayée
+            </p>
+            <p>
+                Les créances IPM apparaissent ici lorsque des factures assurance validées restent impayées.
+            </p>
+        </field>
+    </record>
+
+    <!-- Bind views to aging action -->
+    <record id="action_optical_aging_report_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_account_move_aging_list"/>
+        <field name="act_window_id" ref="action_optical_aging_report"/>
+    </record>
+
+    <record id="action_optical_aging_report_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="view_account_move_aging_pivot"/>
+        <field name="act_window_id" ref="action_optical_aging_report"/>
+    </record>
+
+</odoo>

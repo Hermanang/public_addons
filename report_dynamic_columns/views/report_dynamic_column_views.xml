@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree -->
+    <record id="view_report_dynamic_column_tree" model="ir.ui.view">
+        <field name="name">report.dynamic.column.tree</field>
+        <field name="model">report.dynamic.column</field>
+        <field name="arch" type="xml">
+            <list string="Colonnes dynamiques" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="technical_name"/>
+                <field name="report_type"/>
+                <field name="figure_type"/>
+                <field name="alignment"/>
+                <field name="is_subtotalable"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="view_report_dynamic_column_form" model="ir.ui.view">
+        <field name="name">report.dynamic.column.form</field>
+        <field name="model">report.dynamic.column</field>
+        <field name="arch" type="xml">
+            <form string="Colonne dynamique">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="technical_name"/>
+                            <field name="report_type"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="figure_type"/>
+                            <field name="alignment"/>
+                            <field name="is_subtotalable"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_report_dynamic_column" model="ir.actions.act_window">
+        <field name="name">Colonnes dynamiques</field>
+        <field name="res_model">report.dynamic.column</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu sous Settings > Technique -->
+    <menuitem
+        id="menu_report_dynamic_column"
+        name="Colonnes de rapport"
+        parent="base.menu_custom"
+        action="action_report_dynamic_column"
+        sequence="90"/>
+
+</odoo>
