@@ -1,40 +1,40 @@
 # -*- coding: utf-8 -*-
-from odoo import _, api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
 
 class OpticalCoverageRule(models.Model):
     _name = 'optical.coverage.rule'
-    _description = _("Règle de couverture par catégorie")
+    _description = "Règle de couverture par catégorie"
     _order = 'sequence, product_category'
 
     plan_id = fields.Many2one(
         'optical.insurer.plan',
-        string=_("Plan de couverture"),
+        string="Plan de couverture",
         required=True,
         ondelete='cascade',
         index='btree_not_null',
     )
     product_category = fields.Selection(
         [
-            ('frame', _("Monture")),
-            ('lens', _("Verre")),
-            ('contact_lens', _("Lentille de contact")),
-            ('accessory', _("Accessoire")),
+            ('frame', "Monture"),
+            ('lens', "Verre"),
+            ('contact_lens', "Lentille de contact"),
+            ('accessory', "Accessoire"),
         ],
-        string=_("Catégorie produit"),
+        string="Catégorie produit",
         required=True,
     )
     coverage_rate = fields.Float(
-        string=_("Taux de couverture (%)"),
+        string="Taux de couverture (%)",
         required=True,
     )
     reference_price = fields.Monetary(
-        string=_("Tarif de référence"),
+        string="Tarif de référence",
         currency_field='currency_id',
     )
     annual_ceiling = fields.Monetary(
-        string=_("Plafond annuel"),
+        string="Plafond annuel",
         currency_field='currency_id',
     )
     currency_id = fields.Many2one(

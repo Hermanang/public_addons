@@ -3,7 +3,7 @@ import logging
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ class OpticalPrescription(models.Model):
 
     # --- Champs relationnels et metadonnées ---
     name = fields.Char(
-        string=_("Reference"),
+        string="Reference",
         readonly=True,
         default=lambda self: _('Nouveau'),
         copy=False,
@@ -25,7 +25,7 @@ class OpticalPrescription(models.Model):
     )
     patient_id = fields.Many2one(
         'res.partner',
-        string=_("Patient"),
+        string="Patient",
         required=True,
         domain="[('is_patient', '=', True)]",
         tracking=True,
@@ -34,7 +34,7 @@ class OpticalPrescription(models.Model):
     )
     prescriber_id = fields.Many2one(
         'res.partner',
-        string=_("Prescripteur"),
+        string="Prescripteur",
         required=True,
         domain="[('is_prescriber', '=', True)]",
         tracking=True,
@@ -42,13 +42,13 @@ class OpticalPrescription(models.Model):
         ondelete='restrict',
     )
     date = fields.Date(
-        string=_("Date de prescription"),
+        string="Date de prescription",
         required=True,
         default=fields.Date.context_today,
         tracking=True,
     )
     date_expiry = fields.Date(
-        string=_("Date d'expiration"),
+        string="Date d'expiration",
         compute='_compute_date_expiry',
         store=True,
         precompute=True,
@@ -67,10 +67,10 @@ class OpticalPrescription(models.Model):
         index=True,
         copy=False,
     )
-    notes = fields.Text(string=_("Observations"))
+    notes = fields.Text(string="Observations")
     company_id = fields.Many2one(
         'res.company',
-        string=_("Societe"),
+        string="Societe",
         required=True,
         default=lambda self: self.env.company,
     )
@@ -90,28 +90,28 @@ class OpticalPrescription(models.Model):
 
     # --- Mesures OD (oeil droit) ---
     od_sphere = fields.Float(
-        string=_("SPH OD"),
+        string="SPH OD",
         digits=(4, 2),
-        help=_("Sphere oeil droit (-20.00 a +20.00 dioptries)"),
+        help="Sphere oeil droit (-20.00 a +20.00 dioptries)",
     )
     od_cylinder = fields.Float(
-        string=_("CYL OD"),
+        string="CYL OD",
         digits=(4, 2),
-        help=_("Cylindre oeil droit (0.00 a -8.00 dioptries)"),
+        help="Cylindre oeil droit (0.00 a -8.00 dioptries)",
     )
     od_axis = fields.Integer(
-        string=_("AXE OD"),
-        help=_("Axe oeil droit (0 a 180 degres)"),
+        string="AXE OD",
+        help="Axe oeil droit (0 a 180 degres)",
     )
     od_addition = fields.Float(
-        string=_("ADD OD"),
+        string="ADD OD",
         digits=(3, 2),
-        help=_("Addition oeil droit (0.00 a +4.00 dioptries)"),
+        help="Addition oeil droit (0.00 a +4.00 dioptries)",
     )
     od_prism = fields.Float(
-        string=_("Prisme OD"),
+        string="Prisme OD",
         digits=(3, 2),
-        help=_("Prisme oeil droit"),
+        help="Prisme oeil droit",
     )
     od_prism_base = fields.Selection(
         [
@@ -123,35 +123,35 @@ class OpticalPrescription(models.Model):
         string="Base prisme OD",
     )
     od_pd = fields.Float(
-        string=_("EP OD"),
+        string="EP OD",
         digits=(3, 1),
-        help=_("Ecart pupillaire oeil droit (mm)"),
+        help="Ecart pupillaire oeil droit (mm)",
     )
 
     # --- Mesures OG (oeil gauche) ---
     og_sphere = fields.Float(
-        string=_("SPH OG"),
+        string="SPH OG",
         digits=(4, 2),
-        help=_("Sphere oeil gauche (-20.00 a +20.00 dioptries)"),
+        help="Sphere oeil gauche (-20.00 a +20.00 dioptries)",
     )
     og_cylinder = fields.Float(
-        string=_("CYL OG"),
+        string="CYL OG",
         digits=(4, 2),
-        help=_("Cylindre oeil gauche (0.00 a -8.00 dioptries)"),
+        help="Cylindre oeil gauche (0.00 a -8.00 dioptries)",
     )
     og_axis = fields.Integer(
-        string=_("AXE OG"),
-        help=_("Axe oeil gauche (0 a 180 degres)"),
+        string="AXE OG",
+        help="Axe oeil gauche (0 a 180 degres)",
     )
     og_addition = fields.Float(
-        string=_("ADD OG"),
+        string="ADD OG",
         digits=(3, 2),
-        help=_("Addition oeil gauche (0.00 a +4.00 dioptries)"),
+        help="Addition oeil gauche (0.00 a +4.00 dioptries)",
     )
     og_prism = fields.Float(
-        string=_("Prisme OG"),
+        string="Prisme OG",
         digits=(3, 2),
-        help=_("Prisme oeil gauche"),
+        help="Prisme oeil gauche",
     )
     og_prism_base = fields.Selection(
         [
@@ -163,16 +163,16 @@ class OpticalPrescription(models.Model):
         string="Base prisme OG",
     )
     og_pd = fields.Float(
-        string=_("EP OG"),
+        string="EP OG",
         digits=(3, 1),
-        help=_("Ecart pupillaire oeil gauche (mm)"),
+        help="Ecart pupillaire oeil gauche (mm)",
     )
 
     # --- EP binoculaire ---
     pd_total = fields.Float(
-        string=_("EP Total"),
+        string="EP Total",
         digits=(3, 1),
-        help=_("Ecart pupillaire total (mm)"),
+        help="Ecart pupillaire total (mm)",
     )
 
     # --- Computed ---

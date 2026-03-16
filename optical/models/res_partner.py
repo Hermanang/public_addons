@@ -1,74 +1,74 @@
 # -*- coding: utf-8 -*-
-from odoo import _, fields, models
+from odoo import fields, models, _
 
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     birthdate = fields.Date(
-        string=_("Date de naissance"),
+        string="Date de naissance",
     )
     is_patient = fields.Boolean(
-        string=_("Patient optique"),
+        string="Patient optique",
         default=False,
         index=True,
     )
     is_insurer = fields.Boolean(
-        string=_("Assureur/IPM"),
+        string="Assureur/IPM",
         default=False,
         index=True,
     )
     insurer_type = fields.Selection(
-        [('insurance', _("Assurance")), ('ipm', _("IPM"))],
-        string=_("Type assureur"),
+        [('insurance', "Assurance"), ('ipm', "IPM")],
+        string="Type assureur",
         default='ipm',
     )
     is_prescriber = fields.Boolean(
-        string=_("Prescripteur"),
+        string="Prescripteur",
         default=False,
         index=True,
     )
     prescriber_registration = fields.Char(
-        string=_("N° d'enregistrement"),
-        help=_("Numero d'enregistrement professionnel du prescripteur"),
+        string="N° d'enregistrement",
+        help="Numero d'enregistrement professionnel du prescripteur",
     )
     prescriber_specialty = fields.Selection(
         [
-            ('ophthalmologist', _("Ophtalmologue")),
-            ('optometrist', _("Optometriste")),
-            ('other', _("Autre")),
+            ('ophthalmologist', "Ophtalmologue"),
+            ('optometrist', "Optometriste"),
+            ('other', "Autre"),
         ],
-        string=_("Specialite"),
-        help=_("Specialite du prescripteur"),
+        string="Specialite",
+        help="Specialite du prescripteur",
     )
 
     # --- Dossier patient : One2many inverses ---
     prescription_ids = fields.One2many(
         'optical.prescription', 'patient_id',
-        string=_("Ordonnances"),
+        string="Ordonnances",
     )
     policy_ids = fields.One2many(
         'optical.policy', 'patient_id',
-        string=_("Polices d'assurance"),
+        string="Polices d'assurance",
     )
 
     # --- Souscripteur : One2many inverse ---
     subscriber_policy_ids = fields.One2many(
         'optical.policy', 'subscriber_id',
-        string=_("Polices souscrites"),
+        string="Polices souscrites",
     )
 
     # --- Dossier patient : Computed counts pour smart buttons ---
     prescription_count = fields.Integer(
-        string=_("Nombre d'ordonnances"),
+        string="Nombre d'ordonnances",
         compute='_compute_prescription_count',
     )
     policy_count = fields.Integer(
-        string=_("Nombre de polices"),
+        string="Nombre de polices",
         compute='_compute_policy_count',
     )
     subscriber_policy_count = fields.Integer(
-        string=_("Nombre de polices souscrites"),
+        string="Nombre de polices souscrites",
         compute='_compute_subscriber_policy_count',
     )
 

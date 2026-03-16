@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -9,7 +9,7 @@ _logger = logging.getLogger(__name__)
 
 class OpticalPolicy(models.Model):
     _name = 'optical.policy'
-    _description = _("Police d'assurance optique")
+    _description = "Police d'assurance optique"
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin']
     _order = 'date_end desc, id desc'
 
@@ -42,25 +42,25 @@ class OpticalPolicy(models.Model):
     )
     subscriber_id = fields.Many2one(
         'res.partner',
-        string=_("Souscripteur"),
+        string="Souscripteur",
         index='btree_not_null',
         tracking=True,
         check_company=True,
     )
     beneficiary_relationship = fields.Selection(
         [
-            ('holder', _('Titulaire')),
-            ('spouse', _('Conjoint')),
-            ('child', _('Enfant')),
-            ('parent', _('Parent')),
-            ('other', _('Autre')),
+            ('holder', "Titulaire"),
+            ('spouse', "Conjoint"),
+            ('child', "Enfant"),
+            ('parent', "Parent"),
+            ('other', "Autre"),
         ],
-        string=_("Relation bénéficiaire"),
+        string="Relation bénéficiaire",
         default='holder',
         tracking=True,
     )
     member_number = fields.Char(
-        string=_("Numéro d'adhérent"),
+        string="Numéro d'adhérent",
         index='trigram',
         tracking=True,
     )
@@ -113,19 +113,19 @@ class OpticalPolicy(models.Model):
 
     # === COMPUTED FIELDS === #
     amount_consumed = fields.Monetary(
-        string=_("Montant consommé"),
+        string="Montant consommé",
         compute='_compute_consumption',
         store=False,
         currency_field='currency_id',
     )
     amount_remaining = fields.Monetary(
-        string=_("Montant restant"),
+        string="Montant restant",
         compute='_compute_consumption',
         store=False,
         currency_field='currency_id',
     )
     annual_cap_total = fields.Monetary(
-        string=_("Plafond annuel total"),
+        string="Plafond annuel total",
         compute='_compute_consumption',
         store=False,
         currency_field='currency_id',
