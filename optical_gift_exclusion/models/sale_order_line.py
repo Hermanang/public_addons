@@ -14,6 +14,13 @@ class SaleOrderLine(models.Model):
              "sont automatiquement marquées comme cadeaux.",
     )
 
+    def _prepare_invoice_line(self, **optional_values):
+        """Propager is_gift vers la ligne facture lors de la facturation standard."""
+        res = super()._prepare_invoice_line(**optional_values)
+        if self.is_gift:
+            res['is_gift'] = True
+        return res
+
     def write(self, vals):
         res = super().write(vals)
         # Synchro automatique : si sale_loyalty positionne is_reward_line=True,

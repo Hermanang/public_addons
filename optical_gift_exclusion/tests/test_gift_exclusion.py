@@ -187,6 +187,45 @@ class TestGiftExclusion(OpticalTestCommon):
         self.assertEqual(len(gift_lines), 1, "Une seule ligne doit etre is_gift via delegation")
         self.assertEqual(gift_lines[0].product_id, self.product_promo)
 
+    def test_standard_invoice_creation_propagates_is_gift(self):
+        """Via le bouton standard Odoo 'Creer une facture', is_gift est propage."""
+        order = self.env['sale.order'].create({
+            'partner_id': self.patient.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_monture.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 50000.0,
+                }),
+                Command.create({
+                    'product_id': self.product_promo.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 5000.0,
+                    'is_gift': True,
+                }),
+            ],
+        })
+        order.action_confirm()
+
+        # Chemin standard Odoo : sale.order._create_invoices()
+        invoice = order._create_invoices()
+        self.assertTrue(invoice, "La facture doit exister")
+
+        inv_lines = invoice.invoice_line_ids.filtered(
+            lambda l: l.display_type == 'product'
+        ).sorted('id')
+        self.assertEqual(len(inv_lines), 2, "2 lignes produit attendues")
+
+        # Monture = non-gift, promo = gift
+        monture_line = inv_lines.filtered(
+            lambda l: l.product_id == self.product_monture
+        )
+        gift_line = inv_lines.filtered(
+            lambda l: l.product_id == self.product_promo
+        )
+        self.assertFalse(monture_line.is_gift, "Monture ne doit pas etre is_gift")
+        self.assertTrue(gift_line.is_gift, "Ligne cadeau doit etre is_gift")
+
     # ========================================================================
     # Tests bordereau (Story 14.2) — filtrage is_gift
     # ========================================================================
