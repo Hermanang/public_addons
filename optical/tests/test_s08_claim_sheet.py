@@ -266,7 +266,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
     # --- Task 2.1 : Test contenu PDF format IPM (AC2, AC6) ---
 
     def test_pdf_content_ipm_format(self):
-        """Format IPM : le HTML contient Participant, SOUS TOTAL, nom patient, produits, TOTAL GENERAL."""
+        """Format IPM : le HTML contient Participant, SOUS TOTAL, nom patient, produits."""
         wizard = self._create_wizard()
         wizard.action_search_invoices()
         claim_sheet = self._generate_claim_sheet(wizard)
@@ -276,7 +276,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
         # Labels format IPM (case-insensitive — dynamic columns use title case)
         self.assertIn('participant', html_lower)
         self.assertIn('sous total', html_lower)
-        self.assertIn('total general', html_lower)
+        self.assertNotIn('total general', html_lower)
         # Nom du patient (bénéficiaire et participant en format IPM)
         self.assertIn(self.patient.name, html_str)
         # Noms des produits
@@ -383,8 +383,9 @@ class TestClaimSheetWizard(OpticalTestCommon):
         claim_sheet = invoice_tva.claim_sheet_id
         html_str = self._render_html(claim_sheet)
         html_lower = html_str.lower()
-        # Dont TVA doit apparaître comme colonne (dynamic columns use title case)
-        self.assertIn('dont tva', html_lower)
+        # Mention "Dont TVA" inline supprimée du tableau — TVA exposée uniquement
+        # via la ventilation fiscale en bas de document
+        self.assertNotIn('dont tva', html_lower)
         # La ventilation fiscale doit montrer un montant TVA > 0
         summary = claim_sheet._get_tax_summary()
         self.assertTrue(summary['taxes'], "Il doit y avoir au moins une taxe")
@@ -395,7 +396,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
     # --- Task 3.1 : Test contenu PDF format Assurance (AC1, AC6) ---
 
     def test_pdf_content_insurance_format(self):
-        """Format Assurance : le HTML contient Souscripteur, SOUS TOTAL, nom souscripteur, TOTAL GENERAL."""
+        """Format Assurance : le HTML contient Souscripteur, SOUS TOTAL, nom souscripteur."""
         self.insurer.insurer_type = 'insurance'
         wizard = self._create_wizard()
         wizard.action_search_invoices()
@@ -406,7 +407,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
         # Labels format Assurance (case-insensitive — dynamic columns use title case)
         self.assertIn('souscripteur', html_lower)
         self.assertIn('sous total', html_lower)
-        self.assertIn('total general', html_lower)
+        self.assertNotIn('total general', html_lower)
         # Nom du souscripteur
         self.assertIn(self.subscriber.name, html_str)
 
@@ -530,7 +531,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
         # Le HTML doit se rendre sans erreur avec les bons labels format Assurance
         html_str = self._render_html(claim_sheet)
         html_lower = html_str.lower()
-        self.assertIn('total general', html_lower)
+        self.assertIn('sous total', html_lower)
         self.assertIn(patient_no_sub.name, html_str)
         # L2 fix : vérifier que la colonne Souscripteur est présente (format Assurance)
         self.assertIn('souscripteur', html_lower)

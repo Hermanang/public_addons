@@ -246,24 +246,26 @@ class TestBridgeDynamicColumns(TransactionCase):
         self.assertEqual(len(claim_sheet.column_ids), len(self.columns_ipm))
         rows = claim_sheet._get_dynamic_rows()
         self.assertTrue(rows)
+        # Plus de ligne TOTAL GENERAL : la dernière ligne est un sous-total
         last_row = rows[-1]
-        self.assertTrue(last_row.get('is_total'))
+        self.assertTrue(last_row.get('is_subtotal'))
+        self.assertFalse(any(r.get('is_total') for r in rows))
 
     # --- AC #3 : Dynamic rows structure ---
 
     def test_dynamic_rows_structure(self):
-        """Les rows dynamiques ont la bonne structure (values, sous-totaux, total)."""
+        """Les rows dynamiques ont la bonne structure (values, sous-totaux)."""
         wizard = self._create_wizard()
         wizard.action_search_invoices()
         wizard.report_column_ids = [(6, 0, self.columns_ipm.ids)]
         wizard.action_generate()
         claim_sheet = self.invoice_insurance.claim_sheet_id
         rows = claim_sheet._get_dynamic_rows()
-        self.assertGreaterEqual(len(rows), 3)
+        self.assertGreaterEqual(len(rows), 2)
         subtotal_rows = [r for r in rows if r.get('is_subtotal')]
         total_rows = [r for r in rows if r.get('is_total')]
         self.assertGreaterEqual(len(subtotal_rows), 1)
-        self.assertEqual(len(total_rows), 1)
+        self.assertEqual(len(total_rows), 0)
         n_cols = len(self.columns_ipm)
         for row in rows:
             self.assertEqual(len(row['values']), n_cols)
@@ -331,8 +333,9 @@ class TestBridgeDynamicColumns(TransactionCase):
         # _get_dynamic_rows doit fonctionner avec le fallback
         rows = claim_sheet._get_dynamic_rows()
         self.assertTrue(rows)
+        # Plus de ligne TOTAL GENERAL : la dernière ligne est un sous-total
         last_row = rows[-1]
-        self.assertTrue(last_row.get('is_total'))
+        self.assertTrue(last_row.get('is_subtotal'))
 
     # --- M2 : Test rendu QWeb HTML ---
 

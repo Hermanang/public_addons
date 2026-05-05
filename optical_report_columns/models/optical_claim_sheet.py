@@ -73,7 +73,6 @@ class OpticalClaimSheetColumns(models.Model):
             return []
         groups = self._get_invoices_grouped()
         rows = []
-        grand_total_values = [0.0] * len(columns)
 
         for group in groups:
             subtotal_values = [0.0] * len(columns)
@@ -83,7 +82,6 @@ class OpticalClaimSheetColumns(models.Model):
                 for line_idx, line in enumerate(product_lines):
                     row_values = []
                     rowspans = []
-                    cell_subtitles = {}
                     for i, col in enumerate(columns):
                         val = self._get_column_value(col, invoice, line)
                         row_values.append(val)
@@ -94,17 +92,7 @@ class OpticalClaimSheetColumns(models.Model):
                             rowspans.append(line_count if line_idx == 0 else 0)
                         else:
                             rowspans.append(1)
-                        # Sous-titre TVA inline pour montures
-                        if (col.technical_name == 'amount_total'
-                                and line and line.price_total != line.price_subtotal):
-                            cell_subtitles[i] = {
-                                'label': 'DONT TVA',
-                                'amount': line.price_total - line.price_subtotal,
-                            }
-                    row_data = {'values': row_values, 'rowspans': rowspans}
-                    if cell_subtitles:
-                        row_data['cell_subtitles'] = cell_subtitles
-                    rows.append(row_data)
+                    rows.append({'values': row_values, 'rowspans': rowspans})
 
             st_label = (
                 'SOUS TOTAL CLIENT'
@@ -115,21 +103,10 @@ class OpticalClaimSheetColumns(models.Model):
             for i, col in enumerate(columns):
                 if col.is_subtotalable:
                     st_row.append(subtotal_values[i])
-                    grand_total_values[i] += subtotal_values[i]
                 elif i == 0:
                     st_row.append(st_label)
                 else:
                     st_row.append('')
             rows.append({'values': st_row, 'is_subtotal': True})
-
-        total_row = []
-        for i, col in enumerate(columns):
-            if col.is_subtotalable:
-                total_row.append(grand_total_values[i])
-            elif i == 0:
-                total_row.append('TOTAL GENERAL')
-            else:
-                total_row.append('')
-        rows.append({'values': total_row, 'is_total': True})
 
         return rows

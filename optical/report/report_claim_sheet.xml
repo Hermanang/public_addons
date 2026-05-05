@@ -70,7 +70,6 @@
                             <tbody>
                                 <t t-set="currency" t-value="o.invoice_ids[:1].currency_id or o.env.company.currency_id"/>
                                 <t t-set="groups" t-value="o._get_invoices_grouped()"/>
-                                <t t-set="grand_total" t-value="0"/>
                                 <t t-foreach="groups" t-as="group">
                                     <t t-foreach="group['invoices']" t-as="invoice">
                                         <t t-foreach="o._get_invoice_product_lines(invoice)" t-as="line">
@@ -82,9 +81,6 @@
                                                 <td><t t-esc="line.product_id.name"/></td>
                                                 <td class="text-end">
                                                     <span t-out="line.price_total" t-options='{"widget": "monetary", "display_currency": currency}'/>
-                                                    <t t-if="line.product_id.optical_type == 'frame' and line.price_total != line.price_subtotal">
-                                                        <br/><small>(DONT TVA <span t-out="line.price_total - line.price_subtotal" t-options='{"widget": "monetary", "display_currency": currency}'/>)</small>
-                                                    </t>
                                                 </td>
                                             </tr>
                                         </t>
@@ -97,15 +93,8 @@
                                         </td>
                                         <td class="text-end"><span t-out="group['subtotal']" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
                                     </tr>
-                                    <t t-set="grand_total" t-value="grand_total + group['subtotal']"/>
                                 </t>
                             </tbody>
-                            <tfoot>
-                                <tr class="fw-bold table-dark">
-                                    <td colspan="5" class="text-end">TOTAL GENERAL</td>
-                                    <td class="text-end"><span t-out="grand_total" t-options='{"widget": "monetary", "display_currency": currency}'/></td>
-                                </tr>
-                            </tfoot>
                         </table>
 
                         <!-- Ventilation fiscale dynamique -->
