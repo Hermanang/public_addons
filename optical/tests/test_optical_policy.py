@@ -36,6 +36,30 @@ class TestOpticalPolicy(OpticalTestCommon):
                 'date_end': '2026-01-01',
             })
 
+    def test_create_policy_without_dates(self):
+        """Une police peut être créée sans date_start ni date_end (champs optionnels)."""
+        policy = self.env['optical.policy'].create({
+            'patient_id': self.patient.id,
+            'insurer_id': self.insurer.id,
+            'coverage_rate': 80.0,
+        })
+        self.assertTrue(policy.id)
+        self.assertFalse(policy.date_start)
+        self.assertFalse(policy.date_end)
+        self.assertEqual(policy.state, 'active')
+
+    def test_create_policy_with_only_date_start(self):
+        """Une police peut être créée avec uniquement date_start."""
+        policy = self.env['optical.policy'].create({
+            'patient_id': self.patient.id,
+            'insurer_id': self.insurer.id,
+            'coverage_rate': 80.0,
+            'date_start': '2026-01-01',
+        })
+        self.assertTrue(policy.id)
+        self.assertEqual(str(policy.date_start), '2026-01-01')
+        self.assertFalse(policy.date_end)
+
     def test_check_dates_equal_raises(self):
         """date_end == date_start doit aussi lever une erreur."""
         with self.assertRaises(ValidationError):

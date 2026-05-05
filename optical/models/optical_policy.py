@@ -78,12 +78,10 @@ class OpticalPolicy(models.Model):
     )
     date_start = fields.Date(
         string="Date de début",
-        required=True,
         tracking=True,
     )
     date_end = fields.Date(
         string="Date de fin",
-        required=True,
         tracking=True,
     )
     state = fields.Selection(
