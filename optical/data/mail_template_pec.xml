@@ -13,7 +13,7 @@
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <p>Bonjour,</p>
 
-    <p>Nous vous prions de recevoir la demande de prise en charge de <t t-out="object.patient_id.name or ''">Nom Patient</t>.</p>
+    <p>Nous vous prions de recevoir la demande de prise en charge de <strong><t t-out="object.patient_id.name or ''">Nom Patient</t></strong>.</p>
 
     <p>Veuillez trouver en pièce jointe la facture proforma, la police, et l'ordonnance.</p>
 
