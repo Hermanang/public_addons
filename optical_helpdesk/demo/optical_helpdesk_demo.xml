@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+        Donnees de demonstration optical_helpdesk.
+        Charge uniquement quand le module est installe avec demo data.
+        Avec le flag without-demo all, ce fichier n'est pas charge.
+
+        Demontre la taxonomie 2D type x category avec 5 tickets representatifs.
+        -->
+
+        <!-- Partenaires de demo (clients fictifs) -->
+        <record id="demo_partner_diop" model="res.partner">
+            <field name="name">Aïssatou Diop</field>
+            <field name="phone">77 777 12 34</field>
+            <field name="email">aissatou.diop@example.sn</field>
+            <field name="city">Dakar</field>
+            <field name="customer_rank">1</field>
+        </record>
+
+        <record id="demo_partner_ndiaye" model="res.partner">
+            <field name="name">Cheikh Ndiaye</field>
+            <field name="phone">77 555 88 99</field>
+            <field name="email">cheikh.ndiaye@example.sn</field>
+            <field name="city">Dakar</field>
+            <field name="customer_rank">1</field>
+        </record>
+
+        <record id="demo_partner_fall" model="res.partner">
+            <field name="name">Mariama Fall</field>
+            <field name="phone">77 444 55 66</field>
+            <field name="email">mariama.fall@example.sn</field>
+            <field name="city">Dakar</field>
+            <field name="customer_rank">1</field>
+        </record>
+
+        <record id="demo_partner_sow" model="res.partner">
+            <field name="name">Ousmane Sow</field>
+            <field name="phone">77 222 33 44</field>
+            <field name="email">ousmane.sow@example.sn</field>
+            <field name="city">Dakar</field>
+            <field name="customer_rank">1</field>
+        </record>
+
+        <!-- Canaux demo -->
+        <record id="demo_channel_boutique" model="helpdesk.ticket.channel">
+            <field name="name">Boutique</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="demo_channel_whatsapp" model="helpdesk.ticket.channel">
+            <field name="name">WhatsApp</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Equipe demo configuree avec tous les types et categories -->
+        <record id="demo_team_vdn" model="helpdesk.ticket.team">
+            <field name="name">Boutique Demo VDN</field>
+            <field name="type_ids" eval="[(6, 0, [
+                ref('optical_helpdesk.type_complaint'),
+                ref('optical_helpdesk.type_sav'),
+                ref('optical_helpdesk.type_inquiry'),
+            ])]"/>
+            <field name="category_ids" eval="[(6, 0, [
+                ref('optical_helpdesk.category_optique'),
+                ref('optical_helpdesk.category_optique_verres'),
+                ref('optical_helpdesk.category_optique_montures'),
+                ref('optical_helpdesk.category_optique_lentilles'),
+                ref('optical_helpdesk.category_service'),
+                ref('optical_helpdesk.category_service_tarif'),
+                ref('optical_helpdesk.category_service_mutuelle'),
+            ])]"/>
+        </record>
+
+        <!--
+        Ticket 1 : Reclamation x Optique > Verres
+        Le cas typique : verres rayes, diagnostic complet, solution.
+        -->
+        <record id="demo_ticket_complaint_verres" model="helpdesk.ticket">
+            <field name="name">Verres rayés moins de 3 mois après achat</field>
+            <field name="partner_id" ref="demo_partner_diop"/>
+            <field name="partner_phone">77 777 12 34</field>
+            <field name="team_id" ref="demo_team_vdn"/>
+            <field name="type_id" ref="type_complaint"/>
+            <field name="category_id" ref="category_optique_verres"/>
+            <field name="channel_id" ref="demo_channel_boutique"/>
+            <field name="complaint_motive_ids" eval="[(6, 0, [
+                ref('optical_helpdesk.motive_verre_raye'),
+                ref('optical_helpdesk.motive_inconfort_visuel'),
+            ])]"/>
+            <field name="cause_identified">fournisseur</field>
+            <field name="proposed_solution">remplacement_verre</field>
+            <field name="description" type="html"><![CDATA[<p>Mes verres ils rayent vite, j'ai acheté il y a 3 mois et déjà ya des rayures partout je vois plus bien la nuit quand je conduis. Je nettoie pourtant avec le tissu que vous m'avez donné. Je voudrais un changement svp.</p>]]></field>
+            <field name="internal_diagnostic" type="html"><![CDATA[<p>Verre droit minéral, rayures linéaires multiples sur la face externe, profondeur estimée &gt;50µm. Pas de trace de choc ni de mauvais entretien côté client (étui propre, chiffon non abrasif). Compatible avec un défaut de traitement durci. Lot fournisseur 2025-VRR-0418, déjà signalé sur 2 autres tickets ce mois.</p>]]></field>
+        </record>
+
+        <!--
+        Ticket 2 : Reclamation x Optique > Montures (chute, multi-motifs)
+        -->
+        <record id="demo_ticket_complaint_chute" model="helpdesk.ticket">
+            <field name="name">Lunettes tombées : branches et pont cassés</field>
+            <field name="partner_id" ref="demo_partner_ndiaye"/>
+            <field name="partner_phone">77 555 88 99</field>
+            <field name="team_id" ref="demo_team_vdn"/>
+            <field name="type_id" ref="type_complaint"/>
+            <field name="category_id" ref="category_optique_montures"/>
+            <field name="channel_id" ref="demo_channel_boutique"/>
+            <field name="complaint_motive_ids" eval="[(6, 0, [
+                ref('optical_helpdesk.motive_branches_cassees'),
+                ref('optical_helpdesk.motive_pont_casse'),
+                ref('optical_helpdesk.motive_verre_raye'),
+            ])]"/>
+            <field name="cause_identified">manipulation_client</field>
+            <field name="description" type="html"><![CDATA[<p>Mes lunettes sont tombées de ma poche en sortant de voiture. Branches et pont cassés, et un verre est rayé. Que peut-on faire ?</p>]]></field>
+        </record>
+
+        <!--
+        Ticket 3 : SAV x Optique > Montures (retouche standard, sans champs reclamation)
+        -->
+        <record id="demo_ticket_sav_montures" model="helpdesk.ticket">
+            <field name="name">Demande de retouche - réglage hauteur lunettes</field>
+            <field name="partner_id" ref="demo_partner_fall"/>
+            <field name="partner_phone">77 444 55 66</field>
+            <field name="team_id" ref="demo_team_vdn"/>
+            <field name="type_id" ref="type_sav"/>
+            <field name="category_id" ref="category_optique_montures"/>
+            <field name="channel_id" ref="demo_channel_boutique"/>
+            <field name="description" type="html"><![CDATA[<p>Cliente demande un ajustement de la hauteur de ses verres progressifs. Lunettes glissent légèrement sur le nez, gêne en lecture.</p>]]></field>
+        </record>
+
+        <!--
+        Ticket 4 : Renseignement x Service > Mutuelle (vue minimale, no optical fields)
+        -->
+        <record id="demo_ticket_inquiry_mutuelle" model="helpdesk.ticket">
+            <field name="name">Ma mutuelle IPRES couvre-t-elle les progressifs ?</field>
+            <field name="partner_id" ref="demo_partner_sow"/>
+            <field name="partner_phone">77 222 33 44</field>
+            <field name="team_id" ref="demo_team_vdn"/>
+            <field name="type_id" ref="type_inquiry"/>
+            <field name="category_id" ref="category_service_mutuelle"/>
+            <field name="channel_id" ref="demo_channel_whatsapp"/>
+            <field name="description" type="html"><![CDATA[<p>Bonjour, je suis affilié à l'IPRES et je voudrais savoir si ma mutuelle prend en charge les verres progressifs avec antireflet ?</p>]]></field>
+        </record>
+
+    </data>
+</odoo>

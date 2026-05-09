@@ -1,0 +1,33 @@
+{
+    'name': 'Optique Helpdesk',
+    'version': '18.0.1.0.0',
+    'category': 'Optique/Helpdesk',
+    'summary': 'Gestion des réclamations client en boutique optique : motifs multi-cochables, diagnostic, rapport A5 double-volet',
+    'author': 'Otiten',
+    'website': 'https://www.otiten.com',
+    'license': 'LGPL-3',
+    'depends': [
+        'helpdesk_mgmt',
+        'helpdesk_mgmt_sale',
+        'helpdesk_type',
+        'optical',
+        'sale',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/helpdesk_sequence.xml',
+        'data/helpdesk_type_data.xml',
+        'data/helpdesk_category_data.xml',
+        'data/helpdesk_complaint_motive_data.xml',
+        'data/paperformat.xml',
+        'views/helpdesk_complaint_motive_views.xml',
+        'views/helpdesk_ticket_views.xml',
+        'report/report_complaint_ticket.xml',
+    ],
+    'demo': [
+        'demo/optical_helpdesk_demo.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}

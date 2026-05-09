@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+        Categories (axe "topic / sujet") - hierarchique.
+        Qualifie le domaine produit ou service auquel le ticket se rapporte.
+
+        Different du type (axe "process / kind of workflow") qui determine
+        le formulaire/SLA/rapport.
+
+        Les deux axes sont orthogonaux - un ticket peut etre par exemple :
+        type=Reclamation + category=Optique > Verres
+        type=SAV         + category=Optique > Montures
+        type=Renseignement + category=Service > Mutuelle
+        -->
+
+        <!-- Optique (parent) -->
+        <record id="category_optique" model="helpdesk.ticket.category">
+            <field name="name">Optique</field>
+            <field name="sequence">10</field>
+            <field name="show_in_portal" eval="True"/>
+        </record>
+
+        <record id="category_optique_verres" model="helpdesk.ticket.category">
+            <field name="name">Verres</field>
+            <field name="parent_id" ref="category_optique"/>
+            <field name="sequence">11</field>
+        </record>
+
+        <record id="category_optique_montures" model="helpdesk.ticket.category">
+            <field name="name">Montures</field>
+            <field name="parent_id" ref="category_optique"/>
+            <field name="sequence">12</field>
+        </record>
+
+        <record id="category_optique_lentilles" model="helpdesk.ticket.category">
+            <field name="name">Lentilles de contact</field>
+            <field name="parent_id" ref="category_optique"/>
+            <field name="sequence">13</field>
+        </record>
+
+        <!-- Service (parent) -->
+        <record id="category_service" model="helpdesk.ticket.category">
+            <field name="name">Service</field>
+            <field name="sequence">20</field>
+            <field name="show_in_portal" eval="True"/>
+        </record>
+
+        <record id="category_service_tarif" model="helpdesk.ticket.category">
+            <field name="name">Tarif</field>
+            <field name="parent_id" ref="category_service"/>
+            <field name="sequence">21</field>
+        </record>
+
+        <record id="category_service_mutuelle" model="helpdesk.ticket.category">
+            <field name="name">Mutuelle / Tiers-payant</field>
+            <field name="parent_id" ref="category_service"/>
+            <field name="sequence">22</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,19 +1,19 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Optique',
     'version': '18.0.6.0.0',
-    'category': 'Optique',
+    'category': 'Optique/Core',
     'summary': 'Gestion optique avec facturation assurance',
     'description': """
 Module de gestion optique
 =========================
 
-Gestion complete d'un magasin d'optique :
-* Securite par role (vendeur / responsable)
-* Menus operationnels et configuration
+Gestion complète d'un magasin d'optique :
+* Sécurité par rôle (vendeur / responsable)
+* Menus opérationnels et configuration
 * Multi-boutiques optionnel via le module bridge optical_operating_unit
     """,
-    'author': 'Odoo Optic CE',
+    'author': 'Otiten',
+    'website': 'https://www.otiten.com',
     'license': 'LGPL-3',
     'depends': [
         'sale_management',

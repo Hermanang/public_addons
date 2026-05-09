@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_helpdesk_ticket_stage_form_type_validation" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.stage.form.type.validation</field>
+        <field name="model">helpdesk.ticket.stage</field>
+        <field name="inherit_id" ref="helpdesk_mgmt_stage_validation.view_helpdesk_ticket_stage_form"/>
+        <field name="arch" type="xml">
+            <field name="validate_field_ids" position="after">
+                <field name="validate_type_ids"
+                       widget="many2many_tags"
+                       options="{'no_create': True}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

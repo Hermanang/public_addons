@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ticket_view_form_optical" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.view.form.optical</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_mgmt.ticket_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Téléphone client juste après l'email (utile pour tous les types) -->
+            <field name="partner_email" position="after">
+                <field name="partner_phone"/>
+            </field>
+
+            <!-- Champs invisibles utilitaires + Motifs réclamation après tag_ids -->
+            <field name="tag_ids" position="after">
+                <field name="product_id_domain" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="complaint_motive_ids"
+                       widget="many2many_tags"
+                       options="{'color_field': 'color', 'no_create_edit': True}"
+                       invisible="type_id != %(optical_helpdesk.type_complaint)d"/>
+            </field>
+
+            <!-- Bloc Produit concerné — visible UNIQUEMENT pour le type Réclamation -->
+            <field name="sequence" position="before">
+                <separator string="Produit concerné" colspan="2"
+                           invisible="type_id != %(optical_helpdesk.type_complaint)d"/>
+                <field name="product_id"
+                       options="{'no_create_edit': True}"
+                       domain="product_id_domain"
+                       invisible="type_id != %(optical_helpdesk.type_complaint)d"/>
+                <field name="optical_type" readonly="1"
+                       invisible="type_id != %(optical_helpdesk.type_complaint)d"/>
+                <field name="purchase_price"
+                       invisible="type_id != %(optical_helpdesk.type_complaint)d"/>
+            </field>
+
+            <!-- Page "Diagnostic interne" — visible UNIQUEMENT pour le type Réclamation -->
+            <page name="description" position="after">
+                <page string="Diagnostic interne" name="diagnostic_interne"
+                      invisible="type_id != %(optical_helpdesk.type_complaint)d">
+                    <group>
+                        <group name="cause" string="Cause">
+                            <field name="cause_identified" widget="radio"/>
+                        </group>
+                        <group name="solution" string="Solution">
+                            <field name="proposed_solution"/>
+                            <field name="refund_amount"
+                                   invisible="proposed_solution != 'remboursement'"/>
+                        </group>
+                    </group>
+                    <separator string="Description détaillée du diagnostic"/>
+                    <field name="internal_diagnostic" widget="html"/>
+                </page>
+            </page>
+
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action rapport (limitee aux tickets de type Reclamation via domain) -->
+    <record id="action_report_complaint_ticket" model="ir.actions.report">
+        <field name="name">Ticket de réclamation</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">optical_helpdesk.report_complaint_ticket</field>
+        <field name="report_file">optical_helpdesk.report_complaint_ticket</field>
+        <field name="print_report_name">'Réclamation - %s - %s' % (object.number or '', object.partner_name or (object.partner_id and object.partner_id.name) or '')</field>
+        <field name="binding_model_id" ref="helpdesk_mgmt.model_helpdesk_ticket"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_optical_complaint_a5"/>
+        <field name="domain" eval="str([('type_id', '=', ref('optical_helpdesk.type_complaint'))])"/>
+    </record>
+
+    <!-- Wrapper -->
+    <template id="report_complaint_ticket">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="optical_helpdesk.report_complaint_ticket_document"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- Helper checkbox : carré vide ou avec une croix (SVG) -->
+    <template id="cb">
+        <svg width="9" height="9" style="vertical-align:-1.5px;margin:0 4px 0 0;display:inline-block;">
+            <rect x="0.5" y="0.5" width="8" height="8" fill="white" stroke="black" stroke-width="1"/>
+            <g t-if="checked">
+                <line x1="1.8" y1="1.8" x2="7.2" y2="7.2" stroke="black" stroke-width="1.2"/>
+                <line x1="1.8" y1="7.2" x2="7.2" y2="1.8" stroke="black" stroke-width="1.2"/>
+            </g>
+        </svg>
+    </template>
+
+    <!-- Bloc client réutilisable (volet A et reproduit dans volet B) -->
+    <template id="report_complaint_ticket_client_block">
+
+        <!-- Section Produit concerné -->
+        <div class="section-title">Produit concerné</div>
+        <div class="section-box">
+            <table style="width:100%;border:0;">
+                <tr>
+                    <td>
+                        <span class="cb-item"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.optical_type == 'frame'"/></t>Monture</span>
+                        <span class="cb-item"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.optical_type == 'lens'"/></t>Verre</span>
+                        <span class="cb-item"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.optical_type == 'contact_lens'"/></t>Lentille</span>
+                    </td>
+                    <td style="text-align:right;white-space:nowrap;">
+                        <strong>Prix d'achat :</strong>
+                        <span t-if="doc.purchase_price" t-field="doc.purchase_price"
+                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Section Motif réclamation -->
+        <div class="section-title">Motif réclamation</div>
+        <div class="section-box">
+            <div>
+                <strong>Canal réclamation :</strong>
+                <span t-if="doc.channel_id" style="margin-left:6px;">
+                    <span class="cb-item"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="True"/></t><t t-out="doc.channel_id.name"/></span>
+                </span>
+                <span t-else="" style="margin-left:6px;font-style:italic;">(non renseigné)</span>
+            </div>
+
+            <div style="margin-top:4px;"><strong>Catégorie :</strong></div>
+            <table class="cb-table">
+                <tr>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_defaut_fabrication')"/></t>Défaut de fabrication</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_erreur_correction')"/></t>Erreur de correction</td>
+                    <td/>
+                </tr>
+                <tr>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_probleme_reglage')"/></t>Problème de réglage</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_verre_raye')"/></t>Verre rayé</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_charniere_desserree')"/></t>Charnière desserrée</td>
+                </tr>
+                <tr>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_inconfort_visuel')"/></t>Inconfort visuel</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_retard_livraison')"/></t>Retard de livraison</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_verre_casse')"/></t>Verre cassé / fissuré</td>
+                </tr>
+                <tr>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_branches_cassees')"/></t>Branches cassées</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_pont_casse')"/></t>Pont cassé</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_alteration_matiere')"/></t>Altération de la matière</td>
+                </tr>
+                <tr>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_fixation_plaquettes')"/></t>Fixation plaquettes nasales</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_oxydation_metal')"/></t>Oxydation (métal)</td>
+                    <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc._is_motive_checked('optical_helpdesk.motive_autre')"/></t>Autre</td>
+                </tr>
+            </table>
+
+            <div style="margin-top:4px;"><strong>Description détaillée :</strong></div>
+            <div class="desc-box"><div t-field="doc.description"/></div>
+        </div>
+    </template>
+
+    <!-- Document principal -->
+    <template id="report_complaint_ticket_document">
+
+        <div class="page"
+             t-att-data-oe-model="doc._name"
+             t-att-data-oe-id="doc.id"
+             style="font-family:Helvetica,Arial,sans-serif;font-size:8.5pt;color:#000;">
+            <style>
+                .ticket-title { text-align:center; color:#c00; font-weight:bold; font-size:13pt; margin:4px 0 3px 0; }
+                .section-title { color:#c00; font-weight:bold; font-size:8.5pt; text-align:center; margin:3px 0 1px 0; border-bottom:1px solid #000; padding-bottom:1px; }
+                .section-box { border:1px solid #000; padding:3px 5px; margin-bottom:3px; }
+                .cb-item { display:inline-block; margin-right:10px; white-space:nowrap; }
+                .cb-table { width:100%; font-size:7.5pt; border-collapse:collapse; }
+                .cb-table td { padding:1px 3px; vertical-align:top; }
+                .desc-box { border:1px solid #000; min-height:36px; padding:3px 5px; margin-top:2px; }
+                .cut-line { border-top:1.5px dashed #000; margin:10px 0; }
+                .head-table { width:100%; border-collapse:collapse; margin-bottom:3px; }
+                .head-table td { vertical-align:top; font-size:7.5pt; padding:0 4px; }
+                .commande-table { width:100%; border-collapse:collapse; margin-bottom:3px; }
+                .commande-table th, .commande-table td { border:1px solid #000; padding:2px 4px; text-align:center; font-size:7.5pt; }
+                .commande-table th { font-weight:bold; background:#f3f3f3; }
+                .b-ticket { color:#c00; font-weight:bold; }
+            </style>
+
+            <!-- Header inline : adresse boutique + logo + coordonnées client -->
+            <table class="head-table">
+                <tr>
+                    <td style="width:38%;font-size:7pt;line-height:1.2;vertical-align:middle;">
+                        <strong t-field="doc.company_id.partner_id.name"/><br/>
+                        <span t-if="doc.company_id.partner_id.street" t-field="doc.company_id.partner_id.street"/>
+                        <span t-if="doc.company_id.partner_id.city">, <t t-out="doc.company_id.partner_id.city"/></span>
+                        <span t-if="doc.company_id.partner_id.country_id">, <t t-out="doc.company_id.partner_id.country_id.name"/></span>
+                        <span t-if="doc.company_id.phone"><br/>Tél : <t t-out="doc.company_id.phone"/></span>
+                    </td>
+                    <td style="width:24%;text-align:center;vertical-align:middle;">
+                        <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height:40px;"/>
+                    </td>
+                    <td style="width:38%;font-size:7pt;line-height:1.2;vertical-align:middle;text-align:right;">
+                        <strong>Prénom/Nom :</strong> <t t-out="doc.partner_name or (doc.partner_id.name or '')"/><br/>
+                        <strong>Tél :</strong> <t t-out="doc.partner_phone or ''"/><br/>
+                        <strong>Date :</strong> <t t-out="doc.create_date.strftime('%d-%m-%Y') if doc.create_date else ''"/>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="ticket-title">Ticket de réclamation N&#176; : <t t-out="doc.number"/></div>
+
+            <!-- Volet A (1/3 supérieur) -->
+            <t t-call="optical_helpdesk.report_complaint_ticket_client_block"/>
+
+            <!-- Pointillé de coupe -->
+            <div class="cut-line"/>
+
+            <!-- Volet B (2/3 inférieur) -->
+            <table class="head-table">
+                <tr>
+                    <td style="width:33%;"><span class="b-ticket">Ticket N&#176; : <t t-out="doc.number"/></span></td>
+                    <td style="width:34%;"><strong>Prénom/Nom :</strong> <t t-out="doc.partner_name or (doc.partner_id.name or '')"/></td>
+                    <td style="width:33%;text-align:right;"><strong>Date :</strong> <t t-out="doc.create_date.strftime('%d-%m-%Y') if doc.create_date else ''"/></td>
+                </tr>
+            </table>
+
+            <!-- Tableau Commande (première SO liée si plusieurs) -->
+            <t t-set="so" t-value="doc.sale_order_ids[:1]"/>
+            <table class="commande-table">
+                <tr>
+                    <th>Commande N&#176;</th>
+                    <th>Date d'achat</th>
+                    <th>Commerciale</th>
+                    <th>Point de vente</th>
+                </tr>
+                <tr>
+                    <td><t t-out="so.name or ''"/></td>
+                    <td><t t-out="so.date_order.strftime('%d-%m-%Y') if so and so.date_order else ''"/></td>
+                    <td><t t-out="so.user_id.name if so and so.user_id else ''"/></td>
+                    <td><t t-out="doc.team_id.name or ''"/></td>
+                </tr>
+            </table>
+
+            <!-- Reproduction du bloc client dans le volet B -->
+            <t t-call="optical_helpdesk.report_complaint_ticket_client_block"/>
+
+            <!-- Section Diagnostic interne (spécifique volet B) -->
+            <div class="section-title">Diagnostic interne</div>
+            <div class="section-box">
+                <div>
+                    <strong>Cause identifiée :</strong>
+                    <span class="cb-item" style="margin-left:4px;"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.cause_identified == 'atelier'"/></t>Atelier</span>
+                    <span class="cb-item"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.cause_identified == 'manipulation_client'"/></t>Manipulation client</span>
+                    <span class="cb-item"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.cause_identified == 'fournisseur'"/></t>Fournisseur</span>
+                    <span class="cb-item"><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.cause_identified == 'autre'"/></t>Autre</span>
+                </div>
+
+                <div style="margin-top:4px;"><strong>Description détaillée :</strong></div>
+                <div class="desc-box"><div t-field="doc.internal_diagnostic"/></div>
+
+                <div style="margin-top:4px;"><strong>Solution proposée :</strong></div>
+                <table class="cb-table">
+                    <tr>
+                        <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.proposed_solution == 'reprise_reglage'"/></t>Reprise-réglage</td>
+                        <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.proposed_solution == 'remplacement_verre'"/></t>Remplacement verre</td>
+                        <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.proposed_solution == 'remplacement_monture'"/></t>Remplacement monture</td>
+                    </tr>
+                    <tr>
+                        <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.proposed_solution == 'remboursement'"/></t>Remboursement</td>
+                        <td><t t-call="optical_helpdesk.cb"><t t-set="checked" t-value="doc.proposed_solution == 'rejet'"/></t>Rejet</td>
+                        <td/>
+                    </tr>
+                </table>
+
+                <div style="margin-top:4px;" t-if="doc.proposed_solution == 'remboursement'">
+                    <strong>Montant du remboursement :</strong>
+                    <span t-field="doc.refund_amount"
+                          t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

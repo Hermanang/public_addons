@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': 'Colonnes dynamiques de rapport',
     'version': '18.0.1.0.0',
@@ -8,14 +7,15 @@
 Colonnes dynamiques de rapport
 ===============================
 
-Module generique permettant de definir des colonnes configurables
+Module générique permettant de définir des colonnes configurables
 pour les rapports QWeb PDF :
-* Modele de colonnes avec type, alignement et sequence
+* Modèle de colonnes avec type, alignement et séquence
 * Profils de colonnes par type de rapport
-* Mixin pour integration dans les rapports existants
-* Template QWeb partiel reutilisable
+* Mixin pour intégration dans les rapports existants
+* Template QWeb partiel réutilisable
     """,
-    'author': 'Odoo Optic CE',
+    'author': 'Otiten',
+    'website': 'https://www.otiten.com',
     'license': 'LGPL-3',
     'depends': ['base'],
     'data': [

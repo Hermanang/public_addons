@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+        Types de tickets (axe "process / kind of workflow").
+        Detrmine le formulaire affiche, les contraintes appliquees, le rapport
+        d'impression disponible et la sequence de numerotation.
+
+        Different de la category (axe "topic / sujet") qui qualifie le domaine
+        produit/service auquel le ticket se rapporte.
+
+        team_ids vide : a configurer manuellement par equipe via
+        Helpdesk > Configuration > Teams > onglet Types.
+        -->
+
+        <record id="type_complaint" model="helpdesk.ticket.type">
+            <field name="name">Réclamation</field>
+            <field name="active" eval="True"/>
+            <field name="show_in_portal" eval="True"/>
+        </record>
+
+        <record id="type_sav" model="helpdesk.ticket.type">
+            <field name="name">SAV</field>
+            <field name="active" eval="True"/>
+            <field name="show_in_portal" eval="True"/>
+        </record>
+
+        <record id="type_inquiry" model="helpdesk.ticket.type">
+            <field name="name">Renseignement</field>
+            <field name="active" eval="True"/>
+            <field name="show_in_portal" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

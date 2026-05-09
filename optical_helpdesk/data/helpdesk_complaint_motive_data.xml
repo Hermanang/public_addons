@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Motifs de réclamation cf. PDF de référence (multi-coches) -->
+
+        <record id="motive_defaut_fabrication" model="helpdesk.complaint.motive">
+            <field name="name">Défaut de fabrication</field>
+            <field name="sequence">10</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="motive_erreur_correction" model="helpdesk.complaint.motive">
+            <field name="name">Erreur de correction</field>
+            <field name="sequence">20</field>
+            <field name="color">2</field>
+        </record>
+
+        <record id="motive_probleme_reglage" model="helpdesk.complaint.motive">
+            <field name="name">Problème de réglage</field>
+            <field name="sequence">30</field>
+            <field name="color">3</field>
+        </record>
+
+        <record id="motive_verre_raye" model="helpdesk.complaint.motive">
+            <field name="name">Verre rayé</field>
+            <field name="sequence">40</field>
+            <field name="color">4</field>
+        </record>
+
+        <record id="motive_charniere_desserree" model="helpdesk.complaint.motive">
+            <field name="name">Charnière desserrée</field>
+            <field name="sequence">50</field>
+            <field name="color">5</field>
+        </record>
+
+        <record id="motive_inconfort_visuel" model="helpdesk.complaint.motive">
+            <field name="name">Inconfort visuel</field>
+            <field name="sequence">60</field>
+            <field name="color">6</field>
+        </record>
+
+        <record id="motive_retard_livraison" model="helpdesk.complaint.motive">
+            <field name="name">Retard de livraison</field>
+            <field name="sequence">70</field>
+            <field name="color">7</field>
+        </record>
+
+        <record id="motive_verre_casse" model="helpdesk.complaint.motive">
+            <field name="name">Verre cassé / fissuré</field>
+            <field name="sequence">80</field>
+            <field name="color">8</field>
+        </record>
+
+        <record id="motive_branches_cassees" model="helpdesk.complaint.motive">
+            <field name="name">Branches cassées</field>
+            <field name="sequence">90</field>
+            <field name="color">9</field>
+        </record>
+
+        <record id="motive_pont_casse" model="helpdesk.complaint.motive">
+            <field name="name">Pont cassé</field>
+            <field name="sequence">100</field>
+            <field name="color">10</field>
+        </record>
+
+        <record id="motive_alteration_matiere" model="helpdesk.complaint.motive">
+            <field name="name">Altération de la matière</field>
+            <field name="sequence">110</field>
+            <field name="color">11</field>
+        </record>
+
+        <record id="motive_fixation_plaquettes" model="helpdesk.complaint.motive">
+            <field name="name">Fixation plaquettes nasales</field>
+            <field name="sequence">120</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="motive_oxydation_metal" model="helpdesk.complaint.motive">
+            <field name="name">Oxydation (métal)</field>
+            <field name="sequence">130</field>
+            <field name="color">2</field>
+        </record>
+
+        <record id="motive_autre" model="helpdesk.complaint.motive">
+            <field name="name">Autre</field>
+            <field name="sequence">140</field>
+            <field name="color">0</field>
+        </record>
+
+    </data>
+</odoo>

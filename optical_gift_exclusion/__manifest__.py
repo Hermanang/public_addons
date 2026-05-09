@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 {
-    'name': 'Optique — Exclusion cadeaux/promos',
+    'name': 'Optique Exclusion cadeaux/promos',
     'version': '18.0.1.1.0',
-    'category': 'Optique',
-    'summary': 'Case a cocher Cadeau sur lignes SO, exclusion du bordereau assurance',
-    'author': 'Odoo Optic CE',
-    'website': '',
+    'category': 'Optique/Bridge',
+    'summary': 'Case à cocher Cadeau sur lignes SO, exclusion du bordereau assurance',
+    'author': 'Otiten',
+    'website': 'https://www.otiten.com',
     'license': 'LGPL-3',
     'depends': ['optical'],
     'data': [
