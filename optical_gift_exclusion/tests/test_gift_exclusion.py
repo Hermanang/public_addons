@@ -79,6 +79,7 @@ class TestGiftExclusion(OpticalTestCommon):
         pec = order.pec_id
         pec.action_submit()
         pec.with_user(self.user_responsable).action_approve()
+        pec.write({'amount_insurance_approved': order.amount_insurance or order.amount_total})
         pec.with_user(self.user_responsable).action_create_invoices()
         return pec
 
@@ -175,6 +176,7 @@ class TestGiftExclusion(OpticalTestCommon):
         pec = order.pec_id
         pec.action_submit()
         pec.with_user(self.user_responsable).action_approve()
+        pec.write({'amount_insurance_approved': order.amount_insurance or order.amount_total})
 
         # Appeler via le chemin SO (qui delegue a PEC)
         order.with_user(self.user_responsable).action_create_split_invoices()

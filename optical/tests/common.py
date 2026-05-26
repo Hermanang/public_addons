@@ -240,9 +240,19 @@ class OpticalTestCommon(TransactionCase):
         return order.pec_id
 
     @classmethod
-    def _approve_pec(cls, order=None, confirm=True):
-        """Helper : crée une PEC, la soumet et l'approuve. Retourne la PEC."""
+    def _approve_pec(cls, order=None, confirm=True, approved_amount=None):
+        """Helper : crée une PEC, la soumet, l'approuve et saisit le montant assurance approuvé.
+
+        Par défaut, simule un retour mutuelle aligné sur l'estimation cascade
+        (= sale_order.amount_insurance), ce qui permet aux tests historiques de
+        passer sans modification. Les tests qui doivent vérifier le blocage à la
+        facturation peuvent passer approved_amount=0.
+        """
         pec = cls._create_pec(order, confirm=confirm)
         pec.action_submit()
         pec.with_user(cls.user_responsable).action_approve()
+        if approved_amount is None:
+            approved_amount = pec.sale_order_id.amount_insurance or pec.amount_total
+        if approved_amount:
+            pec.write({'amount_insurance_approved': approved_amount})
         return pec

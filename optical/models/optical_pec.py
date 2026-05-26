@@ -373,6 +373,13 @@ class OpticalPec(models.Model):
             raise UserError(_("Seul un responsable optique peut générer les factures."))
         if self.invoice_insurance_id or self.invoice_tm_id:
             raise UserError(_("Les factures ont déjà été générées pour cette PEC."))
+        if self.amount_insurance_approved <= 0:
+            raise UserError(_(
+                "Saisissez le montant assurance accepté par la mutuelle dans "
+                "« Montant assurance approuvé » avant de générer les factures. "
+                "Si la mutuelle a refusé la prise en charge, utilisez plutôt le "
+                "bouton « Refuser »."
+            ))
 
         order = self.sale_order_id.sudo()
         if order.state != 'sale':
@@ -388,30 +395,21 @@ class OpticalPec(models.Model):
             raise UserError(_("La commande ne contient aucune ligne produit facturable."))
 
         # --- Pré-calcul montants assurance par ligne (HT) ---
+        # Le montant approuvé est obligatoire (cf. précondition ci-dessus) : on
+        # dérive la répartition par ligne depuis amount_insurance_line.
         currency = order.currency_id
-        use_manual = self.amount_insurance_approved > 0
-
-        if use_manual:
-            # Validation intégrité montants manuels
-            line_total_ttc = sum(l.amount_insurance_line for l in product_lines)
-            if abs(line_total_ttc - self.amount_insurance_approved) > 0.01:
-                raise ValidationError(
-                    _("La somme des montants par ligne (%(lines)s) ne correspond pas au "
-                      "montant approuvé (%(approved)s). Utilisez le bouton 'Répartir'.",
-                      lines=line_total_ttc, approved=self.amount_insurance_approved)
-                )
-            # Montants manuels : dériver HT depuis TTC via le ratio taxe
-            line_ins_map = {}
-            for line in product_lines:
-                ins_ttc = line.amount_insurance_line
-                ratio_ht = line.price_subtotal / line.price_total if line.price_total else 1.0
-                line_ins_map[line.id] = currency.round(ins_ttc * ratio_ht)
-        else:
-            # Mode estimation cascade (rétrocompatible)
-            line_ins_map = {
-                line.id: currency.round(order._get_line_insurance_amount(line))
-                for line in product_lines
-            }
+        line_total_ttc = sum(l.amount_insurance_line for l in product_lines)
+        if abs(line_total_ttc - self.amount_insurance_approved) > 0.01:
+            raise ValidationError(
+                _("La somme des montants par ligne (%(lines)s) ne correspond pas au "
+                  "montant approuvé (%(approved)s). Utilisez le bouton 'Répartir'.",
+                  lines=line_total_ttc, approved=self.amount_insurance_approved)
+            )
+        line_ins_map = {}
+        for line in product_lines:
+            ins_ttc = line.amount_insurance_line
+            ratio_ht = line.price_subtotal / line.price_total if line.price_total else 1.0
+            line_ins_map[line.id] = currency.round(ins_ttc * ratio_ht)
 
         # --- Validation intégrité comptable NFR9 ---
         computed_ins_ht = sum(line_ins_map.values())

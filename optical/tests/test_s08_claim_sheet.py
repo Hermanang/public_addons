@@ -121,6 +121,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
         pec2 = order2.pec_id
         pec2.action_submit()
         pec2.with_user(self.user_responsable).action_approve()
+        pec2.write({'amount_insurance_approved': order2.amount_insurance or order2.amount_total})
         pec2.with_user(self.user_responsable).action_create_invoices()
         invoice2 = pec2.invoice_insurance_id
         invoice2.action_post()
@@ -258,6 +259,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
         pec = order.pec_id
         pec.action_submit()
         pec.with_user(self.user_responsable).action_approve()
+        pec.write({'amount_insurance_approved': order.amount_insurance or order.amount_total})
         pec.with_user(self.user_responsable).action_create_invoices()
         invoice = pec.invoice_insurance_id
         invoice.action_post()

@@ -133,6 +133,7 @@ class TestBridgeDynamicColumns(TransactionCase):
         cls.pec.action_submit()
         pec_mgr = cls.pec.with_user(cls.user_manager)
         pec_mgr.action_approve()
+        cls.pec.write({'amount_insurance_approved': cls.sale_order.amount_insurance or cls.sale_order.amount_total})
         pec_mgr.action_create_invoices()
         cls.invoice_insurance = cls.pec.invoice_insurance_id
         cls.invoice_insurance.action_post()

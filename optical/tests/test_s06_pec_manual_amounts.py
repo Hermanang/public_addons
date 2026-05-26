@@ -33,7 +33,11 @@ class TestPecManualAmounts(OpticalTestCommon):
         })
 
     def _approve_pec_for_order(self, order):
-        """Helper : crée, soumet et approuve une PEC."""
+        """Helper : crée, soumet et approuve une PEC.
+
+        Ne saisit volontairement pas amount_insurance_approved : chaque test
+        décide explicitement du montant à tester (cas nominal, écart, blocage…).
+        """
         order.action_create_pec()
         order.action_confirm()
         pec = order.pec_id
@@ -233,6 +237,7 @@ class TestPecManualAmounts(OpticalTestCommon):
         order = self._create_order()
         pec = self._approve_pec_for_order(order)
 
+        pec.write({'amount_insurance_approved': order.amount_insurance})
         pec.with_user(self.user_responsable).action_create_invoices()
         self.assertEqual(pec.state, 'invoiced')
 
@@ -249,6 +254,7 @@ class TestPecManualAmounts(OpticalTestCommon):
         pec = self._approve_pec_for_order(order)
 
         # Générer factures
+        pec.write({'amount_insurance_approved': order.amount_insurance})
         pec.with_user(self.user_responsable).action_create_invoices()
         self.assertEqual(pec.state, 'invoiced')
 
@@ -269,27 +275,23 @@ class TestPecManualAmounts(OpticalTestCommon):
         """AC#12 : factures créées non payées → payment_status = not_paid."""
         order = self._create_order()
         pec = self._approve_pec_for_order(order)
+        pec.write({'amount_insurance_approved': order.amount_insurance})
         pec.with_user(self.user_responsable).action_create_invoices()
 
         self.assertEqual(pec.payment_status, 'not_paid')
 
-    # --- AC#13 : Mode estimation (approved_amount = 0 → cascade) ---
+    # --- AC#13 : Facturation bloquée si montant approuvé non saisi ---
 
-    def test_16_estimation_mode_cascade(self):
-        """AC#13 : si amount_insurance_approved == 0, facturation utilise la cascade."""
+    def test_16_blocked_without_approved_amount(self):
+        """AC#13 : si amount_insurance_approved == 0, action_create_invoices lève une UserError."""
         order = self._create_order()
         pec = self._approve_pec_for_order(order)
 
-        # Ne pas setter amount_insurance_approved (reste à 0)
         self.assertEqual(pec.amount_insurance_approved, 0)
-
-        pec.with_user(self.user_responsable).action_create_invoices()
-        self.assertEqual(pec.state, 'invoiced')
-        self.assertTrue(pec.invoice_insurance_id)
-
-        # Le montant assurance doit correspondre à l'estimation cascade
-        ins_total = pec.invoice_insurance_id.amount_total
-        self.assertGreater(ins_total, 0, "L'estimation cascade doit produire un montant > 0")
+        with self.assertRaises(UserError):
+            pec.with_user(self.user_responsable).action_create_invoices()
+        self.assertEqual(pec.state, 'approved')
+        self.assertFalse(pec.invoice_insurance_id)
 
     # --- AC#7 : Cascade 3 niveaux ---
 

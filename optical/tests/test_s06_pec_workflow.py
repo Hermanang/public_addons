@@ -404,7 +404,8 @@ class TestPecInvoicing(OpticalTestCommon):
         order.action_confirm()
         self.assertEqual(order.state, 'sale')
 
-        # Maintenant la facturation fonctionne
+        # Saisir le montant assurance approuvé puis facturer
+        pec.write({'amount_insurance_approved': order.amount_insurance or order.amount_total})
         self._generate_invoices(pec)
         self.assertEqual(pec.state, 'invoiced')
         self.assertTrue(pec.invoice_insurance_id)

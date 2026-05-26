@@ -78,6 +78,7 @@ class TestPecPartnerRef(OpticalTestCommon):
         pec.action_submit()
         pec_mgr = pec.with_user(self.user_responsable).sudo()
         pec_mgr.action_approve()
+        pec.write({'amount_insurance_approved': order.amount_insurance or order.amount_total})
         pec_mgr.action_create_invoices()
         self.assertTrue(pec.invoice_insurance_id)
         self.assertEqual(pec.invoice_insurance_id.pec_partner_ref, 'MUT-REF-123')
