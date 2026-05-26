@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu Unites operationnelles dans la config optique -->
+    <menuitem id="menu_optical_config_ou"
+              name="Unites operationnelles"
+              parent="optical.menu_optical_config"
+              action="operating_unit.action_operating_unit_tree"
+              groups="optical.group_optical_manager"
+              sequence="40"/>
+
+</odoo>

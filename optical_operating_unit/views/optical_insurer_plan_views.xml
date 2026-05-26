@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form: ajout champ OU -->
+    <record id="optical_insurer_plan_view_form_ou" model="ir.ui.view">
+        <field name="name">optical.insurer.plan.form.ou</field>
+        <field name="model">optical.insurer.plan</field>
+        <field name="inherit_id" ref="optical.optical_insurer_plan_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="operating_unit_id"
+                       groups="operating_unit.group_multi_operating_unit"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

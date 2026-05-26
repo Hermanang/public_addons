@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Insurance list: ajout colonne OU -->
+    <record id="view_account_move_insurance_list_ou" model="ir.ui.view">
+        <field name="name">account.move.insurance.list.ou</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="optical.view_account_move_insurance_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='claim_sheet_id']" position="after">
+                <field name="operating_unit_id" string="Boutique" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Insurance search: ajout champ + filtre OU -->
+    <record id="view_account_move_insurance_search_ou" model="ir.ui.view">
+        <field name="name">account.move.insurance.search.ou</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="optical.view_account_move_insurance_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='claim_sheet_id']" position="after">
+                <field name="operating_unit_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_claim_sheet']" position="after">
+                <filter name="groupby_ou" string="Unite operationnelle"
+                        context="{'group_by': 'operating_unit_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- TM search: ajout champ + filtre OU -->
+    <record id="view_account_move_tm_search_ou" model="ir.ui.view">
+        <field name="name">account.move.tm.search.ou</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="optical.view_account_move_tm_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pec_id']" position="after">
+                <field name="operating_unit_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_payment']" position="after">
+                <filter name="groupby_ou" string="Unite operationnelle"
+                        context="{'group_by': 'operating_unit_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Aging list: ajout colonne OU -->
+    <record id="view_account_move_aging_list_ou" model="ir.ui.view">
+        <field name="name">account.move.aging.list.ou</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="optical.view_account_move_aging_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='aging_bucket']" position="after">
+                <field name="operating_unit_id" string="Boutique" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Aging search: ajout champ + filtre OU -->
+    <record id="view_account_move_aging_search_ou" model="ir.ui.view">
+        <field name="name">account.move.aging.search.ou</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="optical.view_account_move_aging_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pec_id']" position="after">
+                <field name="operating_unit_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='groupby_partner']" position="after">
+                <filter name="groupby_ou" string="Unite operationnelle"
+                        context="{'group_by': 'operating_unit_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search: ajout champ + filtre OU -->
+    <record id="optical_sale_report_search_ou" model="ir.ui.view">
+        <field name="name">optical.sale.report.search.ou</field>
+        <field name="model">optical.sale.report</field>
+        <field name="inherit_id" ref="optical.optical_sale_report_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='subscriber_id']" position="after">
+                <field name="operating_unit_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_lens_material']" position="after">
+                <filter name="group_operating_unit" string="Unite operationnelle"
+                        context="{'group_by': 'operating_unit_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- List: ajout colonne OU -->
+    <record id="optical_sale_report_list_ou" model="ir.ui.view">
+        <field name="name">optical.sale.report.list.ou</field>
+        <field name="model">optical.sale.report</field>
+        <field name="inherit_id" ref="optical.optical_sale_report_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="operating_unit_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

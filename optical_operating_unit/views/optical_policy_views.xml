@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search: ajout filtre group-by OU -->
+    <record id="optical_policy_view_search_ou" model="ir.ui.view">
+        <field name="name">optical.policy.search.ou</field>
+        <field name="model">optical.policy</field>
+        <field name="inherit_id" ref="optical.optical_policy_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='filter_relationship']" position="after">
+                <filter name="filter_ou" string="Unite operationnelle"
+                        context="{'group_by': 'operating_unit_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Form: ajout champ OU -->
+    <record id="optical_policy_view_form_ou" model="ir.ui.view">
+        <field name="name">optical.policy.form.ou</field>
+        <field name="model">optical.policy</field>
+        <field name="inherit_id" ref="optical.optical_policy_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="operating_unit_id"
+                       groups="operating_unit.group_multi_operating_unit"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

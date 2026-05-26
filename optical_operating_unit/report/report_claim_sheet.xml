@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extension du template de bordereau : ajout affichage OU -->
+    <template id="report_claim_sheet_ou"
+              inherit_id="optical.report_claim_sheet_document">
+        <xpath expr="//div[hasclass('row') and .//strong[contains(text(), &quot;Date d'edition&quot;)]]" position="after">
+            <t t-if="o.operating_unit_id">
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Unite :</strong> <t t-esc="o.operating_unit_id.name"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

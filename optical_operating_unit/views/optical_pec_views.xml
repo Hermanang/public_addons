@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search: ajout champ recherche OU -->
+    <record id="optical_pec_view_search_ou" model="ir.ui.view">
+        <field name="name">optical.pec.search.ou</field>
+        <field name="model">optical.pec</field>
+        <field name="inherit_id" ref="optical.optical_pec_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_id']" position="after">
+                <field name="operating_unit_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_insurer']" position="after">
+                <filter name="group_ou" string="Unite operationnelle"
+                        context="{'group_by': 'operating_unit_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree: ajout colonne OU -->
+    <record id="optical_pec_view_tree_ou" model="ir.ui.view">
+        <field name="name">optical.pec.tree.ou</field>
+        <field name="model">optical.pec</field>
+        <field name="inherit_id" ref="optical.optical_pec_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_create']" position="after">
+                <field name="operating_unit_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Form: ajout champ OU -->
+    <record id="optical_pec_view_form_ou" model="ir.ui.view">
+        <field name="name">optical.pec.form.ou</field>
+        <field name="model">optical.pec</field>
+        <field name="inherit_id" ref="optical.optical_pec_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="operating_unit_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
