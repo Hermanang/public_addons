@@ -106,19 +106,19 @@
                                 <tbody>
                                     <tr>
                                         <td><strong>OD</strong></td>
-                                        <td><field name="od_sphere" widget="optical_diopter" readonly="state != 'draft'"/></td>
-                                        <td><field name="od_cylinder" widget="optical_diopter" readonly="state != 'draft'"/></td>
-                                        <td><field name="od_axis" readonly="state != 'draft'"/></td>
-                                        <td><field name="od_addition" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_sphere" widget="optical_diopter" options="{'min': -20, 'max': 20, 'step': 0.25}" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_cylinder" widget="optical_diopter" options="{'min': -8, 'max': 0, 'step': 0.25}" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_axis" widget="optical_diopter" options="{'min': 0, 'max': 180, 'step': 1}" readonly="state != 'draft'"/></td>
+                                        <td><field name="od_addition" widget="optical_diopter" options="{'min': 0, 'max': 4, 'step': 0.25}" readonly="state != 'draft'"/></td>
                                         <td><field name="od_prism" widget="optical_diopter" options="{'step': 0.01}" readonly="state != 'draft'"/></td>
                                         <td><field name="od_prism_base" readonly="state != 'draft'"/></td>
                                     </tr>
                                     <tr>
                                         <td><strong>OG</strong></td>
-                                        <td><field name="og_sphere" widget="optical_diopter" readonly="state != 'draft'"/></td>
-                                        <td><field name="og_cylinder" widget="optical_diopter" readonly="state != 'draft'"/></td>
-                                        <td><field name="og_axis" readonly="state != 'draft'"/></td>
-                                        <td><field name="og_addition" widget="optical_diopter" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_sphere" widget="optical_diopter" options="{'min': -20, 'max': 20, 'step': 0.25}" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_cylinder" widget="optical_diopter" options="{'min': -8, 'max': 0, 'step': 0.25}" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_axis" widget="optical_diopter" options="{'min': 0, 'max': 180, 'step': 1}" readonly="state != 'draft'"/></td>
+                                        <td><field name="og_addition" widget="optical_diopter" options="{'min': 0, 'max': 4, 'step': 0.25}" readonly="state != 'draft'"/></td>
                                         <td><field name="og_prism" widget="optical_diopter" options="{'step': 0.01}" readonly="state != 'draft'"/></td>
                                         <td><field name="og_prism_base" readonly="state != 'draft'"/></td>
                                     </tr>

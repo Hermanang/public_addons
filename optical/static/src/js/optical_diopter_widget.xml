@@ -2,18 +2,33 @@
 <templates xml:space="preserve">
     <t t-name="optical.OpticalDiopterField">
         <span t-if="props.readonly" t-esc="displayValue"/>
-        <input
-            t-else=""
-            t-on-focusin="onFocusIn"
-            t-on-focusout="onFocusOut"
-            t-on-keydown="onKeyDown"
-            t-att-id="props.id"
-            t-ref="numpadDecimal"
-            t-att-placeholder="props.placeholder"
-            type="text"
-            inputmode="decimal"
-            class="o_input"
-            autocomplete="off"
-            t-att-step="step"/>
+        <div t-else="" class="o_optical_combobox position-relative">
+            <input
+                t-on-focusin="onFocusIn"
+                t-on-focusout="onFocusOut"
+                t-on-keydown="onKeyDown"
+                t-on-input="onInput"
+                t-att-id="props.id"
+                t-ref="numpadDecimal"
+                t-att-placeholder="props.placeholder"
+                type="text"
+                inputmode="decimal"
+                class="o_input"
+                autocomplete="off"/>
+            <ul t-if="hasOptions and state.showDropdown"
+                class="dropdown-menu d-block w-100 shadow-sm o_optical_combobox_menu"
+                style="max-height: 220px; overflow-y: auto;">
+                <li t-foreach="filteredOptions" t-as="option" t-key="option.key">
+                    <a href="#"
+                       class="dropdown-item"
+                       t-att-class="{ 'active': option_index === state.activeIndex }"
+                       t-on-mousedown.prevent="() => this.selectOption(option)"
+                       t-esc="option.label"/>
+                </li>
+                <li t-if="!filteredOptions.length" class="px-3 py-1 text-muted">
+                    <small>Aucune valeur</small>
+                </li>
+            </ul>
+        </div>
     </t>
 </templates>

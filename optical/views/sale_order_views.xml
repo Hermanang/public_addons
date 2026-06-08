@@ -50,7 +50,7 @@
                                 <td><strong>OD</strong></td>
                                 <td><field name="prescription_od_sphere" widget="optical_diopter"/></td>
                                 <td><field name="prescription_od_cylinder" widget="optical_diopter"/></td>
-                                <td><field name="prescription_od_axis"/></td>
+                                <td><field name="prescription_od_axis" widget="optical_diopter"/></td>
                                 <td><field name="prescription_od_addition" widget="optical_diopter"/></td>
                                 <td><field name="prescription_od_prism" widget="optical_diopter" options="{'step': 0.01}"/></td>
                                 <td><field name="prescription_od_prism_base"/></td>
@@ -59,7 +59,7 @@
                                 <td><strong>OG</strong></td>
                                 <td><field name="prescription_og_sphere" widget="optical_diopter"/></td>
                                 <td><field name="prescription_og_cylinder" widget="optical_diopter"/></td>
-                                <td><field name="prescription_og_axis"/></td>
+                                <td><field name="prescription_og_axis" widget="optical_diopter"/></td>
                                 <td><field name="prescription_og_addition" widget="optical_diopter"/></td>
                                 <td><field name="prescription_og_prism" widget="optical_diopter" options="{'step': 0.01}"/></td>
                                 <td><field name="prescription_og_prism_base"/></td>
