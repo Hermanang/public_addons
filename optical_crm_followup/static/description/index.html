@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fidélisation &amp; suivi client — Guide utilisateur</title>
+<style>
+.guide{
+  --bg:#F5F8F8; --surface:#FFFFFF; --surface-2:#FBFCFC;
+  --ink:#17252B; --muted:#54666D; --faint:#7C8B91;
+  --border:#E2E9EA; --border-strong:#CBD7D9;
+  --accent:#0F7C86; --accent-ink:#0A5A62; --accent-soft:#E6F1F2;
+  --warn-bg:#FBF2E3; --warn-border:#E3B15E; --warn-ink:#8A5710;
+  --danger:#C0392B; --ok:#1C8C58;
+  --shadow:0 1px 2px rgba(20,40,45,.05),0 6px 24px rgba(20,40,45,.06);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.65;
+  font-size:16px;-webkit-font-smoothing:antialiased;padding:0 0 60px;margin:0;
+}
+.guide *{box-sizing:border-box}
+.guide .wrap{max-width:940px;margin:0 auto;padding:0 22px}
+.guide a{color:var(--accent-ink);text-decoration:none}
+.guide a:hover{text-decoration:underline}
+.guide h1,.guide h2,.guide h3{color:var(--ink)}
+.guide .hero{padding:52px 0 30px;border-bottom:1px solid var(--border)}
+.guide .eyebrow{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-ink);font-weight:700;margin:0 0 12px}
+.guide h1{font-size:2.4rem;line-height:1.08;margin:0 0 14px;letter-spacing:-.02em;font-weight:800}
+.guide .lede{font-size:1.12rem;color:var(--muted);max-width:64ch;margin:0}
+.guide .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.guide .tag{font-size:.78rem;padding:5px 11px;border:1px solid var(--border-strong);border-radius:999px;color:var(--muted);background:var(--surface)}
+.guide nav.toc{margin:28px 0 8px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 22px;box-shadow:var(--shadow)}
+.guide nav.toc h2{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 12px;font-weight:700}
+.guide .toc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 26px}
+.guide .toc-grid a{display:flex;gap:12px;padding:7px 0;color:var(--ink);align-items:baseline}
+.guide .toc-grid a:hover{color:var(--accent-ink);text-decoration:none}
+.guide .toc-grid .n{font-variant-numeric:tabular-nums;color:var(--accent);font-weight:700;font-size:.82rem;min-width:1.6em}
+.guide section{padding:42px 0 6px;border-bottom:1px solid var(--border)}
+.guide section:last-of-type{border-bottom:0}
+.guide .sec-head{display:flex;gap:16px;align-items:baseline;margin:0 0 16px}
+.guide .sec-head .num{font-variant-numeric:tabular-nums;font-weight:800;color:var(--accent);font-size:1rem;padding-top:4px}
+.guide h2.sec{font-size:1.6rem;margin:0;letter-spacing:-.01em;font-weight:700}
+.guide h3{font-size:1.06rem;margin:24px 0 8px;font-weight:700}
+.guide p{margin:0 0 14px;max-width:72ch}
+.guide ul,.guide ol{max-width:72ch;padding-left:1.25em}
+.guide li{margin:5px 0}
+.guide .fig{margin:22px 0 6px}
+.guide .fig img{width:100%;height:auto;display:block;border:1px solid var(--border-strong);border-radius:10px;box-shadow:var(--shadow)}
+.guide .fig figcaption{font-size:.85rem;color:var(--faint);margin-top:9px}
+.guide .callout{border:1px solid var(--border);border-left-width:4px;border-radius:10px;padding:14px 18px;margin:20px 0;background:var(--surface-2)}
+.guide .callout p{margin:0;max-width:none}
+.guide .callout .lab{font-weight:800;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:5px}
+.guide .callout.key{border-left-color:var(--accent);background:var(--accent-soft)}
+.guide .callout.key .lab{color:var(--accent-ink)}
+.guide .callout.warn{border-left-color:var(--warn-border);background:var(--warn-bg)}
+.guide .callout.warn .lab{color:var(--warn-ink)}
+.guide .callout.warn strong{color:var(--warn-ink)}
+.guide .tbl-wrap{overflow-x:auto;margin:20px 0;border:1px solid var(--border);border-radius:10px}
+.guide table{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--surface)}
+.guide th,.guide td{text-align:left;padding:11px 15px;border-bottom:1px solid var(--border);vertical-align:top}
+.guide thead th{background:var(--surface-2);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:700;white-space:nowrap}
+.guide tbody tr:last-child td{border-bottom:0}
+.guide td.when{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600;color:var(--accent-ink)}
+.guide .pill{display:inline-block;font-size:.78rem;font-weight:700;padding:2px 9px;border-radius:999px}
+.guide .pill.red{background:rgba(192,57,43,.13);color:var(--danger)}
+.guide .pill.green{background:rgba(28,140,88,.15);color:var(--ok)}
+.guide .pill.blue{background:var(--accent-soft);color:var(--accent-ink)}
+.guide .path{font-family:var(--mono);font-size:.9em;background:var(--surface-2);border:1px solid var(--border);padding:1px 7px;border-radius:6px;white-space:nowrap;color:var(--ink)}
+.guide .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:stretch;margin:24px 0;text-align:center}
+.guide .flow .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 14px;box-shadow:var(--shadow)}
+.guide .flow .step b{display:block;font-size:.95rem;margin-bottom:4px}
+.guide .flow .step span{font-size:.82rem;color:var(--muted)}
+.guide .flow .arr{align-self:center;color:var(--accent);font-size:1.4rem;font-weight:700}
+.guide .hr-note{font-size:.85rem;color:var(--faint)}
+.guide footer{padding:32px 0 0;color:var(--faint);font-size:.85rem}
+@media (max-width:680px){
+  .guide .toc-grid{grid-template-columns:1fr}
+  .guide .flow{grid-template-columns:1fr}
+  .guide .flow .arr{transform:rotate(90deg);justify-self:center}
+  .guide h1{font-size:2rem}
+}
+</style>
+</head>
+<body>
+<div class="guide">
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Guide utilisateur · Optique Luxe</p>
+  <h1>Fidélisation &amp; suivi client</h1>
+  <p class="lede">Ne plus jamais « perdre » un client après une vente : dès qu'un équipement est remis, Odoo construit un calendrier de relances et rappelle au bon moment de recontacter le client.</p>
+  <div class="meta">
+    <span class="tag">Conseillers &amp; responsables</span>
+    <span class="tag">Aucune connaissance technique requise</span>
+    <span class="tag">Captures réelles — client de démo « Awa TEST »</span>
+  </div>
+</header>
+
+<nav class="toc"><h2>Sommaire</h2><div class="toc-grid">
+<a href="#s1"><span class="n">01</span><span>Le principe en une image</span></a>
+<a href="#s2"><span class="n">02</span><span>Quand un suivi démarre</span></a>
+<a href="#s3"><span class="n">03</span><span>Les conditions de démarrage</span></a>
+<a href="#s4"><span class="n">04</span><span>Le calendrier créé</span></a>
+<a href="#s5"><span class="n">05</span><span>Les plans-types</span></a>
+<a href="#s6"><span class="n">06</span><span>Traiter un rappel</span></a>
+<a href="#s7"><span class="n">07</span><span>Retards &amp; récapitulatif e-mail</span></a>
+<a href="#s8"><span class="n">08</span><span>Retrouver ses calendriers</span></a>
+<a href="#s9"><span class="n">09</span><span>Le planning (calendrier)</span></a>
+<a href="#s10"><span class="n">10</span><span>La commande : onglet Fidélisation</span></a>
+<a href="#s11"><span class="n">11</span><span>Cas particuliers</span></a>
+<a href="#s12"><span class="n">12</span><span>Où trouver quoi</span></a>
+</div></nav>
+
+<section id="s1"><div class="sec-head"><span class="num">01</span><h2 class="sec">Le principe en une image</h2></div>
+<p>Le module transforme <strong>une vente livrée</strong> en un <strong>plan de relances daté</strong>, puis pose au bon moment un <strong>rappel</strong> au commercial référent.</p>
+<div class="flow">
+  <div class="step"><b>Remise au client</b><span>validation de la livraison</span></div>
+  <div class="arr">→</div>
+  <div class="step"><b>Odoo crée le calendrier</b><span>étapes datées selon le produit</span></div>
+  <div class="arr">→</div>
+  <div class="step"><b>Rappels au bon moment</b><span>contacter le client, noter l'issue</span></div>
+</div>
+<p>Tant que le client n'a pas racheté, désabonné ou terminé son parcours, le calendrier vit et déclenche ses relances.</p>
+</section>
+
+<section id="s2"><div class="sec-head"><span class="num">02</span><h2 class="sec">Quand un suivi démarre-t-il&nbsp;?</h2></div>
+<div class="callout warn"><span class="lab">Le point à retenir</span>
+<p>Le suivi <strong>ne démarre PAS à la facturation</strong>. Il démarre à la <strong>validation de la livraison</strong> — le moment où l'on remet l'équipement au client.</p></div>
+<h3>Attention aux boutiques en plusieurs étapes</h3>
+<p>Certaines boutiques enchaînent plusieurs opérations internes avant l'expédition finale&nbsp;:</p>
+<div class="tbl-wrap"><table><thead><tr><th>Boutique</th><th>Étapes de livraison</th></tr></thead><tbody>
+<tr><td>VDN</td><td>3 étapes : Préparation → Colisage → <strong>Expédition</strong></td></tr>
+<tr><td>Corniche</td><td>2 étapes : Préparation → <strong>Expédition</strong></td></tr>
+<tr><td>Touba, Centre Ville</td><td>1 étape : <strong>Expédition</strong> directe</td></tr>
+</tbody></table></div>
+<p>Le suivi démarre <strong>uniquement à la validation de la dernière étape — l'expédition (sortante)</strong>. Les transferts internes ne déclenchent rien. Autrement dit&nbsp;: <em>le suivi démarre quand le client repart avec ses lunettes.</em></p>
+</section>
+
+<section id="s3"><div class="sec-head"><span class="num">03</span><h2 class="sec">Les conditions pour qu'un suivi démarre</h2></div>
+<p>Odoo ne crée <strong>pas</strong> de calendrier si l'une de ces conditions manque&nbsp;:</p>
+<div class="tbl-wrap"><table><thead><tr><th>Condition</th><th>Sans quoi…</th></tr></thead><tbody>
+<tr><td>Le client a <strong>donné son consentement</strong> de fidélisation</td><td>Aucun suivi (RGPD)</td></tr>
+<tr><td>Le client <strong>n'est pas désabonné</strong> (opt-out)</td><td>Aucun suivi</td></tr>
+<tr><td>Client <strong>majeur</strong>, ou mineur avec accord du représentant légal</td><td>Aucun suivi</td></tr>
+</tbody></table></div>
+<div class="callout key"><span class="lab">Astuce</span>
+<p>Si un client « ne déclenche jamais de suivi », vérifiez d'abord sa <strong>case consentement</strong> sur sa fiche.</p></div>
+</section>
+
+<section id="s4"><div class="sec-head"><span class="num">04</span><h2 class="sec">Ce qui se crée&nbsp;: le calendrier de fidélisation</h2></div>
+<p>Dès la validation de l'expédition, Odoo crée <strong>un calendrier</strong> (état <span class="pill blue">En cours</span>) rattaché au client, à la boutique et à la commande, avec <strong>une étape par relance prévue</strong>. Un message est aussi posté dans la conversation de la commande.</p>
+<figure class="fig"><img loading="lazy" alt="Fiche calendrier" src="03-fiche-calendrier.png"/><figcaption>Fiche d'un calendrier : client, boutique, plan-type, référent, et le tableau des étapes.</figcaption></figure>
+<p>Chaque étape suit un cycle&nbsp;: <span class="pill blue">En attente</span> → (le jour venu, traitée) → <span class="pill green">Réalisée</span>. Une étape non traitée à temps passe <span class="pill red">En retard</span>. Le calendrier lui-même évolue de <strong>En cours</strong> à <strong>Suspendu</strong> puis <strong>Abouti</strong>.</p>
+</section>
+
+<section id="s5"><div class="sec-head"><span class="num">05</span><h2 class="sec">Les plans-types et leurs étapes</h2></div>
+<p>Le <strong>plan-type</strong> appliqué dépend des <strong>produits de la commande</strong>. Délais comptés à partir de la date de remise.</p>
+<h3>Standard lunettes 18 mois <span class="hr-note">(par défaut)</span></h3>
+<div class="tbl-wrap"><table><thead><tr><th>Étape</th><th>Échéance</th><th>Canal</th><th>Objectif</th></tr></thead><tbody>
+<tr><td>1</td><td class="when">+ 30 jours</td><td>Appel</td><td>Bilan de satisfaction</td></tr>
+<tr><td>2</td><td class="when">+ 12 mois</td><td>E-mail</td><td>Bilan annuel (entretien, contrôle de vue)</td></tr>
+<tr><td>3</td><td class="when">+ 18 mois</td><td>Appel</td><td>Proposition de renouvellement</td></tr>
+</tbody></table></div>
+<h3>Lentilles réassort 90 jours <span class="hr-note">(vente de lentilles)</span></h3>
+<div class="tbl-wrap"><table><thead><tr><th>Étape</th><th>Échéance</th><th>Canal</th><th>Objectif</th></tr></thead><tbody>
+<tr><td>1</td><td class="when">+ 15 jours</td><td>WhatsApp</td><td>Contrôle du confort d'adaptation</td></tr>
+<tr><td>2</td><td class="when">+ 60 jours</td><td>WhatsApp</td><td>Rappel de réassort</td></tr>
+</tbody></table></div>
+<h3>Étapes VIP additionnelles</h3>
+<div class="tbl-wrap"><table><thead><tr><th>Étape</th><th>Échéance</th><th>Canal</th></tr></thead><tbody>
+<tr><td>Attention anniversaire</td><td class="when">prochain anniversaire</td><td>Appel</td></tr>
+<tr><td>Bilan personnalisé</td><td class="when">+ 12 mois</td><td>E-mail</td></tr>
+</tbody></table></div>
+<p class="hr-note">Les plans et leurs délais sont <strong>paramétrables</strong> par un responsable (<span class="path">Configuration → Plans-types</span>), sans intervention technique.</p>
+</section>
+
+<section id="s6"><div class="sec-head"><span class="num">06</span><h2 class="sec">Le quotidien du commercial&nbsp;: traiter un rappel</h2></div>
+<p><strong>3 jours avant</strong> l'échéance d'une étape, Odoo crée automatiquement un <strong>rappel</strong> sur la fiche du client, assigné au commercial référent — avec quoi faire, par quel canal, et une note d'aide.</p>
+<figure class="fig"><img loading="lazy" alt="Rappel sur la fiche client" src="06-client-activite.png"/><figcaption>Le rappel « Dû dans 3 jours : Bilan satisfaction » sur la fiche client, avec le canal recommandé.</figcaption></figure>
+<p>Une fois le client contacté, le commercial <strong>clôture l'étape</strong> en choisissant une issue&nbsp;:</p>
+<div class="tbl-wrap"><table><thead><tr><th>Issue</th><th>Signification</th></tr></thead><tbody>
+<tr><td><strong>Répondu</strong></td><td>Le client a été joint et a répondu</td></tr>
+<tr><td><strong>Injoignable</strong></td><td>Impossible de joindre le client</td></tr>
+<tr><td><strong>Refusé poliment</strong></td><td>Pas intéressé cette fois</td></tr>
+<tr><td><strong>A acheté</strong></td><td>La relance a débouché sur un achat</td></tr>
+</tbody></table></div>
+<p>L'étape passe alors en <span class="pill green">Réalisée</span> et le rappel disparaît de la fiche client.</p>
+</section>
+
+<section id="s7"><div class="sec-head"><span class="num">07</span><h2 class="sec">Les retards et le récapitulatif e-mail</h2></div>
+<p>Si une étape n'est pas traitée à sa date, elle passe automatiquement <span class="pill red">En retard</span>. Chaque matin, chaque commercial reçoit <strong>un e-mail récapitulatif</strong> listant <em>ses</em> étapes en retard — pour ne rien laisser filer.</p>
+</section>
+
+<section id="s8"><div class="sec-head"><span class="num">08</span><h2 class="sec">Retrouver ses calendriers</h2></div>
+<p>Menu <span class="path">Fidélisation → Calendriers de fidélisation</span>. La vue affiche les calendriers de votre/vos boutique(s), regroupés par état.</p>
+<figure class="fig"><img loading="lazy" alt="Liste des calendriers" src="01-liste-calendriers.png"/><figcaption>La vue « Calendriers de fidélisation » : chaque carte résume client, boutique, remise, prochaine étape et avancement.</figcaption></figure>
+<h3>Ne voir que « mes » clients</h3>
+<p>Dans la recherche, le filtre <strong>« Mes calendriers (dont je suis référent) »</strong> n'affiche que les clients dont <em>vous</em> êtes le commercial référent.</p>
+<figure class="fig"><img loading="lazy" alt="Filtre Mes calendriers" src="02-filtre-mes-calendriers.png"/><figcaption>Le filtre « Mes calendriers (dont je suis référent) » dans le menu Filtres.</figcaption></figure>
+</section>
+
+<section id="s9"><div class="sec-head"><span class="num">09</span><h2 class="sec">Le planning des étapes (vue calendrier)</h2></div>
+<p>Les menus <span class="path">Mes activités en retard</span> et <span class="path">Mon planning</span> proposent une <strong>vue calendrier</strong> de vos étapes, positionnées à leur date.</p>
+<figure class="fig"><img loading="lazy" alt="Vue calendrier des étapes" src="04-calendrier-etapes.png"/><figcaption>Vue calendrier : chaque étape est nommée « Client — Objectif (Canal) » pour agir d'un coup d'œil.</figcaption></figure>
+<p>Chaque événement est nommé de façon lisible&nbsp;: <strong>« Client — Objectif (Canal) »</strong>, pour savoir immédiatement qui contacter et pourquoi.</p>
+</section>
+
+<section id="s10"><div class="sec-head"><span class="num">10</span><h2 class="sec">La commande&nbsp;: l'onglet Fidélisation</h2></div>
+<p>Sur chaque commande, un onglet <strong>Fidélisation</strong> rappelle la <strong>date de remise</strong> et donne un <strong>lien direct vers le calendrier</strong> créé. Un bouton intelligent <strong>« Fidélisation »</strong> (en haut) ouvre aussi directement ce calendrier.</p>
+<figure class="fig"><img loading="lazy" alt="Onglet Fidélisation sur la commande" src="05-commande-fidelisation.png"/><figcaption>L'onglet Fidélisation de la commande : date de remise et lien vers le calendrier de suivi.</figcaption></figure>
+</section>
+
+<section id="s11"><div class="sec-head"><span class="num">11</span><h2 class="sec">Cas particuliers</h2></div>
+<p>Le module gère automatiquement plusieurs situations, <strong>sans action manuelle</strong>&nbsp;:</p>
+<div class="tbl-wrap"><table><thead><tr><th>Situation</th><th>Ce qui se passe</th></tr></thead><tbody>
+<tr><td><strong>SAV en cours</strong></td><td>Le calendrier est <strong>suspendu</strong> le temps du SAV, puis <strong>repris</strong> à la clôture du ticket.</td></tr>
+<tr><td><strong>Réachat anticipé</strong></td><td>L'ancien calendrier est <strong>clôturé</strong> et un <strong>nouveau</strong> démarre.</td></tr>
+<tr><td><strong>Désabonnement</strong></td><td>Tous les calendriers du client sont <strong>annulés</strong> et les rappels supprimés.</td></tr>
+<tr><td><strong>Passage à la majorité</strong></td><td>E-mail de renouvellement de consentement à 18 ans ; sans réponse sous 90 j, le suivi est <strong>mis en pause</strong>.</td></tr>
+<tr><td><strong>Départ d'un commercial</strong></td><td>Clients et rappels sont <strong>réattribués</strong> à un autre référent.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="s12"><div class="sec-head"><span class="num">12</span><h2 class="sec">Où trouver quoi (menus)</h2></div>
+<div class="tbl-wrap"><table><thead><tr><th>Sous-menu</th><th>Pour qui</th><th>Contenu</th></tr></thead><tbody>
+<tr><td>Calendriers de fidélisation</td><td>Tous</td><td>Tous les calendriers de la boutique</td></tr>
+<tr><td>Mes activités en retard</td><td>Tous</td><td>Vos étapes en retard (liste + calendrier)</td></tr>
+<tr><td>Mon planning</td><td>Tous</td><td>Vos étapes à venir</td></tr>
+<tr><td>Tableau de bord direction</td><td>Responsables</td><td>4 indicateurs de pilotage</td></tr>
+<tr><td>Vues de supervision</td><td>Responsables</td><td>SAV &gt; 30 j, clients sans référent, absences</td></tr>
+<tr><td>Configuration</td><td>Responsables</td><td>Plans-types, fenêtres de vigilance</td></tr>
+</tbody></table></div>
+</section>
+
+<footer>Guide généré à partir de l'instance réelle (données de démonstration). Module <span class="path">optical_crm_followup</span> — Optique Luxe.</footer>
+
+</div>
+</div>
+</body>
+</html>

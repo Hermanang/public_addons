@@ -16,6 +16,22 @@
               sequence="60"
               groups="optical.group_optical_user"/>
 
+    <!-- Guide utilisateur : ouvre la page HTML stylée (static/description)
+         dans un nouvel onglet. Accessible à tous les utilisateurs optiques,
+         contrairement à la page Apps (admin only + CSS retiré au rendu). -->
+    <record id="action_optical_followup_guide" model="ir.actions.act_url">
+        <field name="name">Guide utilisateur — Fidélisation</field>
+        <field name="url">/optical_crm_followup/static/description/index.html</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_optical_followup_guide"
+              name="Guide utilisateur"
+              parent="menu_optical_followup_root"
+              action="action_optical_followup_guide"
+              sequence="100"
+              groups="optical.group_optical_user"/>
+
     <!-- Menus quotidiens : vendeurs -->
     <menuitem id="menu_optical_followup_my_schedules"
               name="Calendriers de fidélisation"

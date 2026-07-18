@@ -181,6 +181,11 @@
         <field name="name">Calendriers de fidélisation</field>
         <field name="res_model">optical.followup.schedule</field>
         <field name="view_mode">kanban,list,form</field>
+        <!-- Épingle la vue de recherche métier : sans cela, les vues de
+             recherche KPI (primaires, model=optical.followup.schedule) sont
+             sélectionnées par défaut (tri priority,name → "kpi…" < "…search")
+             et masquent les filtres d'état + "Mes calendriers". -->
+        <field name="search_view_id" ref="view_optical_followup_schedule_search"/>
     </record>
 
     <!-- Ligne : vue liste + recherche pour "Mes activités en retard" -->
