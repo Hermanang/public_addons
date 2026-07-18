@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_optical_followup_holiday_window_tree" model="ir.ui.view">
+        <field name="name">optical.followup.holiday.window.tree</field>
+        <field name="model">optical.followup.holiday.window</field>
+        <field name="arch" type="xml">
+            <list string="Fenêtres de vigilance">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="behavior"/>
+                <field name="lunar_date_id" optional="show"/>
+                <field name="date_start_civil" optional="show"/>
+                <field name="date_end_civil" optional="show"/>
+                <field name="duration_days" optional="hide"/>
+                <field name="suggested_channel" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_holiday_window_form" model="ir.ui.view">
+        <field name="name">optical.followup.holiday.window.form</field>
+        <field name="model">optical.followup.holiday.window</field>
+        <field name="arch" type="xml">
+            <form string="Fenêtre de vigilance">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ex. Ramadan, Fêtes fin d'année..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Configuration">
+                            <field name="active"/>
+                            <field name="sequence"/>
+                            <field name="behavior"/>
+                            <field name="suggested_channel"
+                                   invisible="behavior != 'switch_channel_soft'"/>
+                        </group>
+                        <group string="Ancrage temporel">
+                            <field name="lunar_date_id"
+                                   options="{'no_create': True}"/>
+                            <field name="duration_days"
+                                   invisible="not lunar_date_id"/>
+                            <field name="date_start_civil"
+                                   placeholder="MM-DD (ex. 12-23)"/>
+                            <field name="date_end_civil"
+                                   placeholder="MM-DD (ex. 01-03)"/>
+                        </group>
+                    </group>
+                    <group string="Description">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_holiday_window" model="ir.actions.act_window">
+        <field name="name">Fenêtres de vigilance</field>
+        <field name="res_model">optical.followup.holiday.window</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

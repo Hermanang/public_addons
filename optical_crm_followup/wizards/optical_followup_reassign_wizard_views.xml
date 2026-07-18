@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Story 17-3 AC-F — Wizard de réattribution en masse
+        =====================================================
+        Formulaire wizard + server action ouvrant le wizard + menuitem
+        supervision (manager uniquement).
+    -->
+
+    <record id="view_optical_followup_reassign_wizard_form" model="ir.ui.view">
+        <field name="name">optical.followup.reassign.wizard.form</field>
+        <field name="model">optical.followup.reassign.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Réattribuer un portefeuille">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Réattribution de portefeuille commercial</h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="source_user_id"/>
+                            <field name="target_user_id"/>
+                        </group>
+                        <group>
+                            <field name="transfer_scope"/>
+                            <field name="warehouse_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason"/>
+                    </group>
+                    <group string="Aperçu">
+                        <field name="preview_activities_count" readonly="1"/>
+                        <field name="preview_partners_count" readonly="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm"
+                            type="object"
+                            string="Valider la réattribution"
+                            class="oe_highlight"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_reassign_wizard" model="ir.actions.act_window">
+        <field name="name">Réattribuer un portefeuille</field>
+        <field name="res_model">optical.followup.reassign.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            6 fenêtres de vigilance saisonnière (archi V1.1 § 6.5).
+
+            Comportements retenus (défauts, ajustables post-install par PO) :
+              - postpone_to_end : fêtes courtes où toute sollicitation
+                commerciale est déplacée (Aïd, Tabaski, Magal).
+              - switch_channel_soft : périodes longues où l'activité reste
+                planifiée mais on suggère un canal doux (Ramadan, fêtes fin
+                d'année).
+              - none : période « signalée » sans impact fonctionnel (Rentrée
+                scolaire — opportunité, pas contrainte).
+
+            Les fenêtres lunaires pointent la ligne lunaire de 2026 par
+            `lunar_date_id` (ancrage sémantique). La résolution effective
+            année-glissante utilise `event` + année cible (cf. `_get_effective_period`).
+
+            `duration_days` sur les fenêtres lunaires est un fallback :
+            utilisé uniquement si la ligne lunaire cible n'a pas de
+            `date_gregorian_end` renseignée. Les 20 records livrés ont tous
+            leur date de fin — `duration_days` ne s'active que si un admin
+            l'efface accidentellement.
+
+            noupdate="1" — modifiables post-install (behavior, duration,
+            suggested_channel, description).
+        -->
+
+        <!-- Fenêtre 1 : Ramadan (lunaire, 30 j, switch_channel_soft) -->
+        <record id="holiday_window_ramadan" model="optical.followup.holiday.window">
+            <field name="name">Ramadan</field>
+            <field name="active">True</field>
+            <field name="sequence">10</field>
+            <field name="lunar_date_id" ref="optical_crm_followup.lunar_date_ramadan_2026"/>
+            <field name="duration_days">30</field>
+            <field name="behavior">switch_channel_soft</field>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="description">Période de jeûne. Privilégier WhatsApp pour ne pas déranger, différer les appels en soirée après rupture du jeûne.</field>
+        </record>
+
+        <!-- Fenêtre 2 : Aïd al-Fitr (lunaire, 2 j, postpone_to_end) -->
+        <record id="holiday_window_aid_fitr" model="optical.followup.holiday.window">
+            <field name="name">Aïd al-Fitr</field>
+            <field name="active">True</field>
+            <field name="sequence">20</field>
+            <field name="lunar_date_id" ref="optical_crm_followup.lunar_date_aid_fitr_2026"/>
+            <field name="duration_days">2</field>
+            <field name="behavior">postpone_to_end</field>
+            <field name="description">Fête familiale de rupture du jeûne. Toute sollicitation commerciale est reportée au lendemain de la fin.</field>
+        </record>
+
+        <!-- Fenêtre 3 : Tabaski (Aïd al-Adha) (lunaire, 3 j, postpone_to_end) -->
+        <record id="holiday_window_tabaski" model="optical.followup.holiday.window">
+            <field name="name">Tabaski (Aïd al-Adha)</field>
+            <field name="active">True</field>
+            <field name="sequence">30</field>
+            <field name="lunar_date_id" ref="optical_crm_followup.lunar_date_aid_adha_2026"/>
+            <field name="duration_days">3</field>
+            <field name="behavior">postpone_to_end</field>
+            <field name="description">Grande fête du sacrifice. Reporter les sollicitations commerciales au lendemain de la fin.</field>
+        </record>
+
+        <!-- Fenêtre 4 : Grand Magal de Touba (lunaire, 2 j, postpone_to_end) -->
+        <record id="holiday_window_magal" model="optical.followup.holiday.window">
+            <field name="name">Grand Magal de Touba</field>
+            <field name="active">True</field>
+            <field name="sequence">40</field>
+            <field name="lunar_date_id" ref="optical_crm_followup.lunar_date_magal_2026"/>
+            <field name="duration_days">2</field>
+            <field name="behavior">postpone_to_end</field>
+            <field name="description">Grand pèlerinage à Touba. Reporter les sollicitations commerciales au lendemain de la fin.</field>
+        </record>
+
+        <!-- Fenêtre 5 : Fêtes de fin d'année (civil, 23/12 → 03/01, switch_channel_soft) -->
+        <record id="holiday_window_fin_annee" model="optical.followup.holiday.window">
+            <field name="name">Fêtes de fin d'année</field>
+            <field name="active">True</field>
+            <field name="sequence">50</field>
+            <field name="date_start_civil">12-23</field>
+            <field name="date_end_civil">01-03</field>
+            <field name="behavior">switch_channel_soft</field>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="description">Période de fêtes familiales. Privilégier WhatsApp pour un message chaleureux plutôt qu'un appel commercial.</field>
+        </record>
+
+        <!-- Fenêtre 6 : Rentrée scolaire (civil, 15/09 → 05/10, none — opportunité) -->
+        <record id="holiday_window_rentree" model="optical.followup.holiday.window">
+            <field name="name">Rentrée scolaire</field>
+            <field name="active">True</field>
+            <field name="sequence">60</field>
+            <field name="date_start_civil">09-15</field>
+            <field name="date_end_civil">10-05</field>
+            <field name="behavior">none</field>
+            <field name="description">Période de rentrée — opportunité commerciale (bilan de vue enfants, remplacement lunettes de sport). Aucune contrainte, signalisation pour reporting futur.</field>
+        </record>
+
+    </data>
+</odoo>

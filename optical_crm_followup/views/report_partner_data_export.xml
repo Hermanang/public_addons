@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Story 17-3 AC-D — Rapport QWeb « Extrait droit d'accès CDP »
+        =============================================================
+        Loi 2008-12 art. 65-71 : le client (personne physique) a le droit
+        d'obtenir un extrait complet de ses données personnelles détenues
+        par l'établissement. Ce rapport structure ces données en 7 sections.
+
+        Généré par ``res.partner.action_optical_followup_data_export``
+        (manager uniquement). Rejette les personnes morales.
+    -->
+
+    <record id="action_report_partner_data_export" model="ir.actions.report">
+        <field name="name">Extrait droit d'accès CDP</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">optical_crm_followup.report_partner_data_export_document</field>
+        <field name="report_file">optical_crm_followup.report_partner_data_export_document</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="print_report_name">"Droit-acces-%s" % (object.name or "").replace(" ", "_")</field>
+    </record>
+
+    <template id="report_partner_data_export_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="partner">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Extrait droit d'accès — Loi 2008-12 art. 65-71</h2>
+                        <p>
+                            Extrait généré le <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                            pour le client <strong t-esc="partner.name"/>.
+                        </p>
+
+                        <!-- 1. Identité -->
+                        <h3>1. Identité</h3>
+                        <table class="table table-sm">
+                            <tr><td><strong>Nom</strong></td><td t-esc="partner.name or '-'"/></tr>
+                            <tr><td><strong>Date de naissance</strong></td>
+                                <td t-esc="partner.birthdate and partner.birthdate.strftime('%d/%m/%Y') or '-'"/></tr>
+                            <tr><td><strong>Email</strong></td><td t-esc="partner.email or '-'"/></tr>
+                            <tr><td><strong>Téléphone</strong></td><td t-esc="partner.phone or '-'"/></tr>
+                            <tr><td><strong>Mobile</strong></td><td t-esc="partner.mobile or '-'"/></tr>
+                            <tr><td><strong>Adresse</strong></td>
+                                <td>
+                                    <span t-esc="partner.street or ''"/>
+                                    <t t-if="partner.street2"><br/><span t-esc="partner.street2"/></t>
+                                    <br/>
+                                    <span t-esc="partner.zip or ''"/>
+                                    <span t-esc="partner.city or ''"/>
+                                    <t t-if="partner.country_id"><br/><span t-esc="partner.country_id.name"/></t>
+                                </td>
+                            </tr>
+                            <tr><td><strong>NINEA / IFU</strong></td><td t-esc="partner.vat or '-'"/></tr>
+                        </table>
+
+                        <!-- 2. Consentement dispositif fidélisation -->
+                        <h3>2. Consentement suivi optique</h3>
+                        <table class="table table-sm">
+                            <tr><td><strong>Consentement</strong></td>
+                                <td><t t-if="partner.optical_followup_consent">Oui</t><t t-else="">Non</t></td></tr>
+                            <tr><td><strong>Date consentement</strong></td>
+                                <td t-esc="partner.optical_followup_consent_date and partner.optical_followup_consent_date.strftime('%d/%m/%Y') or '-'"/></tr>
+                            <tr><td><strong>Recueilli par</strong></td>
+                                <td t-esc="partner.optical_followup_consent_by_id.name or '-'"/></tr>
+                            <tr><td><strong>Représentant légal</strong></td>
+                                <td><t t-if="partner.optical_followup_consent_by_legal_rep">Oui</t><t t-else="">Non</t></td></tr>
+                        </table>
+
+                        <!-- 3. Opposition (opt-out) -->
+                        <h3>3. Opposition au suivi (opt-out)</h3>
+                        <table class="table table-sm">
+                            <tr><td><strong>Opt-out</strong></td>
+                                <td><t t-if="partner.optical_followup_optout">Oui</t><t t-else="">Non</t></td></tr>
+                            <tr><td><strong>Date opt-out</strong></td>
+                                <td t-esc="partner.optical_followup_optout_date and partner.optical_followup_optout_date.strftime('%d/%m/%Y') or '-'"/></tr>
+                            <tr><td><strong>Motif</strong></td>
+                                <td t-esc="partner.optical_followup_optout_reason or '-'"/></tr>
+                        </table>
+
+                        <!-- 4. Majorité -->
+                        <h3>4. Passage à la majorité (renouvellement consentement)</h3>
+                        <table class="table table-sm">
+                            <tr><td><strong>Date demande consentement majeur</strong></td>
+                                <td t-esc="partner.optical_followup_majority_request_date and partner.optical_followup_majority_request_date.strftime('%d/%m/%Y') or '-'"/></tr>
+                        </table>
+
+                        <!-- 5. Historique commercial -->
+                        <h3>5. Historique commercial</h3>
+                        <t t-set="sale_orders" t-value="env['sale.order'].sudo().search([('partner_id', '=', partner.id), ('state', '!=', 'cancel')], order='date_order desc')"/>
+                        <table class="table table-sm" t-if="sale_orders">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th><th>Date</th><th>Montant TTC</th>
+                                    <th>État</th><th>Boutique</th><th>Remise</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="sale_orders" t-as="so">
+                                    <td t-esc="so.name"/>
+                                    <td t-esc="so.date_order and so.date_order.strftime('%d/%m/%Y') or '-'"/>
+                                    <td t-esc="'%.2f' % so.amount_total"/>
+                                    <td t-esc="so.state"/>
+                                    <td t-esc="so.warehouse_id.name or '-'"/>
+                                    <td t-esc="so.delivered_date and so.delivered_date.strftime('%d/%m/%Y') or '-'"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p t-if="not sale_orders"><em>Aucune commande enregistrée.</em></p>
+
+                        <!-- 6. Historique calendriers fidélisation -->
+                        <h3>6. Historique calendriers fidélisation</h3>
+                        <t t-set="schedules" t-value="env['optical.followup.schedule'].sudo().search([('partner_id', '=', partner.id)], order='create_date desc')"/>
+                        <t t-foreach="schedules" t-as="schedule">
+                            <p>
+                                <strong t-esc="schedule.name"/>
+                                — État : <span t-esc="schedule.state"/>
+                                — Plan : <span t-esc="schedule.plan_id.name or '-'"/>
+                                — Boutique : <span t-esc="schedule.warehouse_id.name or '-'"/>
+                            </p>
+                            <table class="table table-sm" t-if="schedule.line_ids">
+                                <thead>
+                                    <tr>
+                                        <th>Étape</th><th>Date planifiée</th><th>État</th><th>Issue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="schedule.line_ids" t-as="line">
+                                        <td t-esc="line.step_id.name or '-'"/>
+                                        <td t-esc="line.date_planned and line.date_planned.strftime('%d/%m/%Y') or '-'"/>
+                                        <td t-esc="line.state"/>
+                                        <td t-esc="line.outcome or '-'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        <p t-if="not schedules"><em>Aucun calendrier de fidélisation enregistré.</em></p>
+
+                        <!-- 7. Anonymisation -->
+                        <h3>7. Statut anonymisation</h3>
+                        <table class="table table-sm">
+                            <tr><td><strong>Fiche anonymisée</strong></td>
+                                <td><t t-if="partner.optical_anonymized">Oui</t><t t-else="">Non</t></td></tr>
+                            <tr t-if="partner.optical_anonymized"><td><strong>Date d'anonymisation</strong></td>
+                                <td t-esc="partner.optical_anonymized_date and partner.optical_anonymized_date.strftime('%d/%m/%Y') or '-'"/></tr>
+                        </table>
+
+                        <hr/>
+                        <p><small>
+                            Cet extrait est émis conformément à la Loi n° 2008-12
+                            (Sénégal) art. 65-71 relative à la protection des
+                            données à caractère personnel. Il constitue la
+                            réponse à une demande d'accès formulée par le client
+                            ou son représentant légal.
+                        </small></p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

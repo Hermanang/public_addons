@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Plan -->
+    <record id="view_optical_followup_plan_tree" model="ir.ui.view">
+        <field name="name">optical.followup.plan.tree</field>
+        <field name="model">optical.followup.plan</field>
+        <field name="arch" type="xml">
+            <list string="Plans-types de suivi">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="optical_type_trigger"/>
+                <!-- Story 18-1 AC-4 : tier réservé (plan additionnel par tier) -->
+                <field name="tier_id" optional="show"/>
+                <field name="duration_months"/>
+                <!-- Story 17-2 AC-4.4 : sous-métrique désabonnement 30 j -->
+                <field name="fast_unsubscribe_rate_30d_display"
+                       string="Taux désab. 30 j" optional="show"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_plan_form" model="ir.ui.view">
+        <field name="name">optical.followup.plan.form</field>
+        <field name="model">optical.followup.plan</field>
+        <field name="arch" type="xml">
+            <form string="Plan-type">
+                <sheet>
+                    <widget name="web_ribbon" title="Archivé" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="duration_months"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <!-- Story 18-1 AC-4 : réservation par tier.
+                                 Renseigné ⇒ plan NON sélectionné par FR-02 ;
+                                 ses étapes sont injectées en supplément pour
+                                 les clients atteignant ce tier (cumulatif). -->
+                            <field name="tier_id"/>
+                            <!-- Le déclencheur produit n'a de sens que pour un
+                                 plan universel (sélection FR-02) ; masqué pour
+                                 un plan réservé à un tier. -->
+                            <field name="optical_type_trigger"
+                                   invisible="tier_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Étapes" name="steps">
+                            <field name="step_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="offset_days"/>
+                                    <field name="activity_type_id"/>
+                                    <field name="suggested_channel"/>
+                                    <field name="suggested_role" optional="show"/>
+                                    <field name="birthday_step"/>
+                                    <field name="objective" optional="hide"/>
+                                    <field name="mail_template_id" optional="hide"/>
+                                    <field name="description" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_plan" model="ir.actions.act_window">
+        <field name="name">Plans-types</field>
+        <field name="res_model">optical.followup.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

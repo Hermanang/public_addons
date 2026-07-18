@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================== -->
+    <!-- Action d'impression : Fiche de montage sur sale.order           -->
+    <!-- ============================================================== -->
+    <record id="action_report_optical_workshop_sheet" model="ir.actions.report">
+        <field name="name">Fiche de montage</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">optical_workshop_sheet.report_optical_workshop_sheet</field>
+        <field name="report_file">optical_workshop_sheet.report_optical_workshop_sheet</field>
+        <field name="print_report_name">'Fiche montage - %s' % (object.name or '')</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_optical_workshop_sheet"/>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Wrapper                                                         -->
+    <!-- ============================================================== -->
+    <template id="report_optical_workshop_sheet">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="optical_workshop_sheet.report_optical_workshop_sheet_document"
+                   t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================== -->
+    <!-- Helper : bloc monture (mesures OD/OG + tableau technique vide) -->
+    <!-- Utilisé pour la monture achetée ET la monture offerte           -->
+    <!-- Variables attendues : frame_line, lens_line, presc              -->
+    <!-- ============================================================== -->
+    <template id="report_optical_workshop_sheet_monture_block">
+        <!-- Traitements du produit verres (matching insensible à la casse) -->
+        <t t-set="lens_treatments"
+           t-value="[t.lower().strip() for t in (lens_line[:1].product_id.lens_treatment_ids.mapped('name') if lens_line else [])]"/>
+
+        <!-- Ligne : Marque / Référence -->
+        <table class="lo-ws-line-tbl">
+            <tr>
+                <td class="lo-ws-title-red" style="width: 50%;">
+                    <strong>Marque monture <t t-out="section_label"/> : </strong>
+                    <t t-if="frame_line" t-out="frame_line[:1].product_id.product_brand_id.name or ''"/>
+                </td>
+                <td class="lo-ws-title-red" style="width: 50%; text-align: left;">
+                    <strong>Référence : </strong>
+                    <t t-if="frame_line" t-out="(frame_line[:1].product_id.display_name or '').title()"/>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Type de verres (3 checkboxes) -->
+        <div class="lo-ws-checkboxes">
+            <strong>Type de verres :</strong>
+            <span class="lo-ws-cb">
+                <span t-out="'☒' if presc and presc.vision_type == 'far' else '☐'"/> Vision de loin
+            </span>
+            <span class="lo-ws-cb">
+                <span t-out="'☒' if presc and presc.vision_type == 'near' else '☐'"/> Vision de près
+            </span>
+            <span class="lo-ws-cb">
+                <span t-out="'☒' if presc and presc.vision_type == 'progressive' else '☐'"/> Verres Progressifs
+            </span>
+        </div>
+
+        <!-- Traitement des verres (8 checkboxes fixes en 3 colonnes comme PDF) -->
+        <div class="lo-ws-treatments">
+            <strong>Traitement des verres :</strong>
+            <table class="lo-ws-treat-tbl">
+                <tr>
+                    <td>&#160;</td>
+                    <td>
+                        <span t-out="'☒' if 'photogray anti reflet' in lens_treatments else '☐'"/>
+                        Photogray anti reflet
+                    </td>
+                    <td>
+                        <span t-out="'☒' if 'photogray anti reflet blue-cut' in lens_treatments else '☐'"/>
+                        Photogray anti reflet blue-cut
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span t-out="'☒' if 'photogray anti reflet bleu' in lens_treatments else '☐'"/>
+                        Photogray anti reflet bleu
+                    </td>
+                    <td>
+                        <span t-out="'☒' if 'blanc anti reflet' in lens_treatments else '☐'"/>
+                        Blanc anti reflet
+                    </td>
+                    <td>
+                        <span t-out="'☒' if 'photogray anti reflet aminci' in lens_treatments else '☐'"/>
+                        photogray anti reflet aminci
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span t-out="'☒' if 'blanc aminci' in lens_treatments else '☐'"/>
+                        Blanc aminci
+                    </td>
+                    <td>
+                        <span t-out="'☒' if 'photogray anti reflet teinté' in lens_treatments else '☐'"/>
+                        Photogray anti reflet teinté
+                    </td>
+                    <td>
+                        <span t-out="'☒' if 'blanc anti reflet bleu' in lens_treatments else '☐'"/>
+                        blanc anti reflet bleu
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- EP / EP OD / EP OG (Écart Pupillaire) -->
+        <table class="lo-ws-ep-tbl">
+            <tr>
+                <th>EP :</th>
+                <td><span t-if="presc and presc.pd_total" t-field="presc.pd_total"/></td>
+                <th>EP OD :</th>
+                <td><span t-if="presc and presc.od_pd" t-field="presc.od_pd"/></td>
+                <th>EP OG :</th>
+                <td><span t-if="presc and presc.og_pd" t-field="presc.og_pd"/></td>
+            </tr>
+        </table>
+
+        <!-- Tableau mesures optiques OD/OG -->
+        <table class="lo-ws-measures">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>SPH</th>
+                    <th>CYCL</th>
+                    <th>AXE</th>
+                    <th>ADD</th>
+                    <th>PRISME</th>
+                    <th>BASE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Oeil droite</th>
+                    <td><span t-if="presc" t-field="presc.od_sphere"/></td>
+                    <td><span t-if="presc" t-field="presc.od_cylinder"/></td>
+                    <td><span t-if="presc" t-field="presc.od_axis"/></td>
+                    <td><span t-if="presc" t-field="presc.od_addition"/></td>
+                    <td><span t-if="presc" t-field="presc.od_prism"/></td>
+                    <td><span t-if="presc" t-field="presc.od_prism_base"/></td>
+                </tr>
+                <tr>
+                    <th>Oeil gauche</th>
+                    <td><span t-if="presc" t-field="presc.og_sphere"/></td>
+                    <td><span t-if="presc" t-field="presc.og_cylinder"/></td>
+                    <td><span t-if="presc" t-field="presc.og_axis"/></td>
+                    <td><span t-if="presc" t-field="presc.og_addition"/></td>
+                    <td><span t-if="presc" t-field="presc.og_prism"/></td>
+                    <td><span t-if="presc" t-field="presc.og_prism_base"/></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Tableau technique monture (cases vides, remplies à la main atelier) -->
+        <table class="lo-ws-frame-tech">
+            <thead>
+                <tr>
+                    <th>HBOX</th>
+                    <th>VBOX</th>
+                    <th>DBL</th>
+                    <th>FH</th>
+                    <th>PANTO</th>
+                    <th>VERTEX</th>
+                    <th>Base Curve</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>&#160;</td>
+                    <td>&#160;</td>
+                    <td>&#160;</td>
+                    <td>&#160;</td>
+                    <td>&#160;</td>
+                    <td>&#160;</td>
+                    <td>&#160;</td>
+                </tr>
+            </tbody>
+        </table>
+    </template>
+
+    <!-- ============================================================== -->
+    <!-- Document principal : fiche de montage A4                        -->
+    <!-- ============================================================== -->
+    <template id="report_optical_workshop_sheet_document">
+        <t t-set="company" t-value="doc.company_id"/>
+        <t t-set="presc" t-value="doc.prescription_id"/>
+
+        <!-- Lignes monture/verres : achetées vs offertes -->
+        <t t-set="frame_paid"
+           t-value="doc.order_line.filtered(lambda l: not l.display_type and l.product_id.optical_type == 'frame' and not l.is_gift)"/>
+        <t t-set="lens_paid"
+           t-value="doc.order_line.filtered(lambda l: not l.display_type and l.product_id.optical_type == 'lens' and not l.is_gift)"/>
+        <t t-set="frame_gift"
+           t-value="doc.order_line.filtered(lambda l: not l.display_type and l.product_id.optical_type == 'frame' and l.is_gift)"/>
+        <t t-set="lens_gift"
+           t-value="doc.order_line.filtered(lambda l: not l.display_type and l.product_id.optical_type == 'lens' and l.is_gift)"/>
+
+        <!-- Adresse boutique dynamique via warehouse.partner_id (fallback company) -->
+        <t t-set="boutique_partner"
+           t-value="doc.warehouse_id.partner_id if (doc.warehouse_id and doc.warehouse_id.partner_id) else doc.company_id.partner_id"/>
+
+        <!-- Paiements auto : les 2 premiers paiements postés sur factures patient -->
+        <t t-set="patient_invoices"
+           t-value="doc.invoice_ids.filtered(lambda i: i.state == 'posted' and i.move_type == 'out_invoice' and not i.is_insurance_invoice)"/>
+        <t t-set="payments"
+           t-value="patient_invoices.mapped('matched_payment_ids').filtered(lambda p: p.state in ('paid', 'in_process')).sorted(key=lambda p: p.date)"/>
+        <t t-set="reglement_1" t-value="payments[0] if len(payments) &gt;= 1 else False"/>
+        <t t-set="reglement_2" t-value="payments[1] if len(payments) &gt;= 2 else False"/>
+
+        <!-- Assurance -->
+        <t t-set="insurer_name" t-value="doc.policy_id.insurer_id.name if doc.policy_id and doc.policy_id.insurer_id else ''"/>
+        <t t-set="part_assurance" t-value="(doc.amount_total - doc.amount_patient) if doc.has_insurance else 0.0"/>
+        <t t-set="reste_a_payer"
+           t-value="sum(patient_invoices.mapped('amount_residual'))"/>
+
+        <div class="page lo-ws">
+            <style>
+                /* === Reset marges Odoo + layout général === */
+                .lo-ws {
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 10pt;
+                    color: #000;
+                    line-height: 1.4;
+                    padding: 0;
+                    margin: 0;
+                }
+
+                /* === Header : logo centré avec lignes déco (table layout wkhtmltopdf-safe) === */
+                .lo-ws-header {
+                    text-align: center;
+                    margin: 0 0 12px 0;
+                    padding-bottom: 6px;
+                }
+                .lo-ws-header-lines {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 4px;
+                }
+                .lo-ws-header-lines td.lo-ws-header-line {
+                    width: 40%;
+                    vertical-align: middle;
+                }
+                .lo-ws-header-lines td.lo-ws-header-logo-cell {
+                    padding: 0 12px;
+                    text-align: center;
+                    white-space: nowrap;
+                    vertical-align: middle;
+                }
+                .lo-ws-header img {
+                    max-height: 90px;
+                    max-width: 220px;
+                    display: inline-block;
+                }
+                .lo-ws-title {
+                    font-size: 20pt;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    margin: 4px 0 0 0;
+                    color: #000;
+                }
+
+                /* === Bloc client + société (2 colonnes) === */
+                .lo-ws-topinfo {
+                    width: 100%;
+                    margin-bottom: 12px;
+                    border-collapse: collapse;
+                }
+                .lo-ws-topinfo td {
+                    vertical-align: top;
+                    font-size: 10.5pt;
+                    padding: 2px 0;
+                }
+                .lo-ws-topinfo .company-name {
+                    font-weight: bold;
+                    text-align: right;
+                    color: #1f3864;
+                    font-size: 12pt;
+                }
+                .lo-ws-topinfo .company-addr {
+                    text-align: right;
+                    font-size: 9pt;
+                    color: #555;
+                    line-height: 1.35;
+                }
+
+                /* === Meta table === */
+                .lo-ws-meta {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 8px 0 16px 0;
+                }
+                .lo-ws-meta th,
+                .lo-ws-meta td {
+                    border: 1.2px solid #000;
+                    padding: 6px 6px;
+                    text-align: center;
+                    font-size: 10pt;
+                }
+                .lo-ws-meta th {
+                    background: #f2f2f2;
+                    font-weight: bold;
+                }
+                .lo-ws-meta tbody td {
+                    height: 26px;
+                }
+
+                /* === Titres rouges des sections monture === */
+                .lo-ws-title-red {
+                    color: #c00000;
+                    font-size: 11pt;
+                    font-weight: bold;
+                    padding: 8px 0 4px 0;
+                    vertical-align: top;
+                }
+                .lo-ws-line-tbl {
+                    width: 100%;
+                    margin-top: 4px;
+                    border-collapse: collapse;
+                }
+
+                /* === Checkboxes (type verres) === */
+                .lo-ws-checkboxes {
+                    margin: 6px 0;
+                    font-size: 10.5pt;
+                }
+                .lo-ws-checkboxes .lo-ws-cb {
+                    display: inline-block;
+                    margin-left: 28px;
+                    font-weight: normal;
+                }
+                .lo-ws-checkboxes strong {
+                    display: inline-block;
+                    min-width: 140px;
+                }
+
+                /* === Bloc traitements (8 checkboxes en 3 colonnes comme PDF) === */
+                .lo-ws-treatments {
+                    margin: 8px 0 10px 0;
+                }
+                .lo-ws-treatments strong {
+                    display: block;
+                    margin-bottom: 4px;
+                    font-size: 10.5pt;
+                }
+                .lo-ws-treat-tbl {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                .lo-ws-treat-tbl td {
+                    width: 33.33%;
+                    padding: 3px 4px;
+                    font-size: 9.5pt;
+                    vertical-align: top;
+                }
+
+                /* === Ligne EP === */
+                .lo-ws-ep-tbl {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 10px 0 6px 0;
+                }
+                .lo-ws-ep-tbl th,
+                .lo-ws-ep-tbl td {
+                    border: 1.2px solid #000;
+                    padding: 6px 8px;
+                    font-size: 10.5pt;
+                    height: 24px;
+                }
+                .lo-ws-ep-tbl th {
+                    background: #f2f2f2;
+                    text-align: left;
+                    font-weight: bold;
+                    width: 13%;
+                }
+                .lo-ws-ep-tbl td {
+                    width: 20.33%;
+                }
+
+                /* === Tableau mesures OD/OG === */
+                .lo-ws-measures,
+                .lo-ws-frame-tech {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin: 6px 0;
+                }
+                .lo-ws-measures th,
+                .lo-ws-measures td,
+                .lo-ws-frame-tech th,
+                .lo-ws-frame-tech td {
+                    border: 1.2px solid #000;
+                    padding: 6px 4px;
+                    text-align: center;
+                    font-size: 10pt;
+                }
+                .lo-ws-measures th,
+                .lo-ws-frame-tech th {
+                    background: #f2f2f2;
+                    font-weight: bold;
+                    height: 26px;
+                }
+                .lo-ws-measures tbody th {
+                    text-align: right;
+                    padding-right: 10px;
+                    width: 20%;
+                }
+                .lo-ws-measures tbody td {
+                    height: 28px;
+                }
+                .lo-ws-frame-tech tbody td {
+                    height: 30px;
+                }
+
+                /* === Séparateur pointillé === */
+                .lo-ws-sep {
+                    border: none;
+                    border-top: 1.5px dashed #999;
+                    margin: 8px 0 4px 0;
+                }
+
+                /* === Bloc paiements === */
+                .lo-ws-pay {
+                    width: 100%;
+                    margin-top: 8px;
+                    border-collapse: collapse;
+                }
+                .lo-ws-pay td {
+                    padding: 5px 6px;
+                    font-size: 10.5pt;
+                    vertical-align: top;
+                }
+                .lo-ws-pay .lbl {
+                    font-weight: bold;
+                }
+
+                /* === Bloc note (zone vide pour écriture manuelle) === */
+                .lo-ws-note {
+                    margin-top: 12px;
+                    font-size: 10.5pt;
+                }
+                .lo-ws-note .lbl {
+                    font-weight: bold;
+                }
+                .lo-ws-note-space {
+                    min-height: 25px;
+                    margin-top: 4px;
+                }
+            </style>
+
+            <!-- ================================================== -->
+            <!-- HEADER : logo centré entre 2 lignes déco + titre  -->
+            <!-- ================================================== -->
+            <div class="lo-ws-header">
+                <table class="lo-ws-header-lines">
+                    <tr>
+                        <td class="lo-ws-header-line"></td>
+                        <td class="lo-ws-header-logo-cell">
+                            <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                        </td>
+                        <td class="lo-ws-header-line"></td>
+                    </tr>
+                </table>
+                <div class="lo-ws-title">FICHE DE MONTAGE</div>
+            </div>
+
+            <!-- ================================================== -->
+            <!-- INFO CLIENT (gauche) + SOCIÉTÉ/BOUTIQUE (droite)  -->
+            <!-- ================================================== -->
+            <table class="lo-ws-topinfo">
+                <tr>
+                    <td style="width: 55%;">
+                        <div><strong>Prénom/Nom : </strong>
+                            <t t-out="doc.partner_id.name or ''"/>
+                        </div>
+                        <div><strong>Tel : </strong>
+                            <t t-out="doc.partner_id.phone or doc.partner_id.mobile or ''"/>
+                        </div>
+                    </td>
+                    <td style="width: 45%;">
+                        <div class="company-name">
+                            <t t-out="boutique_partner.name or ''"/>
+                        </div>
+                        <div class="company-addr">
+                            <t t-out="boutique_partner.street or ''"/>
+                            <t t-if="boutique_partner.street2">
+                                <br/><t t-out="boutique_partner.street2"/>
+                            </t>
+                            <br/>
+                            <t t-out="boutique_partner.city or ''"/>
+                            <t t-if="boutique_partner.country_id">
+                                / <t t-out="boutique_partner.country_id.name"/>
+                            </t>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ================================================== -->
+            <!-- META : Dossier / Date cmde / Date livr / Vendeur / Boutique -->
+            <!-- ================================================== -->
+            <table class="lo-ws-meta">
+                <tr>
+                    <th>DOSSIER N°</th>
+                    <th>Date commande</th>
+                    <th>Date livraison</th>
+                    <th>Vendeur</th>
+                    <th>BOUTIQUE</th>
+                </tr>
+                <tr>
+                    <td><t t-out="doc.name or ''"/></td>
+                    <td>
+                        <t t-if="doc.date_order" t-out="doc.date_order.strftime('%d/%m/%Y')"/>
+                    </td>
+                    <td>
+                        <t t-if="doc.commitment_date" t-out="doc.commitment_date.strftime('%d/%m/%Y')"/>
+                    </td>
+                    <td><t t-out="doc.user_id.name if doc.user_id else ''"/></td>
+                    <td><t t-out="doc.warehouse_id.name if doc.warehouse_id else ''"/></td>
+                </tr>
+            </table>
+
+            <!-- ================================================== -->
+            <!-- MONTURE ACHETÉE                                    -->
+            <!-- ================================================== -->
+            <t t-set="section_label" t-value="'achetée'"/>
+            <t t-set="frame_line" t-value="frame_paid"/>
+            <t t-set="lens_line" t-value="lens_paid"/>
+            <t t-call="optical_workshop_sheet.report_optical_workshop_sheet_monture_block"/>
+
+            <!-- ================================================== -->
+            <!-- MONTURE OFFERTE (si lignes is_gift)                -->
+            <!-- ================================================== -->
+            <t t-if="frame_gift or lens_gift">
+                <hr class="lo-ws-sep"/>
+                <t t-set="section_label" t-value="'offerte'"/>
+                <t t-set="frame_line" t-value="frame_gift"/>
+                <t t-set="lens_line" t-value="lens_gift"/>
+                <t t-call="optical_workshop_sheet.report_optical_workshop_sheet_monture_block"/>
+            </t>
+
+            <hr class="lo-ws-sep"/>
+
+            <!-- ================================================== -->
+            <!-- BLOC PAIEMENTS                                     -->
+            <!-- ================================================== -->
+            <table class="lo-ws-pay">
+                <tr>
+                    <td style="width: 33%;">
+                        <span class="lbl">Prix : </span>
+                        <span t-out="doc.amount_total"
+                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                    </td>
+                    <td style="width: 33%;">
+                        <span class="lbl">Règlement 1<t t-if="reglement_1"> (<t t-out="reglement_1.payment_method_line_id.name or reglement_1.journal_id.name or ''"/>)</t> : </span>
+                        <t t-if="reglement_1">
+                            <span t-out="reglement_1.amount"
+                                  t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                        </t>
+                    </td>
+                    <td style="width: 34%;">
+                        <span class="lbl">Règlement 2<t t-if="reglement_2"> (<t t-out="reglement_2.payment_method_line_id.name or reglement_2.journal_id.name or ''"/>)</t> : </span>
+                        <t t-if="reglement_2">
+                            <span t-out="reglement_2.amount"
+                                  t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                        </t>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="lbl">Assurance/IPM : </span>
+                        <t t-out="insurer_name"/>
+                    </td>
+                    <td>
+                        <span class="lbl">Part assurance : </span>
+                        <t t-if="doc.has_insurance">
+                            <span t-out="part_assurance"
+                                  t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                        </t>
+                    </td>
+                    <td>
+                        <span class="lbl">Reste : </span>
+                        <span t-out="reste_a_payer"
+                              t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ================================================== -->
+            <!-- NOTE libre (zone vide pour écriture manuelle)      -->
+            <!-- ================================================== -->
+            <div class="lo-ws-note">
+                <span class="lbl">Note : </span>
+                <div class="lo-ws-note-space"></div>
+            </div>
+        </div>
+    </template>
+
+</odoo>

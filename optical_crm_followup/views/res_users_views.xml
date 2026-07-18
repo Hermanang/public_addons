@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_users_form_inherit_crm_followup" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.optical_crm_followup</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Fidélisation" name="optical_crm_followup"
+                      groups="optical.group_optical_user">
+                    <group>
+                        <field name="optical_warehouse_ids"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"
+                               groups="optical.group_optical_manager"/>
+                        <field name="optical_warehouse_ids"
+                               widget="many2many_tags"
+                               readonly="1"
+                               groups="!optical.group_optical_manager"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

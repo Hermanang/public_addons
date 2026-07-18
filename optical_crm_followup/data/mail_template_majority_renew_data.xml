@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Story 17-3 AC-A.1 — Template mail « Renouvellement consentement majeur »
+            =========================================================================
+            Envoyé par le cron RH 06 h 00 le jour où le client atteint 18 ans,
+            si son consentement initial avait été signé par un représentant
+            légal (mineur au moment de la 1ʳᵉ commande).
+            Inclut le footer légal Loi 2008-12 art. 33 (FR-16).
+        -->
+
+        <record id="email_majority_renew_consent" model="mail.template">
+            <field name="name">Optical Fidélisation — Renouvellement consentement (majorité)</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="subject">Renouvellement de votre consentement personnel</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour <t t-out="object.name or ''"/>,</p>
+                    <p>Vous venez d'atteindre l'âge de 18 ans — félicitations !</p>
+                    <p>
+                        Le consentement initial de votre suivi de fidélisation
+                        avait été signé par votre représentant légal. Pour
+                        continuer à recevoir nos messages de rappel entretien
+                        et de renouvellement d'équipement, nous vous invitons
+                        à confirmer votre consentement personnel lors de votre
+                        prochaine visite en boutique.
+                    </p>
+                    <p>
+                        Sans confirmation de votre part sous 90 jours, votre
+                        calendrier de suivi sera automatiquement mis en pause.
+                        Il pourra être réactivé à tout moment sur simple demande.
+                    </p>
+                    <p>Bien cordialement,<br/>Votre équipe Luxe Optique</p>
+                    <t t-call="optical_crm_followup.mail_footer_legal"/>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

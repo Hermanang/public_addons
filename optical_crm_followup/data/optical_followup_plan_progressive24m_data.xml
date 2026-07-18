@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Preset "Progressifs 24 mois adaptation" — plan dense de 13 étapes
+            sur 24 mois pour les primo-porteurs progressifs (adaptation
+            critique). Sélectionné par FR-02 quand la SO contient un produit
+            optical_type='lens' + lens_design='progressive'.
+
+            noupdate="1" garantit qu'un responsable peut modifier le contenu
+            en post-install (offsets, canal, objectif, description...) sans
+            qu'un upgrade module ne réécrase ses ajustements (FR-12).
+        -->
+
+        <record id="plan_progressive_24m" model="optical.followup.plan">
+            <field name="name">Progressifs 24 mois adaptation</field>
+            <field name="active">True</field>
+            <field name="sequence">40</field>
+            <field name="duration_months">24</field>
+            <field name="optical_type_trigger">progressive</field>
+        </record>
+
+        <!-- Étape 1 : J+0 — Livraison / conseils d'adaptation (Visite) -->
+        <record id="plan_progressive_24m_step_j0" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">10</field>
+            <field name="name">Livraison — Conseils d'adaptation</field>
+            <field name="offset_days">0</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_visite"/>
+            <field name="suggested_channel">in_person</field>
+            <field name="suggested_role">optician</field>
+            <field name="objective">Conseils d'adaptation</field>
+            <field name="description">Prendre le temps de rappeler les principes d'adaptation aux progressifs (positionnement du regard, éviter mouvements de tête brusques, période d'accoutumance ~2 semaines).</field>
+        </record>
+
+        <!-- Étape 2 : J+3 — Rassurer (WhatsApp) -->
+        <record id="plan_progressive_24m_step_j3" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">20</field>
+            <field name="name">J+3 — Rassurer</field>
+            <field name="offset_days">3</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Rassurer</field>
+            <field name="description">Court WhatsApp pour rassurer, valider absence de vertiges, encourager persévérance.</field>
+        </record>
+
+        <!-- Étape 3 : J+7 — Détecter gêne précoce (Appel) -->
+        <record id="plan_progressive_24m_step_j7" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">30</field>
+            <field name="name">J+7 — Détecter gêne précoce</field>
+            <field name="offset_days">7</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">optician</field>
+            <field name="objective">Détecter gêne précoce</field>
+            <field name="description">Appel court pour identifier gêne visuelle, fatigue oculaire ou inconfort de positionnement à J+7.</field>
+        </record>
+
+        <!-- Étape 4 : J+15 — Contrôle qualité (Appel) -->
+        <record id="plan_progressive_24m_step_j15" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">40</field>
+            <field name="name">J+15 — Contrôle qualité</field>
+            <field name="offset_days">15</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">manager</field>
+            <field name="objective">Contrôle qualité</field>
+            <field name="description">Contrôle qualité opérationnel : ajustement monture, précision des zones de vision, satisfaction perçue.</field>
+        </record>
+
+        <!-- Étape 5 : J+30 — Bilan adaptation (WhatsApp) -->
+        <record id="plan_progressive_24m_step_j30" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">50</field>
+            <field name="name">J+30 — Bilan adaptation</field>
+            <field name="offset_days">30</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">optician</field>
+            <field name="objective">Bilan adaptation</field>
+            <field name="description">Bilan complet — confort, netteté vision de près / loin, gêne éventuelle, satisfaction globale.</field>
+        </record>
+
+        <!-- Étape 6 : M+3 — Entretien gratuit (WhatsApp) -->
+        <record id="plan_progressive_24m_step_m3" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">60</field>
+            <field name="name">M+3 — Entretien gratuit</field>
+            <field name="offset_days">90</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Entretien gratuit</field>
+            <field name="description">Proposition d'un rendez-vous d'entretien gratuit en boutique (nettoyage, ajustement, contrôle).</field>
+        </record>
+
+        <!-- Étape 7 : M+6 — Contrôle confort (Appel) -->
+        <record id="plan_progressive_24m_step_m6" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">70</field>
+            <field name="name">M+6 — Contrôle confort</field>
+            <field name="offset_days">180</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">optician</field>
+            <field name="objective">Contrôle confort</field>
+            <field name="description">Contrôle du confort après 6 mois : vérification de l'usage quotidien, détection d'un besoin d'ajustement.</field>
+        </record>
+
+        <!-- Étape 8 : M+9 — Maintien de la relation (WhatsApp) -->
+        <record id="plan_progressive_24m_step_m9" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">80</field>
+            <field name="name">M+9 — Maintien relation</field>
+            <field name="offset_days">270</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Maintien de la relation</field>
+            <field name="description">Message léger pour maintenir la relation client (astuce d'entretien, actualité boutique).</field>
+        </record>
+
+        <!-- Étape 9 : M+12 — Bilan annuel (Appel) -->
+        <record id="plan_progressive_24m_step_m12" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">90</field>
+            <field name="name">M+12 — Bilan annuel</field>
+            <field name="offset_days">365</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">optician</field>
+            <field name="objective">Bilan annuel</field>
+            <field name="description">Bilan annuel complet : satisfaction, évolution de la vue, contrôle recommandé chez l'ophtalmologiste.</field>
+        </record>
+
+        <!-- Étape 10 : M+15 — Entretien premium (WhatsApp) -->
+        <record id="plan_progressive_24m_step_m15" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">100</field>
+            <field name="name">M+15 — Entretien premium</field>
+            <field name="offset_days">455</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Entretien premium</field>
+            <field name="description">Proposition d'un entretien premium en boutique (nettoyage professionnel, contrôle serrage, ajustement).</field>
+        </record>
+
+        <!-- Étape 11 : M+18 — Anticiper évolution (Appel) -->
+        <record id="plan_progressive_24m_step_m18" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">110</field>
+            <field name="name">M+18 — Anticiper évolution</field>
+            <field name="offset_days">547</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">optician</field>
+            <field name="objective">Anticiper évolution</field>
+            <field name="description">Anticiper la prochaine évolution : proposer un contrôle de vue préventif à 6 mois du renouvellement estimé.</field>
+        </record>
+
+        <!-- Étape 12 : M+21 — Nouveautés (WhatsApp) -->
+        <record id="plan_progressive_24m_step_m21" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">120</field>
+            <field name="name">M+21 — Nouveautés</field>
+            <field name="offset_days">637</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Nouveautés</field>
+            <field name="description">Partager les nouveautés collection (montures, verres premium) — préparation du renouvellement.</field>
+        </record>
+
+        <!-- Étape 13 : M+24 — Bilan + renouvellement (Appel) -->
+        <record id="plan_progressive_24m_step_m24" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_progressive_24m"/>
+            <field name="sequence">130</field>
+            <field name="name">M+24 — Bilan + renouvellement</field>
+            <field name="offset_days">730</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">manager</field>
+            <field name="objective">Bilan + renouvellement</field>
+            <field name="description">Bilan + proposition renouvellement (verres évolutifs vraisemblablement à remplacer, monture à évaluer).</field>
+        </record>
+
+    </data>
+</odoo>

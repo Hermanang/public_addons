@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Template mail digest overdue — envoyé par le cron 07h00 (AC9).
+            L'appel se fait sur une schedule.line "récord de tête" ; la liste
+            complète des lignes est passée dans context['overdue_line_ids'].
+            Le footer légal (Loi 2008-12) est inclus via t-call.
+        -->
+        <record id="email_digest_overdue" model="mail.template">
+            <field name="name">Optical Fidélisation — Digest des activités en retard</field>
+            <field name="model_id" ref="model_optical_followup_schedule_line"/>
+            <field name="subject">Fidélisation — vos activités en retard ({{ object.env.context.get('overdue_count') or '' }})</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour,</p>
+                    <p>Vous avez des activités de suivi client en retard nécessitant votre attention :</p>
+                    <t t-set="line_ids" t-value="object.env.context.get('overdue_line_ids') or [object.id]"/>
+                    <t t-set="lines" t-value="object.env['optical.followup.schedule.line'].browse(line_ids)"/>
+                    <table style="border-collapse: collapse; width: 100%;">
+                        <thead>
+                            <tr style="background-color: #f0f0f0;">
+                                <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Client</th>
+                                <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Date planifiée</th>
+                                <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Objectif</th>
+                                <th style="border: 1px solid #ccc; padding: 6px; text-align: left;">Canal recommandé</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="lines" t-as="line">
+                                <td style="border: 1px solid #ccc; padding: 6px;"><t t-out="line.schedule_id.partner_id.name or ''"/></td>
+                                <td style="border: 1px solid #ccc; padding: 6px;"><t t-out="line.date_planned or ''"/></td>
+                                <td style="border: 1px solid #ccc; padding: 6px;"><t t-out="(line.step_id.objective or line.step_id.name) or ''"/></td>
+                                <td style="border: 1px solid #ccc; padding: 6px;"><t t-out="line.step_id.suggested_channel or ''"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 15px;">Rendez-vous dans Odoo &gt; Fidélisation &gt; Mes activités en retard pour les traiter.</p>
+                    <t t-call="optical_crm_followup.mail_footer_legal"/>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

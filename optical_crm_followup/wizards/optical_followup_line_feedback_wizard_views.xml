@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_optical_followup_line_feedback_wizard_form" model="ir.ui.view">
+        <field name="name">optical.followup.line.feedback.wizard.form</field>
+        <field name="model">optical.followup.line.feedback.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Clôturer l'étape de suivi">
+                <group>
+                    <field name="line_id" invisible="1"/>
+                    <field name="partner_id" readonly="1"/>
+                    <field name="step_name" readonly="1"/>
+                    <field name="outcome" widget="radio"/>
+                    <field name="note" placeholder="Détails éventuels..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Valider"
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_line_feedback_wizard" model="ir.actions.act_window">
+        <field name="name">Clôturer l'étape</field>
+        <field name="res_model">optical.followup.line.feedback.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_optical_followup_schedule_line"/>
+    </record>
+
+</odoo>

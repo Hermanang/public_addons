@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Story 17-2 AC-5.3 — Wizard d'assignation en masse d'un référent
+        =================================================================
+        Formulaire wizard 1 champ (target_user_id) + action de masse
+        binding_model_id="res.partner" pour apparaître dans le menu
+        "Actions" de la vue « Clients sans référent ».
+    -->
+
+    <record id="view_optical_followup_assign_referent_wizard_form" model="ir.ui.view">
+        <field name="name">optical.followup.assign.referent.wizard.form</field>
+        <field name="model">optical.followup.assign.referent.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Assigner un référent">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Assignation d'un référent commercial</h1>
+                    </div>
+                    <group>
+                        <field name="partner_count" readonly="1"/>
+                        <field name="target_user_id"/>
+                    </group>
+                    <field name="partner_ids" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_apply"
+                            type="object"
+                            string="Assigner"
+                            class="oe_highlight"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_assign_referent_wizard" model="ir.actions.act_window">
+        <field name="name">Assigner un référent</field>
+        <field name="res_model">optical.followup.assign.referent.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4, ref('optical.group_optical_manager'))]"/>
+    </record>
+
+</odoo>

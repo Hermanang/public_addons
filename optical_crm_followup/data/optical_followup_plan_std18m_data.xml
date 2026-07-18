@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Preset "Standard lunettes 18 mois" — plan de suivi générique
+            appliqué par défaut à toute vente ne contenant pas de produit
+            "progressive" ou "lentilles" (fallback FR-02).
+
+            noupdate="1" garantit qu'un responsable peut modifier le contenu
+            en post-install (offset, canal, objectif...) sans qu'un upgrade
+            module ne réécrase ses ajustements (FR-12 généricité).
+        -->
+
+        <record id="plan_standard_18m" model="optical.followup.plan">
+            <field name="name">Standard lunettes 18 mois</field>
+            <field name="active">True</field>
+            <field name="sequence">50</field>
+            <field name="duration_months">18</field>
+            <field name="optical_type_trigger">any</field>
+        </record>
+
+        <!-- Étape 1 : J+30 — Bilan satisfaction (Appel) -->
+        <record id="plan_standard_18m_step_j30" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_standard_18m"/>
+            <field name="sequence">10</field>
+            <field name="name">Bilan satisfaction J+30</field>
+            <field name="offset_days">30</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Bilan satisfaction</field>
+            <field name="description">Appeler le client pour valider le confort d'usage et la satisfaction avec l'équipement livré.</field>
+        </record>
+
+        <!-- Étape 2 : M+12 — Bilan annuel (Email) -->
+        <record id="plan_standard_18m_step_m12" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_standard_18m"/>
+            <field name="sequence">20</field>
+            <field name="name">Bilan annuel M+12</field>
+            <field name="offset_days">365</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="suggested_channel">email</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Bilan annuel</field>
+            <field name="description">Envoyer un mail de bilan annuel : rappel entretien, suggestion de contrôle de vue.</field>
+        </record>
+
+        <!-- Étape 3 : M+18 — Proposition de renouvellement (Appel) -->
+        <record id="plan_standard_18m_step_m18" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_standard_18m"/>
+            <field name="sequence">30</field>
+            <field name="name">Proposition renouvellement M+18</field>
+            <field name="offset_days">547</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Proposition de renouvellement</field>
+            <field name="description">Appeler le client pour proposer un renouvellement d'équipement (nouvelle ordonnance recommandée).</field>
+        </record>
+
+    </data>
+</odoo>

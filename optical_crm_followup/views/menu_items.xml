@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Menu top-level "Fidélisation" — Story 15.0 (archi V1.1 § 8.4)
+        ===============================================================
+        Chaque menuitem déclare son `groups` explicitement.
+        - "Tableau de bord direction" (4 KPI) livré par Story 17-2.
+        - "Vues de supervision" (SAV > 30 j, absences, réattribuer,
+          clients sans référent) livré par 16.2 / 17-3 / 17-2.
+    -->
+
+    <!-- Menu top-level : visible par tous les utilisateurs optiques -->
+    <menuitem id="menu_optical_followup_root"
+              name="Fidélisation"
+              sequence="60"
+              groups="optical.group_optical_user"/>
+
+    <!-- Menus quotidiens : vendeurs -->
+    <menuitem id="menu_optical_followup_my_schedules"
+              name="Calendriers de fidélisation"
+              parent="menu_optical_followup_root"
+              action="action_optical_followup_schedule"
+              sequence="10"
+              groups="optical.group_optical_user"/>
+
+    <menuitem id="menu_optical_followup_my_overdue"
+              name="Mes activités en retard"
+              parent="menu_optical_followup_root"
+              action="action_optical_followup_schedule_line_overdue"
+              sequence="20"
+              groups="optical.group_optical_user"/>
+
+    <!-- Story 17-4 D-UX-MENU option A : menu séparé "Mon planning" avec
+         action dédiée. Le search_default "filter_planning_mine" évite le
+         vidage 90 % induit par l'héritage de "Mes activités en retard" (search
+         default overdue). Le menuitem déclare explicitement son groups (L6). -->
+    <menuitem id="menu_optical_followup_my_planning"
+              name="Mon planning"
+              parent="menu_optical_followup_root"
+              action="action_optical_followup_my_lines_planning"
+              sequence="25"
+              groups="optical.group_optical_user"/>
+
+    <!--
+        Tableau de bord direction (Story 17-2) — 4 KPI natifs Odoo
+        ===========================================================
+        Manager uniquement. Sequence 60 (entre daily=25 et supervision=80,
+        archi V1.1 § 8.4). Chaque sous-menu pointe vers son action pivot /
+        list / graph selon le KPI.
+    -->
+    <menuitem id="menu_optical_followup_dashboard"
+              name="Tableau de bord direction"
+              parent="menu_optical_followup_root"
+              sequence="60"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_kpi_contact_rate"
+              name="KPI 1 - Taux de contact"
+              parent="menu_optical_followup_dashboard"
+              action="action_optical_followup_kpi_contact_rate"
+              sequence="10"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_kpi_schedule_state"
+              name="KPI 2 - État des calendriers"
+              parent="menu_optical_followup_dashboard"
+              action="action_optical_followup_kpi_schedule_state"
+              sequence="20"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_kpi_renewal_basket"
+              name="KPI 3 - Panier moyen renouvellement"
+              parent="menu_optical_followup_dashboard"
+              action="action_optical_followup_kpi_renewal_basket"
+              sequence="30"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_kpi_activation_rate"
+              name="KPI 4 - Taux d'activation"
+              parent="menu_optical_followup_dashboard"
+              action="action_optical_followup_kpi_activation_rate"
+              sequence="40"
+              groups="optical.group_optical_manager"/>
+
+    <!-- Vues de supervision : responsables uniquement (Story 16.2 — R4 archi) -->
+    <menuitem id="menu_optical_followup_supervision"
+              name="Vues de supervision"
+              parent="menu_optical_followup_root"
+              sequence="80"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_sav_paused_30d"
+              name="Calendriers en pause SAV &gt; 30 j"
+              parent="menu_optical_followup_supervision"
+              action="action_optical_followup_schedule_sav_paused_30d"
+              sequence="10"
+              groups="optical.group_optical_manager"/>
+
+    <!-- Story 17-2 AC-5 : clients sans référent (mitigation R2 archi) -->
+    <menuitem id="menu_optical_followup_partners_without_referent"
+              name="Clients sans référent"
+              parent="menu_optical_followup_supervision"
+              action="action_optical_followup_partners_without_referent"
+              sequence="15"
+              groups="optical.group_optical_manager"/>
+
+    <!-- Story 17-3 AC-E : absences programmées (redirection RH) -->
+    <menuitem id="menu_optical_followup_user_leaves"
+              name="Absences programmées"
+              parent="menu_optical_followup_supervision"
+              action="action_optical_followup_user_leave"
+              sequence="20"
+              groups="optical.group_optical_manager"/>
+
+    <!-- Story 17-3 AC-F : wizard réattribution en masse -->
+    <menuitem id="menu_optical_followup_reassign_wizard"
+              name="Réattribuer un portefeuille"
+              parent="menu_optical_followup_supervision"
+              action="action_optical_followup_reassign_wizard"
+              sequence="30"
+              groups="optical.group_optical_manager"/>
+
+    <!-- Configuration : responsables uniquement -->
+    <menuitem id="menu_optical_followup_configuration"
+              name="Configuration"
+              parent="menu_optical_followup_root"
+              sequence="90"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_plans"
+              name="Plans-types"
+              parent="menu_optical_followup_configuration"
+              action="action_optical_followup_plan"
+              sequence="10"
+              groups="optical.group_optical_manager"/>
+
+    <!-- Story 18-1 AC-1.2 : tiers clients configurables -->
+    <menuitem id="menu_optical_followup_customer_tiers"
+              name="Tiers clients"
+              parent="menu_optical_followup_configuration"
+              action="action_optical_customer_tier"
+              sequence="15"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_holiday_windows"
+              name="Fenêtres de vigilance"
+              parent="menu_optical_followup_configuration"
+              action="action_optical_followup_holiday_window"
+              sequence="20"
+              groups="optical.group_optical_manager"/>
+
+    <menuitem id="menu_optical_followup_lunar_dates"
+              name="Table lunaire"
+              parent="menu_optical_followup_configuration"
+              action="action_optical_followup_lunar_date"
+              sequence="30"
+              groups="optical.group_optical_manager"/>
+
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Cron quotidien 00h30 UTC — 3 passes :
+              1. Matérialisation mail.activity J-3 (AC3)
+              2. Marquage lignes overdue (AC4)
+              3. Alerte picking > 7 j (AC7, mitigation R1)
+        -->
+        <record id="ir_cron_optical_followup_daily" model="ir.cron">
+            <field name="name">Optical fidélisation — cron quotidien (matérialisation + overdue + alerte picking)</field>
+            <field name="model_id" ref="model_optical_followup_schedule"/>
+            <field name="state">code</field>
+            <field name="code">model._run_daily_cron()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.utcnow().replace(hour=0, minute=30, second=0, microsecond=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="active">True</field>
+        </record>
+
+        <!--
+            Cron digest 07h00 UTC — envoie un email de récapitulatif aux
+            référents commerciaux ayant des lignes en retard (AC9, NFR-08).
+            Heure ajustable post-install via l'interface Odoo (aucun code à
+            recompiler — noupdate="1" garantit la préservation).
+        -->
+        <record id="ir_cron_optical_followup_digest" model="ir.cron">
+            <field name="name">Optical fidélisation — digest quotidien des activités en retard (07h00)</field>
+            <field name="model_id" ref="model_optical_followup_schedule"/>
+            <field name="state">code</field>
+            <field name="code">model._run_digest_overdue()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.utcnow().replace(hour=7, minute=0, second=0, microsecond=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Squelettes des 3 templates mail du preset Standard 18m.
+            Livrés en noupdate="1" : un responsable peut réécrire le corps
+            depuis Configuration → Techniques → Templates mail sans qu'un
+            upgrade module n'écrase ses ajustements.
+            Chaque template inclut le footer légal Loi 2008-12 (obligatoire).
+        -->
+
+        <record id="email_std18m_j30_satisfaction" model="mail.template">
+            <field name="name">Optical Fidélisation — Bilan satisfaction J+30</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="subject">Comment se passe votre nouvel équipement ?</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour <t t-out="object.name or ''"/>,</p>
+                    <p>Il y a un mois, vous avez reçu votre nouvel équipement optique. Nous espérons que tout se passe bien pour vous.</p>
+                    <p>N'hésitez pas à passer en boutique pour un ajustement ou à nous répondre pour partager vos impressions.</p>
+                    <p>Bien cordialement,<br/>Votre équipe Luxe Optique</p>
+                    <t t-call="optical_crm_followup.mail_footer_legal"/>
+                </div>
+            </field>
+        </record>
+
+        <record id="email_std18m_m12_bilan_annuel" model="mail.template">
+            <field name="name">Optical Fidélisation — Bilan annuel M+12</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="subject">Un an après — bilan annuel de votre équipement</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour <t t-out="object.name or ''"/>,</p>
+                    <p>Cela fait déjà un an que vous portez votre équipement optique. C'est le bon moment pour un contrôle de vue et un rappel d'entretien.</p>
+                    <p>Nous vous invitons à prendre rendez-vous en boutique pour un bilan gratuit.</p>
+                    <p>Bien cordialement,<br/>Votre équipe Luxe Optique</p>
+                    <t t-call="optical_crm_followup.mail_footer_legal"/>
+                </div>
+            </field>
+        </record>
+
+        <record id="email_std18m_m18_renouvellement" model="mail.template">
+            <field name="name">Optical Fidélisation — Proposition renouvellement M+18</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="subject">Il est temps de penser à votre prochain équipement</field>
+            <field name="use_default_to" eval="True"/>
+            <field name="body_html" type="html">
+                <div>
+                    <p>Bonjour <t t-out="object.name or ''"/>,</p>
+                    <p>Vous portez votre équipement optique depuis 18 mois. Il pourrait être temps d'envisager un renouvellement, avec une nouvelle ordonnance si nécessaire.</p>
+                    <p>Nous serions ravis de vous accueillir en boutique pour un essai des dernières nouveautés.</p>
+                    <p>Bien cordialement,<br/>Votre équipe Luxe Optique</p>
+                    <t t-call="optical_crm_followup.mail_footer_legal"/>
+                </div>
+            </field>
+        </record>
+
+        <!-- Rattachement des templates aux steps du preset (post-création). -->
+        <function model="optical.followup.plan.step" name="write" eval="[
+            [ref('plan_standard_18m_step_j30')],
+            {'mail_template_id': ref('email_std18m_j30_satisfaction')}
+        ]"/>
+        <function model="optical.followup.plan.step" name="write" eval="[
+            [ref('plan_standard_18m_step_m12')],
+            {'mail_template_id': ref('email_std18m_m12_bilan_annuel')}
+        ]"/>
+        <function model="optical.followup.plan.step" name="write" eval="[
+            [ref('plan_standard_18m_step_m18')],
+            {'mail_template_id': ref('email_std18m_m18_renouvellement')}
+        ]"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Schedule -->
+    <record id="view_optical_followup_schedule_tree" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.tree</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Calendriers de suivi"
+                  decoration-warning="state == 'paused'"
+                  decoration-danger="state == 'cancelled'"
+                  decoration-muted="state == 'expired'"
+                  decoration-success="state == 'fulfilled'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="warehouse_id"/>
+                <field name="plan_id"/>
+                <field name="referent_user_id"/>
+                <field name="delivered_date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_schedule_form" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.form</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Calendrier">
+                <header>
+                    <field name="state"
+                           widget="statusbar"
+                           clickable="0"
+                           statusbar_visible="running,paused,fulfilled"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon"
+                            title="Annulé"
+                            bg_color="text-bg-danger"
+                            invisible="state != 'cancelled'"/>
+                    <widget name="web_ribbon"
+                            title="Abouti"
+                            bg_color="text-bg-success"
+                            invisible="state != 'fulfilled'"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_lines"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-tasks"
+                                invisible="steps_total_count == 0">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="steps_done_count"/>/<field name="steps_total_count"/>
+                                </span>
+                                <span class="o_stat_text">étapes</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="warehouse_id"/>
+                            <field name="plan_id"/>
+                            <field name="referent_user_id"/>
+                        </group>
+                        <group>
+                            <field name="sale_order_id"/>
+                            <field name="picking_id"/>
+                            <field name="delivered_date"/>
+                            <field name="first_contact_date"/>
+                            <field name="pause_reason"/>
+                            <field name="sav_paused_date" invisible="pause_reason != 'sav_open'" groups="optical.group_optical_manager"/>
+                            <field name="sav_pause_duration_days" invisible="pause_reason != 'sav_open'" groups="optical.group_optical_manager"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Étapes" name="lines">
+                            <field name="line_ids">
+                                <list decoration-danger="state == 'overdue'" decoration-muted="state in ('cancelled', 'skipped')" decoration-success="state == 'done'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="step_id"/>
+                                    <field name="date_planned"/>
+                                    <field name="activity_id"/>
+                                    <field name="outcome"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter reload_on_post="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_schedule_search" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.search</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <search string="Calendriers">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="referent_user_id"/>
+                <filter name="filter_my_schedules" string="Mes calendriers (dont je suis référent)"
+                        domain="[('referent_user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="filter_running" string="En cours" domain="[('state', '=', 'running')]"/>
+                <filter name="filter_paused" string="Suspendus" domain="[('state', '=', 'paused')]"/>
+                <filter name="filter_fulfilled" string="Aboutis" domain="[('state', '=', 'fulfilled')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_referent" string="Commercial" context="{'group_by': 'referent_user_id'}"/>
+                    <filter name="group_warehouse" string="Boutique" context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_plan" string="Plan-type" context="{'group_by': 'plan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--
+        Kanban schedule (Story 17-4 — AC2)
+        =======================================
+        Pipeline visuel groupé par state. Drag INTERDIT entre colonnes
+        (H5) : la state machine est gouvernée par les hooks métier
+        (_pause_for_sav, _resume_from_sav, action_cancel_for_optout,
+        _create_from_picking). Progressbar avec les 5 valeurs (M4).
+    -->
+    <record id="view_optical_followup_schedule_kanban" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.kanban</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state"
+                    records_draggable="0"
+                    sample="1"
+                    class="o_kanban_mobile o_kanban_small_column">
+                <field name="state"/>
+                <field name="partner_id"/>
+                <field name="warehouse_id"/>
+                <field name="referent_user_id"/>
+                <field name="delivered_date"/>
+                <field name="next_step_date"/>
+                <field name="steps_total_count"/>
+                <field name="steps_done_count"/>
+                <progressbar field="state"
+                             colors='{"running": "info", "paused": "warning", "fulfilled": "success", "cancelled": "danger", "expired": "muted"}'/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_record_top">
+                            <div class="o_kanban_record_headings">
+                                <strong class="o_kanban_record_title">
+                                    <field name="partner_id"/>
+                                </strong>
+                                <span class="o_kanban_record_subtitle text-muted text-truncate">
+                                    <field name="warehouse_id"/>
+                                </span>
+                            </div>
+                            <field name="referent_user_id" widget="many2one_avatar_user"/>
+                        </div>
+                        <div class="o_kanban_record_body">
+                            <div t-if="record.delivered_date.raw_value">
+                                <i class="fa fa-shopping-bag me-1" role="img" aria-label="Remise"/>
+                                Remis le <field name="delivered_date"/>
+                            </div>
+                            <div t-if="record.next_step_date.raw_value" class="text-primary">
+                                <i class="fa fa-calendar me-1" role="img" aria-label="Prochaine étape"/>
+                                Prochaine : <field name="next_step_date"/>
+                            </div>
+                            <div class="text-muted">
+                                <field name="steps_done_count"/>/<field name="steps_total_count"/> étapes
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_schedule" model="ir.actions.act_window">
+        <field name="name">Calendriers de fidélisation</field>
+        <field name="res_model">optical.followup.schedule</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- Ligne : vue liste + recherche pour "Mes activités en retard" -->
+    <record id="view_optical_followup_schedule_line_tree" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.line.tree</field>
+        <field name="model">optical.followup.schedule.line</field>
+        <field name="arch" type="xml">
+            <list string="Étapes de suivi" decoration-danger="state == 'overdue'" decoration-muted="state in ('cancelled', 'skipped')" decoration-success="state == 'done'">
+                <field name="schedule_id"/>
+                <field name="step_id"/>
+                <field name="date_planned"/>
+                <field name="activity_id"/>
+                <field name="outcome"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_schedule_line_form" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.line.form</field>
+        <field name="model">optical.followup.schedule.line</field>
+        <field name="arch" type="xml">
+            <form string="Étape">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="schedule_id"/>
+                            <field name="step_id"/>
+                            <field name="date_planned"/>
+                            <field name="date_planned_original"/>
+                        </group>
+                        <group>
+                            <field name="activity_id"/>
+                            <field name="state"/>
+                            <field name="outcome"/>
+                        </group>
+                    </group>
+                    <field name="outcome_note" placeholder="Commentaire..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_schedule_line_search" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.line.search</field>
+        <field name="model">optical.followup.schedule.line</field>
+        <field name="arch" type="xml">
+            <search string="Étapes de suivi">
+                <field name="schedule_id"/>
+                <filter name="filter_my_overdue"
+                        string="Mes retards"
+                        domain="[('state', '=', 'overdue'), ('schedule_id.referent_user_id', '=', uid)]"/>
+                <filter name="filter_overdue" string="En retard" domain="[('state', '=', 'overdue')]"/>
+                <filter name="filter_pending" string="En attente" domain="[('state', '=', 'pending')]"/>
+                <filter name="filter_done" string="Réalisées" domain="[('state', '=', 'done')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!--
+        Calendar view line (Story 17-4 — AC1)
+        =====================================
+        color=state_color : champ Integer compute avec mapping sémantique
+        (H4 revue). NE PAS utiliser color=state — Odoo hasherait les
+        valeurs Selection arbitrairement. Pattern conforme mail.activity.
+    -->
+    <record id="view_optical_followup_schedule_line_calendar" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.line.calendar</field>
+        <field name="model">optical.followup.schedule.line</field>
+        <field name="arch" type="xml">
+            <calendar string="Planning des étapes"
+                      date_start="date_planned"
+                      color="state_color"
+                      mode="month"
+                      hide_time="true"
+                      event_limit="5">
+                <field name="schedule_id"/>
+                <field name="step_id"/>
+                <field name="state" invisible="1"/>
+                <field name="state_color" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_schedule_line_overdue" model="ir.actions.act_window">
+        <field name="name">Mes activités en retard</field>
+        <field name="res_model">optical.followup.schedule.line</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="search_view_id" ref="view_optical_followup_schedule_line_search"/>
+        <field name="domain">[('state', '=', 'overdue')]</field>
+        <field name="context">{'search_default_filter_my_overdue': 1}</field>
+    </record>
+
+    <!--
+        Action + filtre "Mon planning" (Story 17-4 — AC1 + D-UX-MENU A)
+        ==================================================================
+        Action dédiée séparée de "Mes activités en retard" pour éviter que
+        le search_default overdue ne vide 90 % du calendrier.
+    -->
+    <record id="view_optical_followup_schedule_line_planning_search" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.line.planning.search</field>
+        <field name="model">optical.followup.schedule.line</field>
+        <field name="arch" type="xml">
+            <search string="Mon planning">
+                <field name="schedule_id"/>
+                <filter name="filter_planning_mine"
+                        string="Mes étapes à venir"
+                        domain="[('state', 'in', ('pending', 'overdue')), ('schedule_id.referent_user_id', '=', uid)]"/>
+                <filter name="filter_planning_all_pending"
+                        string="À venir"
+                        domain="[('state', 'in', ('pending', 'overdue'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_my_lines_planning" model="ir.actions.act_window">
+        <field name="name">Mon planning</field>
+        <field name="res_model">optical.followup.schedule.line</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="search_view_id" ref="view_optical_followup_schedule_line_planning_search"/>
+        <field name="context">{'search_default_filter_planning_mine': 1}</field>
+    </record>
+
+    <!--
+        Vue supervision "Calendriers en pause SAV > 30 j"
+        Story 16.2 AC8 — mitigation R4 archi § 7.5.
+    -->
+    <record id="view_optical_followup_schedule_sav_supervision_tree" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.sav.supervision.tree</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Calendriers en pause SAV"
+                  decoration-warning="sav_pause_duration_days &gt;= 30"
+                  decoration-danger="sav_pause_duration_days &gt;= 60">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="warehouse_id"/>
+                <field name="referent_user_id"/>
+                <field name="sav_paused_date"/>
+                <field name="sav_pause_duration_days" string="Jours de pause"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_schedule_sav_paused_30d" model="ir.actions.act_window">
+        <field name="name">Calendriers en pause SAV &gt; 30 j</field>
+        <field name="res_model">optical.followup.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_optical_followup_schedule_sav_supervision_tree"/>
+        <field name="domain">
+            [('state', '=', 'paused'),
+             ('pause_reason', '=', 'sav_open'),
+             ('sav_paused_date', '&lt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]
+        </field>
+        <field name="context">{'search_default_group_warehouse': 1}</field>
+    </record>
+
+</odoo>

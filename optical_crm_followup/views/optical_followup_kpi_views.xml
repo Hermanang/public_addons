@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Story 17-2 — Reporting direction : 4 KPI (pivot, tree, graph) +
+        vue supervision « Clients sans référent »
+        ================================================================
+        Décision D-KPI-COMPUTE (V1) : vues natives Odoo — mesures brutes
+        (count, sum) agrégées côté client. Les ratios calculés (taux de
+        contact, taux d'activation, désabonnement rapide) sont des Char
+        compute non-stored — non aggregables en pivot mais visibles en
+        tree, kanban et form. Les seuils métier sont documentés en aide
+        contextuelle (D-KPI-DECO-STYLE).
+    -->
+
+    <!-- ================================================================
+         KPI 1 — Taux de contact (pivot sur schedule.line)
+         =============================================================== -->
+
+    <record id="view_optical_followup_kpi_contact_rate_pivot" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.line.kpi.contact.rate.pivot</field>
+        <field name="model">optical.followup.schedule.line</field>
+        <field name="arch" type="xml">
+            <pivot string="KPI 1 - Taux de contact" sample="1">
+                <field name="schedule_id" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_kpi_contact_rate_search" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.line.kpi.contact.rate.search</field>
+        <field name="model">optical.followup.schedule.line</field>
+        <field name="arch" type="xml">
+            <search string="KPI 1 - Taux de contact">
+                <field name="schedule_id"/>
+                <filter name="filter_last_7d"
+                        string="7 derniers jours"
+                        domain="[('date_planned', '&gt;=', (context_today() - relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_last_30d"
+                        string="30 derniers jours"
+                        domain="[('date_planned', '&gt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_last_90d"
+                        string="90 derniers jours"
+                        domain="[('date_planned', '&gt;=', (context_today() - relativedelta(days=90)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="filter_state_done" string="Réalisées"
+                        domain="[('state', '=', 'done')]"/>
+                <filter name="filter_state_overdue" string="En retard"
+                        domain="[('state', '=', 'overdue')]"/>
+                <filter name="filter_outcome_unreachable" string="Injoignables"
+                        domain="[('outcome', '=', 'unreachable')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_by_referent"
+                            string="Commercial"
+                            context="{'group_by': 'referent_user_id'}"/>
+                    <filter name="group_by_warehouse"
+                            string="Boutique"
+                            context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_by_state"
+                            string="État"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_by_outcome"
+                            string="Issue"
+                            context="{'group_by': 'outcome'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_kpi_contact_rate" model="ir.actions.act_window">
+        <field name="name">KPI 1 - Taux de contact</field>
+        <field name="res_model">optical.followup.schedule.line</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="view_optical_followup_kpi_contact_rate_search"/>
+        <field name="context">{'search_default_filter_last_30d': 1, 'search_default_group_by_referent': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucune ligne de suivi sur la période</p>
+            <p>
+                <b>KPI 1 — Taux de contact 30 j :</b>
+                <code>count(done) / count(done + overdue + outcome=unreachable)</code>
+                sur les lignes des 30 derniers jours, ventilé par commercial.
+            </p>
+            <p>
+                <b>Sous-métrique taux d'ouverture email :</b> non disponible en
+                V1 (Odoo CE sans <code>mass_mailing</code> ne track pas l'ouverture
+                des mails transactionnels). Colonne conservée, valeur '—' — sera
+                activée en V1.1 avec un service de tracking. Voir la fiche
+                calendrier (champ <em>Taux ouverture email 30 j</em>).
+            </p>
+            <p>
+                Utiliser les regroupements <em>Commercial</em>, <em>Boutique</em>,
+                <em>État</em>, <em>Issue</em> pour ventiler l'analyse. Filtres
+                temporels : 7 j / 30 j (défaut) / 90 j.
+            </p>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         KPI 2 — État des calendriers (tree sur schedule)
+         =============================================================== -->
+
+    <record id="view_optical_followup_kpi_schedule_state_tree" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.kpi.state.tree</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <list string="KPI 2 - État des calendriers"
+                  default_group_by="state"
+                  decoration-warning="state == 'paused'"
+                  decoration-danger="state == 'cancelled'"
+                  decoration-muted="state == 'expired'"
+                  decoration-success="state == 'fulfilled'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="warehouse_id"/>
+                <field name="referent_user_id"/>
+                <field name="plan_id"/>
+                <field name="delivered_date"/>
+                <field name="state"/>
+                <field name="pause_reason" optional="show"/>
+                <field name="overdue_line_count" sum="Retards"/>
+                <field name="contact_rate_30d_display" optional="show"/>
+                <field name="email_open_rate_30d_display" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_kpi_schedule_state_search" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.kpi.state.search</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <search string="KPI 2 - État des calendriers">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="referent_user_id"/>
+                <field name="warehouse_id"/>
+                <filter name="filter_state_running" string="En cours"
+                        domain="[('state', '=', 'running')]"/>
+                <filter name="filter_state_paused" string="Suspendus"
+                        domain="[('state', '=', 'paused')]"/>
+                <filter name="filter_state_fulfilled" string="Aboutis"
+                        domain="[('state', '=', 'fulfilled')]"/>
+                <filter name="filter_state_cancelled" string="Annulés"
+                        domain="[('state', '=', 'cancelled')]"/>
+                <filter name="filter_state_expired" string="Expirés"
+                        domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <filter name="filter_pause_sav" string="Pause SAV"
+                        domain="[('pause_reason', '=', 'sav_open')]"/>
+                <filter name="filter_pause_majority" string="Pause majorité"
+                        domain="[('pause_reason', '=', 'majority_pending')]"/>
+                <filter name="filter_pause_manual" string="Pause manuelle"
+                        domain="[('pause_reason', '=', 'manual')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_by_state"
+                            string="État"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_by_referent"
+                            string="Commercial référent"
+                            context="{'group_by': 'referent_user_id'}"/>
+                    <filter name="group_by_warehouse"
+                            string="Boutique"
+                            context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_by_plan"
+                            string="Plan-type"
+                            context="{'group_by': 'plan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_kpi_schedule_state" model="ir.actions.act_window">
+        <field name="name">KPI 2 - État des calendriers</field>
+        <field name="res_model">optical.followup.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_optical_followup_kpi_schedule_state_tree"/>
+        <field name="search_view_id" ref="view_optical_followup_kpi_schedule_state_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucun calendrier de suivi actif</p>
+            <p>
+                <b>KPI 2 — État des calendriers :</b> vue tree groupée par
+                état (en cours / suspendu / abouti / annulé / expiré). La
+                colonne <em>Retards</em> compte les lignes <code>overdue</code>
+                de chaque calendrier et somme au niveau du groupe — trier
+                DESC pour repérer les portefeuilles en dérive.
+            </p>
+            <p>
+                Filtres par motif de suspension (SAV / majorité / manuel),
+                par boutique et par commercial référent disponibles.
+            </p>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         KPI 3 — Panier moyen renouvellement (graph sur schedule)
+         =============================================================== -->
+
+    <record id="view_optical_followup_kpi_renewal_basket_graph" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.kpi.renewal.basket.graph</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <graph string="KPI 3 - Panier moyen renouvellement" type="bar" sample="1">
+                <field name="referent_user_id"/>
+                <field name="amount_total_trigger_so" type="measure"/>
+                <field name="amount_total_renewal_avg" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_kpi_renewal_basket_search" model="ir.ui.view">
+        <field name="name">optical.followup.schedule.kpi.renewal.basket.search</field>
+        <field name="model">optical.followup.schedule</field>
+        <field name="arch" type="xml">
+            <search string="KPI 3 - Panier moyen renouvellement">
+                <field name="partner_id"/>
+                <field name="referent_user_id"/>
+                <field name="warehouse_id"/>
+                <filter name="filter_fulfilled_with_purchase"
+                        string="Aboutis avec rachat"
+                        domain="[('state', '=', 'fulfilled'), ('has_purchase_outcome', '=', True)]"/>
+                <filter name="filter_fulfilled"
+                        string="Aboutis (tous)"
+                        domain="[('state', '=', 'fulfilled')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_by_referent"
+                            string="Commercial"
+                            context="{'group_by': 'referent_user_id'}"/>
+                    <filter name="group_by_warehouse"
+                            string="Boutique"
+                            context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_by_plan"
+                            string="Plan-type"
+                            context="{'group_by': 'plan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_kpi_renewal_basket" model="ir.actions.act_window">
+        <field name="name">KPI 3 - Panier moyen renouvellement</field>
+        <field name="res_model">optical.followup.schedule</field>
+        <field name="view_mode">graph,list</field>
+        <field name="view_id" ref="view_optical_followup_kpi_renewal_basket_graph"/>
+        <field name="search_view_id" ref="view_optical_followup_kpi_renewal_basket_search"/>
+        <field name="context">{'search_default_filter_fulfilled_with_purchase': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucun calendrier abouti avec rachat sur la période</p>
+            <p>
+                <b>KPI 3 — Panier moyen renouvellement :</b> compare le CA
+                de la SO de déclenchement au CA moyen des SO postérieures
+                du même client (fulfilled AND outcome=purchased).
+            </p>
+            <p>
+                <b>Attention biais du survivant :</b> ce KPI compare
+                uniquement les clients qui sont revenus racheter — il
+                n'inclut pas ceux qui n'ont pas racheté. Un panier
+                renouvellement supérieur au premier achat ne signifie donc
+                PAS que le dispositif augmente le panier moyen général,
+                mais qu'un client qui rachète dépense plus que sa première
+                commande. Croiser avec le <b>KPI 4</b> (taux d'activation)
+                pour la lecture complète.
+            </p>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         KPI 4 — Taux d'activation du consentement (pivot sur sale.order)
+         =============================================================== -->
+
+    <record id="view_optical_followup_kpi_activation_rate_pivot" model="ir.ui.view">
+        <field name="name">sale.order.kpi.activation.rate.pivot</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <!-- AC-4.1 : mesure par défaut = nombre de SO (Odoo affiche count
+                 automatiquement quand aucun `type="measure"` n'est déclaré).
+                 `amount_total` reste toggleable via le menu Mesures — sans
+                 `type="measure"` sur cette déclaration, elle n'est PAS la
+                 mesure par défaut (revue H1 S17-2). -->
+            <pivot string="KPI 4 - Taux d'activation" sample="1">
+                <field name="user_id" type="row"/>
+                <field name="followup_activated" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_kpi_activation_rate_search" model="ir.ui.view">
+        <field name="name">sale.order.kpi.activation.rate.search</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <search string="KPI 4 - Taux d'activation">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="user_id"/>
+                <field name="warehouse_id"/>
+                <filter name="filter_last_30d"
+                        string="30 derniers jours"
+                        domain="[('date_order', '&gt;=', (context_today() - relativedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_confirmed"
+                        string="Confirmées / Livrées"
+                        domain="[('state', 'in', ('sale', 'done'))]"/>
+                <separator/>
+                <filter name="filter_followup_activated"
+                        string="Suivi activé"
+                        domain="[('followup_activated', '=', True)]"/>
+                <filter name="filter_followup_not_activated"
+                        string="Sans consentement (à rattraper)"
+                        domain="[('followup_activated', '=', False), ('state', 'in', ('sale', 'done'))]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_by_user"
+                            string="Commercial"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_warehouse"
+                            string="Boutique"
+                            context="{'group_by': 'warehouse_id'}"/>
+                    <filter name="group_by_activated"
+                            string="Suivi activé"
+                            context="{'group_by': 'followup_activated'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_kpi_activation_rate" model="ir.actions.act_window">
+        <field name="name">KPI 4 - Taux d'activation</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">pivot,list,form</field>
+        <field name="view_id" ref="view_optical_followup_kpi_activation_rate_pivot"/>
+        <field name="search_view_id" ref="view_optical_followup_kpi_activation_rate_search"/>
+        <field name="context">{'search_default_filter_last_30d': 1, 'search_default_filter_confirmed': 1, 'search_default_group_by_user': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucune commande sur la période</p>
+            <p>
+                <b>KPI 4 — Taux d'activation du consentement :</b>
+                <code>count(SO avec followup_schedule_id != NULL) / count(SO total)</code>
+                sur 30 j glissants, par commercial. Colonnes ventilées par
+                <em>Suivi activé</em> (True/False) — la proportion True/Total
+                donne le taux d'activation par commercial.
+            </p>
+            <p>
+                <b>Colonne « ventes sans consentement » (M5) :</b> le filtre
+                <em>Sans consentement (à rattraper)</em> ouvre la liste des SO
+                non activées — action de rattrapage manuel pour le manager.
+            </p>
+            <p>
+                <b>Seuils métier :</b>
+                <ul>
+                    <li>Taux d'activation cible : <b>≥ 80 %</b>
+                        (alerte orange sous ce seuil).</li>
+                    <li>Taux désabonnement cible (sous-métrique FR-23) :
+                        <b>≤ 15 %</b> (alerte rouge au-dessus). Visible par
+                        plan dans <em>Configuration → Plans-types</em>
+                        (colonne <em>Taux désabonnement 30 j</em>).</li>
+                </ul>
+                Le taux désabonnement rapide 30 j mesure la proportion de
+                clients qui se désabonnent dans les 30 j suivant leur 1ʳᵉ
+                relance — indicateur de qualité perçue du dispositif.
+            </p>
+        </field>
+    </record>
+
+    <!-- ================================================================
+         Vue supervision — Clients sans référent (Story 17-2 AC-5)
+         =============================================================== -->
+
+    <record id="view_optical_followup_partners_without_referent_tree" model="ir.ui.view">
+        <field name="name">res.partner.followup.without.referent.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <list string="Clients sans référent">
+                <field name="name"/>
+                <field name="sale_order_count" string="Nb commandes"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="optical_customer_tier_id" optional="show"/>
+                <field name="optical_followup_state" widget="badge"
+                       decoration-success="optical_followup_state == 'active'"
+                       decoration-info="optical_followup_state == 'done'"
+                       decoration-warning="optical_followup_state == 'paused'"
+                       decoration-danger="optical_followup_state == 'optout'"
+                       decoration-muted="optical_followup_state == 'never'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_partners_without_referent" model="ir.actions.act_window">
+        <field name="name">Clients sans référent</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_optical_followup_partners_without_referent_tree"/>
+        <field name="domain">
+            [('optical_has_confirmed_so', '=', True),
+             ('user_id', '=', False),
+             ('optical_referent_user_id', '=', False),
+             ('optical_anonymized', '=', False)]
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Tous vos clients ont un référent 👍</p>
+            <p>
+                <b>Mitigation R2 archi :</b> les clients avec au moins une
+                commande mais sans <em>Commercial</em> manuel ET sans
+                référent identifiable via leurs SO récentes.
+            </p>
+            <p>
+                Sélectionner un ou plusieurs clients puis
+                <em>Action → Assigner un référent</em> pour redispatcher
+                le portefeuille en un clic. L'assignation trace un chatter
+                sur chaque client concerné (audit RH).
+            </p>
+        </field>
+    </record>
+
+</odoo>

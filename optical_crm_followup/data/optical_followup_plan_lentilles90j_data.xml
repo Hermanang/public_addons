@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Preset "Lentilles réassort 90 j" — plan court dédié aux ventes de
+            lentilles de contact. Sélectionné par FR-02 quand la SO contient
+            un produit optical_type='contact_lens' (priorité lentilles >
+            progressive > any dans _select_for_sale_order).
+
+            noupdate="1" garantit qu'un responsable peut désactiver le preset
+            en post-install sans qu'un upgrade module ne le ré-active
+            (FR-12 : preset désactivable via toggle active).
+        -->
+
+        <record id="plan_lentilles_90j" model="optical.followup.plan">
+            <field name="name">Lentilles réassort 90 j</field>
+            <field name="active">True</field>
+            <field name="sequence">45</field>
+            <field name="duration_months">3</field>
+            <field name="optical_type_trigger">lentilles</field>
+        </record>
+
+        <!-- Étape 1 : J+15 — Contrôle confort (WhatsApp) -->
+        <record id="plan_lentilles_90j_step_j15" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_lentilles_90j"/>
+            <field name="sequence">10</field>
+            <field name="name">J+15 — Contrôle confort</field>
+            <field name="offset_days">15</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Contrôle confort</field>
+            <field name="description">Court WhatsApp pour valider le confort d'adaptation aux lentilles, absence de rougeurs ou d'irritation, respect des consignes d'entretien.</field>
+        </record>
+
+        <!-- Étape 2 : J+60 — Rappel réassort (WhatsApp) -->
+        <record id="plan_lentilles_90j_step_j60" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_lentilles_90j"/>
+            <field name="sequence">20</field>
+            <field name="name">J+60 — Rappel réassort</field>
+            <field name="offset_days">60</field>
+            <field name="activity_type_id" ref="optical_crm_followup.mail_activity_type_whatsapp"/>
+            <field name="suggested_channel">whatsapp</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Rappel réassort</field>
+            <field name="description">Rappel WhatsApp du réassort à prévoir (stock proche de la fin — porter à 90 j). Proposer prise de rendez-vous en boutique si besoin.</field>
+        </record>
+
+    </data>
+</odoo>

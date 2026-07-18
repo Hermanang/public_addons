@@ -1,0 +1,1174 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* optical_crm_followup
+#
+# Module 100 % français — les msgid sont directement en français
+# (sources déjà en français, fr.po fourni pour respecter la convention
+# et permettre l'export/inclusion dans le workflow i18n Odoo).
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_plan
+msgid "Plan-type de suivi client optique"
+msgstr "Plan-type de suivi client optique"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_plan_step
+msgid "Étape d'un plan-type de suivi"
+msgstr "Étape d'un plan-type de suivi"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_schedule
+msgid "Calendrier de suivi client optique (instance)"
+msgstr "Calendrier de suivi client optique (instance)"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_schedule_line
+msgid "Étape matérialisée d'un calendrier de suivi"
+msgstr "Étape matérialisée d'un calendrier de suivi"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_holiday_window
+msgid "Fenêtre de vigilance saisonnière"
+msgstr "Fenêtre de vigilance saisonnière"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_lunar_date
+msgid "Date lunaire hégirienne (référentiel annuel)"
+msgstr "Date lunaire hégirienne (référentiel annuel)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_plan__name
+msgid "Nom du plan"
+msgstr "Nom du plan"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_plan__step_ids
+msgid "Étapes"
+msgstr "Étapes"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_plan_step__plan_id
+msgid "Plan"
+msgstr "Plan"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_plan_step__name
+msgid "Nom de l'étape"
+msgstr "Nom de l'étape"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__name
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule_line__schedule_id
+msgid "Référence"
+msgstr "Référence"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__partner_id
+msgid "Client"
+msgstr "Client"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__warehouse_id
+msgid "Boutique"
+msgstr "Boutique"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__state
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule_line__state
+msgid "État"
+msgstr "État"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__line_ids
+msgid "Étapes matérialisées"
+msgstr "Étapes matérialisées"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule__state__running
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__res_partner__optical_followup_state__active
+msgid "En cours"
+msgstr "En cours"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule__state__paused
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__res_partner__optical_followup_state__paused
+msgid "Suspendu"
+msgstr "Suspendu"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule__state__fulfilled
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__res_partner__optical_followup_state__done
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_form
+msgid "Abouti"
+msgstr "Abouti"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule__state__cancelled
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__state__cancelled
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_form
+msgid "Annulé"
+msgstr "Annulé"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule__state__expired
+msgid "Expiré"
+msgstr "Expiré"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__state__pending
+msgid "En attente"
+msgstr "En attente"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__state__done
+msgid "Réalisée"
+msgstr "Réalisée"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__state__skipped
+msgid "Ignorée"
+msgstr "Ignorée"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__state__paused
+msgid "Suspendue"
+msgstr "Suspendue"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__state__overdue
+msgid "En retard"
+msgstr "En retard"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__name
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_lunar_date__name
+msgid "Nom"
+msgstr "Nom"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_lunar_date__year
+msgid "Année grégorienne"
+msgstr "Année grégorienne"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_lunar_date__event
+msgid "Événement"
+msgstr "Événement"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_lunar_date__date_gregorian_start
+msgid "Date grégorienne (début)"
+msgstr "Date grégorienne (début)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_lunar_date__date_gregorian_end
+msgid "Date grégorienne (fin)"
+msgstr "Date grégorienne (fin)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_lunar_date__event__ramadan_start
+msgid "Début du Ramadan"
+msgstr "Début du Ramadan"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_lunar_date__event__aid_fitr
+#: model:optical.followup.holiday.window,name:optical_crm_followup.holiday_window_aid_fitr
+msgid "Aïd al-Fitr"
+msgstr "Aïd al-Fitr"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_lunar_date__event__aid_adha
+msgid "Aïd al-Adha (Tabaski)"
+msgstr "Aïd al-Adha (Tabaski)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_lunar_date__event__magal
+#: model:optical.followup.holiday.window,name:optical_crm_followup.holiday_window_magal
+msgid "Grand Magal de Touba"
+msgstr "Grand Magal de Touba"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_users__optical_warehouse_ids
+msgid "Boutiques de fidélisation"
+msgstr "Boutiques de fidélisation"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_root
+#: model:ir.ui.view,arch_db:optical_crm_followup.view_users_form_inherit_crm_followup
+msgid "Fidélisation"
+msgstr "Fidélisation"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_my_schedules
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_schedule
+msgid "Calendriers de fidélisation"
+msgstr "Calendriers de fidélisation"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_my_overdue
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_schedule_line_overdue
+msgid "Mes activités en retard"
+msgstr "Mes activités en retard"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_configuration
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_plans
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_plan
+msgid "Plans-types"
+msgstr "Plans-types"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_holiday_windows
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_holiday_window
+msgid "Fenêtres de vigilance"
+msgstr "Fenêtres de vigilance"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_lunar_dates
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_lunar_date
+msgid "Table lunaire"
+msgstr "Table lunaire"
+
+# ================================================================
+# Story 15.1 — Consentement, opt-out et fondations légales
+# ================================================================
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_consent
+msgid "Consentement suivi optique"
+msgstr "Consentement suivi optique"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,help:optical_crm_followup.field_res_partner__optical_followup_consent
+msgid ""
+"Coché par le commercial lorsque le client a signé la case sur le bon de "
+"commande papier. Sans consentement, aucun calendrier de suivi ne peut "
+"démarrer (Loi 2008-12 art. 33)."
+msgstr ""
+"Coché par le commercial lorsque le client a signé la case sur le bon de "
+"commande papier. Sans consentement, aucun calendrier de suivi ne peut "
+"démarrer (Loi 2008-12 art. 33)."
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_consent_date
+msgid "Date consentement"
+msgstr "Date consentement"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,help:optical_crm_followup.field_res_partner__optical_followup_consent_date
+msgid "Horodatage automatique de la dernière coche du consentement."
+msgstr "Horodatage automatique de la dernière coche du consentement."
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_consent_by_id
+msgid "Consentement recueilli par"
+msgstr "Consentement recueilli par"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,help:optical_crm_followup.field_res_partner__optical_followup_consent_by_id
+msgid "Utilisateur ayant coché le consentement — traçabilité chatter."
+msgstr "Utilisateur ayant coché le consentement — traçabilité chatter."
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_consent_by_legal_rep
+msgid "Consentement représentant légal"
+msgstr "Consentement représentant légal"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,help:optical_crm_followup.field_res_partner__optical_followup_consent_by_legal_rep
+msgid ""
+"Coché par le commercial pour un client mineur lorsque le parent ou "
+"représentant légal a signé le bon de commande."
+msgstr ""
+"Coché par le commercial pour un client mineur lorsque le parent ou "
+"représentant légal a signé le bon de commande."
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_optout
+msgid "Opposition au suivi"
+msgstr "Opposition au suivi"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,help:optical_crm_followup.field_res_partner__optical_followup_optout
+msgid ""
+"Coché lorsque le client demande à ne plus recevoir de messages de suivi. "
+"La cascade est immédiate : calendriers en cours annulés, activités "
+"pendantes supprimées, futures créations verrouillées (NFR-04 < 60 s)."
+msgstr ""
+"Coché lorsque le client demande à ne plus recevoir de messages de suivi. "
+"La cascade est immédiate : calendriers en cours annulés, activités "
+"pendantes supprimées, futures créations verrouillées (NFR-04 < 60 s)."
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_optout_date
+msgid "Date opposition"
+msgstr "Date opposition"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_optout_reason
+msgid "Motif opposition"
+msgstr "Motif opposition"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,help:optical_crm_followup.field_res_partner__optical_followup_optout_reason
+msgid ""
+"Motif recommandé mais non obligatoire (la Loi 2008-12 n'oblige pas le "
+"client à justifier son opposition)."
+msgstr ""
+"Motif recommandé mais non obligatoire (la Loi 2008-12 n'oblige pas le "
+"client à justifier son opposition)."
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_followup_state
+msgid "Statut suivi"
+msgstr "Statut suivi"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__res_partner__optical_followup_state__never
+msgid "Jamais démarré"
+msgstr "Jamais démarré"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__res_partner__optical_followup_state__optout
+msgid "En opposition"
+msgstr "En opposition"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule_line__activity_id
+msgid "Activité Odoo"
+msgstr "Activité Odoo"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,help:optical_crm_followup.field_optical_followup_schedule_line__activity_id
+msgid ""
+"Activité Odoo associée à l'étape (rappel commercial). Supprimée en "
+"cascade lors d'un opt-out client."
+msgstr ""
+"Activité Odoo associée à l'étape (rappel commercial). Supprimée en "
+"cascade lors d'un opt-out client."
+
+#. module: optical_crm_followup
+#: model:ir.ui.view,arch_db:optical_crm_followup.res_partner_view_form_followup
+msgid "Fidélisation & consentement"
+msgstr "Fidélisation & consentement"
+
+#. module: optical_crm_followup
+#. odoo-python
+#: code:addons/optical_crm_followup/models/res_partner.py:0
+#, python-format
+msgid "Consentement de suivi enregistré le %(date)s par %(user)s."
+msgstr "Consentement de suivi enregistré le %(date)s par %(user)s."
+
+#. module: optical_crm_followup
+#. odoo-python
+#: code:addons/optical_crm_followup/models/res_partner.py:0
+#, python-format
+msgid ""
+"Opposition enregistrée le %(date)s par %(user)s. Raison : %(reason)s. "
+"%(count_s)s calendrier(s) annulé(s), %(count_a)s activité(s) pendante(s) "
+"supprimée(s)."
+msgstr ""
+"Opposition enregistrée le %(date)s par %(user)s. Raison : %(reason)s. "
+"%(count_s)s calendrier(s) annulé(s), %(count_a)s activité(s) pendante(s) "
+"supprimée(s)."
+
+#. module: optical_crm_followup
+#. odoo-python
+#: code:addons/optical_crm_followup/models/res_partner.py:0
+#, python-format
+msgid "(non précisée)"
+msgstr "(non précisée)"
+
+#. module: optical_crm_followup
+#: model:ir.ui.view,arch_db:optical_crm_followup.report_saleorder_document_inherit_consent
+msgid ""
+"J'accepte de recevoir des messages de suivi (bilan de confort, entretien, "
+"renouvellement) par email, SMS ou WhatsApp. Je peux m'y opposer à tout "
+"moment sur simple demande."
+msgstr ""
+"J'accepte de recevoir des messages de suivi (bilan de confort, entretien, "
+"renouvellement) par email, SMS ou WhatsApp. Je peux m'y opposer à tout "
+"moment sur simple demande."
+
+#. module: optical_crm_followup
+#: model:ir.ui.view,arch_db:optical_crm_followup.report_saleorder_document_inherit_consent
+msgid "Signature du client :"
+msgstr "Signature du client :"
+
+#. module: optical_crm_followup
+#: model:ir.ui.view,arch_db:optical_crm_followup.report_saleorder_document_inherit_consent
+msgid ""
+"Pour un client mineur, signature obligatoire du parent ou représentant "
+"légal. Le mineur peut co-signer (recommandé)."
+msgstr ""
+"Pour un client mineur, signature obligatoire du parent ou représentant "
+"légal. Le mineur peut co-signer (recommandé)."
+
+#. module: optical_crm_followup
+#: model:ir.ui.view,arch_db:optical_crm_followup.report_saleorder_document_inherit_consent
+msgid "Bon de commande — Consentement suivi optique"
+msgstr "Bon de commande — Consentement suivi optique"
+
+#. module: optical_crm_followup
+#: model:ir.ui.view,arch_db:optical_crm_followup.mail_footer_legal
+msgid ""
+"Conformément à la Loi n° 2008-12 sur la protection des données à caractère "
+"personnel, vous disposez d'un droit d'accès, de rectification et "
+"d'opposition sur vos données. Pour l'exercer, contactez [contact CDP Luxe "
+"Optique]."
+msgstr ""
+"Conformément à la Loi n° 2008-12 sur la protection des données à caractère "
+"personnel, vous disposez d'un droit d'accès, de rectification et "
+"d'opposition sur vos données. Pour l'exercer, contactez [contact CDP Luxe "
+"Optique]."
+
+#. module: optical_crm_followup
+#: model:ir.ui.view,arch_db:optical_crm_followup.mail_footer_legal
+msgid "Pied de mail légal — Loi 2008-12"
+msgstr "Pied de mail légal — Loi 2008-12"
+
+# ============================================================================
+# Story 15.2 — Moteur calendriers, preset Standard 18m, alerte picking > 7 j
+# ============================================================================
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan,name:optical_crm_followup.plan_standard_18m
+msgid "Standard lunettes 18 mois"
+msgstr "Standard lunettes 18 mois"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_standard_18m_step_j30
+msgid "Bilan satisfaction J+30"
+msgstr "Bilan satisfaction J+30"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_standard_18m_step_m12
+msgid "Bilan annuel M+12"
+msgstr "Bilan annuel M+12"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_standard_18m_step_m18
+msgid "Proposition renouvellement M+18"
+msgstr "Proposition renouvellement M+18"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_line_feedback_wizard
+msgid "Wizard clôture d'une étape de suivi (outcome)"
+msgstr "Wizard clôture d'une étape de suivi (outcome)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_line_feedback_wizard__outcome__answered
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__outcome__answered
+msgid "Répondu"
+msgstr "Répondu"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_line_feedback_wizard__outcome__unreachable
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__outcome__unreachable
+msgid "Injoignable"
+msgstr "Injoignable"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_line_feedback_wizard__outcome__refused
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__outcome__refused
+msgid "Refusé poliment"
+msgstr "Refusé poliment"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_line_feedback_wizard__outcome__purchased
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_schedule_line__outcome__purchased
+msgid "A acheté"
+msgstr "A acheté"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "Calendrier de fidélisation démarré : %(plan)s (%(n)s étapes)."
+msgstr "Calendrier de fidélisation démarré : %(plan)s (%(n)s étapes)."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "Réachat anticipé — nouveau calendrier ouvert."
+msgstr "Réachat anticipé — nouveau calendrier ouvert."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid ""
+"Réachat anticipé : ancien calendrier clôturé (%(n)s étapes annulées), "
+"nouveau calendrier %(name)s ouvert."
+msgstr ""
+"Réachat anticipé : ancien calendrier clôturé (%(n)s étapes annulées), "
+"nouveau calendrier %(name)s ouvert."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "Picking en attente > 7 j — remise non validée"
+msgstr "Picking en attente > 7 j — remise non validée"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "Picking en attente > 7 j — remise non validée. Vérifier situation client."
+msgstr "Picking en attente > 7 j — remise non validée. Vérifier situation client."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid ""
+"Alerte 'Picking en attente > 7 j' fermée automatiquement — pickings outgoing "
+"tous validés."
+msgstr ""
+"Alerte 'Picking en attente > 7 j' fermée automatiquement — pickings outgoing "
+"tous validés."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "Cette étape a déjà été clôturée (état : %s)."
+msgstr "Cette étape a déjà été clôturée (état : %s)."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "Canal recommandé : %(channel)s. Rôle recommandé : %(role)s."
+msgstr "Canal recommandé : %(channel)s. Rôle recommandé : %(role)s."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "Template mail suggéré : %s"
+msgstr "Template mail suggéré : %s"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+msgid "(non précisé)"
+msgstr "(non précisé)"
+
+#. module: optical_crm_followup
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_line_feedback_wizard
+msgid "Clôturer l'étape"
+msgstr "Clôturer l'étape"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_line_feedback_wizard_form
+msgid "Clôturer l'étape de suivi"
+msgstr "Clôturer l'étape de suivi"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/wizards/optical_followup_line_feedback_wizard.py:0
+msgid "Aucune étape à clôturer."
+msgstr "Aucune étape à clôturer."
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_line_feedback_wizard__outcome
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule_line__outcome
+msgid "Issue du contact"
+msgstr "Issue du contact"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_line_feedback_wizard__note
+msgid "Commentaire (optionnel)"
+msgstr "Commentaire (optionnel)"
+
+#. module: optical_crm_followup
+#: model:mail.template,subject:optical_crm_followup.email_digest_overdue
+msgid "Fidélisation — vos activités en retard ({{ object.env.context.get('overdue_count') or '' }})"
+msgstr "Fidélisation — vos activités en retard ({{ object.env.context.get('overdue_count') or '' }})"
+
+#. module: optical_crm_followup
+#: model:mail.template,name:optical_crm_followup.email_digest_overdue
+msgid "Optical Fidélisation — Digest des activités en retard"
+msgstr "Optical Fidélisation — Digest des activités en retard"
+
+#. module: optical_crm_followup
+#: model:mail.template,name:optical_crm_followup.email_std18m_j30_satisfaction
+msgid "Optical Fidélisation — Bilan satisfaction J+30"
+msgstr "Optical Fidélisation — Bilan satisfaction J+30"
+
+#. module: optical_crm_followup
+#: model:mail.template,name:optical_crm_followup.email_std18m_m12_bilan_annuel
+msgid "Optical Fidélisation — Bilan annuel M+12"
+msgstr "Optical Fidélisation — Bilan annuel M+12"
+
+#. module: optical_crm_followup
+#: model:mail.template,name:optical_crm_followup.email_std18m_m18_renouvellement
+msgid "Optical Fidélisation — Proposition renouvellement M+18"
+msgstr "Optical Fidélisation — Proposition renouvellement M+18"
+
+#. module: optical_crm_followup
+#: model:mail.activity.type,name:optical_crm_followup.mail_activity_type_whatsapp
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#. module: optical_crm_followup
+#: model:mail.activity.type,name:optical_crm_followup.mail_activity_type_visite
+msgid "Visite en boutique"
+msgstr "Visite en boutique"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_sale_order__delivered_date
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__delivered_date
+msgid "Date de remise"
+msgstr "Date de remise"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_sale_order__followup_schedule_id
+msgid "Calendrier de fidélisation"
+msgstr "Calendrier de fidélisation"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_sale_order__picking_late_alert_sent
+msgid "Alerte picking > 7 j envoyée"
+msgstr "Alerte picking > 7 j envoyée"
+
+
+# ============================================================
+# Story 16.1 — Preset Progressifs 24m + fenêtres de vigilance
+# ============================================================
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan,name:optical_crm_followup.plan_progressive_24m
+msgid "Progressifs 24 mois adaptation"
+msgstr "Progressifs 24 mois adaptation"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_j0
+msgid "Livraison — Conseils d'adaptation"
+msgstr "Livraison — Conseils d'adaptation"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_j3
+msgid "J+3 — Rassurer"
+msgstr "J+3 — Rassurer"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_j7
+msgid "J+7 — Détecter gêne précoce"
+msgstr "J+7 — Détecter gêne précoce"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_j15
+msgid "J+15 — Contrôle qualité"
+msgstr "J+15 — Contrôle qualité"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_j30
+msgid "J+30 — Bilan adaptation"
+msgstr "J+30 — Bilan adaptation"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m3
+msgid "M+3 — Entretien gratuit"
+msgstr "M+3 — Entretien gratuit"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m6
+msgid "M+6 — Contrôle confort"
+msgstr "M+6 — Contrôle confort"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m9
+msgid "M+9 — Maintien relation"
+msgstr "M+9 — Maintien relation"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m12
+msgid "M+12 — Bilan annuel"
+msgstr "M+12 — Bilan annuel"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m15
+msgid "M+15 — Entretien premium"
+msgstr "M+15 — Entretien premium"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m18
+msgid "M+18 — Anticiper évolution"
+msgstr "M+18 — Anticiper évolution"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m21
+msgid "M+21 — Nouveautés"
+msgstr "M+21 — Nouveautés"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_progressive_24m_step_m24
+msgid "M+24 — Bilan + renouvellement"
+msgstr "M+24 — Bilan + renouvellement"
+
+#. module: optical_crm_followup
+#: model:optical.followup.holiday.window,name:optical_crm_followup.holiday_window_ramadan
+msgid "Ramadan"
+msgstr "Ramadan"
+
+#. module: optical_crm_followup
+#: model:optical.followup.holiday.window,name:optical_crm_followup.holiday_window_tabaski
+msgid "Tabaski (Aïd al-Adha)"
+msgstr "Tabaski (Aïd al-Adha)"
+
+#. module: optical_crm_followup
+#: model:optical.followup.holiday.window,name:optical_crm_followup.holiday_window_fin_annee
+msgid "Fêtes de fin d'année"
+msgstr "Fêtes de fin d'année"
+
+#. module: optical_crm_followup
+#: model:optical.followup.holiday.window,name:optical_crm_followup.holiday_window_rentree
+msgid "Rentrée scolaire"
+msgstr "Rentrée scolaire"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_holiday_window__behavior__postpone_to_end
+msgid "Reporter à la fin de la fenêtre"
+msgstr "Reporter à la fin de la fenêtre"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_holiday_window__behavior__switch_channel_soft
+msgid "Basculer sur canal doux (indicatif)"
+msgstr "Basculer sur canal doux (indicatif)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__optical_followup_holiday_window__behavior__none
+msgid "Aucun (fenêtre neutre)"
+msgstr "Aucun (fenêtre neutre)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__behavior
+msgid "Comportement"
+msgstr "Comportement"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__lunar_date_id
+msgid "Ancrage lunaire"
+msgstr "Ancrage lunaire"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__date_start_civil
+msgid "Début (civil MM-DD)"
+msgstr "Début (civil MM-DD)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__date_end_civil
+msgid "Fin (civil MM-DD)"
+msgstr "Fin (civil MM-DD)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__duration_days
+msgid "Durée (jours)"
+msgstr "Durée (jours)"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__suggested_channel
+msgid "Canal recommandé"
+msgstr "Canal recommandé"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_holiday_window__description
+msgid "Description"
+msgstr "Description"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_lunar_date__source
+msgid "Source"
+msgstr "Source"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_lunar_date__verified
+msgid "Vérifié"
+msgstr "Vérifié"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Étape « %(step)s » reportée du %(from_date)s au %(to_date)s — fenêtre %(window)s."
+msgstr "Étape « %(step)s » reportée du %(from_date)s au %(to_date)s — fenêtre %(window)s."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Reporté par fenêtre %(window)s (période initiale %(original)s)."
+msgstr "Reporté par fenêtre %(window)s (période initiale %(original)s)."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Période %(window)s : préférer %(win_channel)s plutôt que %(step_channel)s."
+msgstr "Période %(window)s : préférer %(win_channel)s plutôt que %(step_channel)s."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Période %(window)s : privilégier WhatsApp ou email plutôt que %(step_channel)s."
+msgstr "Période %(window)s : privilégier WhatsApp ou email plutôt que %(step_channel)s."
+
+# ==============================================================================
+# Story 16.2 — Suspension SAV et réachat anticipé
+# ==============================================================================
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__sav_paused_date
+msgid "Date de mise en pause SAV"
+msgstr "Date de mise en pause SAV"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__sav_pause_duration_days
+msgid "Jours de pause SAV"
+msgstr "Jours de pause SAV"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_sav_supervision_tree
+msgid "Calendriers en pause SAV"
+msgstr "Calendriers en pause SAV"
+
+#. module: optical_crm_followup
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_schedule_sav_paused_30d
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_sav_paused_30d
+msgid "Calendriers en pause SAV > 30 j"
+msgstr "Calendriers en pause SAV > 30 j"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_supervision
+msgid "Vues de supervision"
+msgstr "Vues de supervision"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_sav_supervision_tree
+msgid "Jours de pause"
+msgstr "Jours de pause"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Calendrier de fidélisation suspendu automatiquement : ticket SAV %(ticket)s ouvert."
+msgstr "Calendrier de fidélisation suspendu automatiquement : ticket SAV %(ticket)s ouvert."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Ticket SAV %(ticket)s rouvert — calendrier maintenu en suspension."
+msgstr "Ticket SAV %(ticket)s rouvert — calendrier maintenu en suspension."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Calendrier de fidélisation repris automatiquement : tous les tickets SAV sont clos (durée de pause : %(n)s jour(s))."
+msgstr "Calendrier de fidélisation repris automatiquement : tous les tickets SAV sont clos (durée de pause : %(n)s jour(s))."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Réachat anticipé pendant SAV en cours : ancien calendrier clôturé (%(n)s étapes annulées), nouveau calendrier %(name)s ouvert (immédiatement suspendu — ticket(s) SAV toujours ouvert(s))."
+msgstr "Réachat anticipé pendant SAV en cours : ancien calendrier clôturé (%(n)s étapes annulées), nouveau calendrier %(name)s ouvert (immédiatement suspendu — ticket(s) SAV toujours ouvert(s))."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "(sans référence)"
+msgstr "(sans référence)"
+
+#
+# Story 17-4 — Refonte UX navigation quotidienne
+#
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__steps_total_count
+msgid "Nombre total d'étapes"
+msgstr "Nombre total d'étapes"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__steps_done_count
+msgid "Étapes réalisées"
+msgstr "Étapes réalisées"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__next_step_date
+msgid "Prochaine étape"
+msgstr "Prochaine étape"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule_line__state_color
+msgid "Couleur (calendrier)"
+msgstr "Couleur (calendrier)"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "Étapes — %s"
+msgstr "Étapes — %s"
+
+#. module: optical_crm_followup
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_my_lines_planning
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_my_planning
+msgid "Mon planning"
+msgstr "Mon planning"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_line_planning_search
+msgid "Mes étapes à venir"
+msgstr "Mes étapes à venir"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_line_planning_search
+msgid "À venir"
+msgstr "À venir"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_kanban
+msgid "Prochaine :"
+msgstr "Prochaine :"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_kanban
+msgid "Remis le"
+msgstr "Remis le"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_kanban
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_form
+msgid "étapes"
+msgstr "étapes"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_schedule_line_calendar
+msgid "Planning des étapes"
+msgstr "Planning des étapes"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_customer_tier
+msgid "Tier client"
+msgstr "Tier client"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__res_partner__optical_customer_tier__vip
+msgid "VIP"
+msgstr "VIP"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields.selection,name:optical_crm_followup.selection__res_partner__optical_customer_tier__standard
+msgid "Standard"
+msgstr "Standard"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_customer_tier_override
+msgid "Forcer VIP (override manager)"
+msgstr "Forcer VIP (override manager)"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan,name:optical_crm_followup.plan_lentilles_90j
+msgid "Lentilles réassort 90 j"
+msgstr "Lentilles réassort 90 j"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_lentilles_90j_step_j15
+msgid "J+15 — Contrôle confort"
+msgstr "J+15 — Contrôle confort"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_lentilles_90j_step_j60
+msgid "J+60 — Rappel réassort"
+msgstr "J+60 — Rappel réassort"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan,name:optical_crm_followup.plan_vip_extra
+msgid "Étapes VIP additionnelles"
+msgstr "Étapes VIP additionnelles"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_vip_extra_step_birthday
+msgid "Attention anniversaire"
+msgstr "Attention anniversaire"
+
+#. module: optical_crm_followup
+#: model:optical.followup.plan.step,name:optical_crm_followup.plan_vip_extra_step_m12
+msgid "M+12 — Bilan personnalisé"
+msgstr "M+12 — Bilan personnalisé"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/res_partner.py:0
+#, python-format
+msgid "Tier client basculé en VIP par override manuel (Manager : %(user)s)."
+msgstr "Tier client basculé en VIP par override manuel (Manager : %(user)s)."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/res_partner.py:0
+#, python-format
+msgid "Override VIP retiré — tier recalculé automatiquement (Manager : %(user)s)."
+msgstr "Override VIP retiré — tier recalculé automatiquement (Manager : %(user)s)."
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/models/optical_followup_schedule.py:0
+#, python-format
+msgid "%(n)s étape(s) VIP ajoutée(s) au calendrier (client VIP — %(reason)s)%(skip)s."
+msgstr "%(n)s étape(s) VIP ajoutée(s) au calendrier (client VIP — %(reason)s)%(skip)s."
+
+#. module: optical_crm_followup
+#. Story 17-2 — Reporting direction (4 KPI + vue clients sans référent)
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_dashboard
+msgid "Tableau de bord direction"
+msgstr "Tableau de bord direction"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_kpi_contact_rate
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_kpi_contact_rate
+msgid "KPI 1 - Taux de contact"
+msgstr "KPI 1 - Taux de contact"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_kpi_schedule_state
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_kpi_schedule_state
+msgid "KPI 2 - État des calendriers"
+msgstr "KPI 2 - État des calendriers"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_kpi_renewal_basket
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_kpi_renewal_basket
+msgid "KPI 3 - Panier moyen renouvellement"
+msgstr "KPI 3 - Panier moyen renouvellement"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_kpi_activation_rate
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_kpi_activation_rate
+msgid "KPI 4 - Taux d'activation"
+msgstr "KPI 4 - Taux d'activation"
+
+#. module: optical_crm_followup
+#: model:ir.ui.menu,name:optical_crm_followup.menu_optical_followup_partners_without_referent
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_partners_without_referent
+msgid "Clients sans référent"
+msgstr "Clients sans référent"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__overdue_line_count
+msgid "Lignes en retard"
+msgstr "Lignes en retard"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__has_purchase_outcome
+msgid "Rachat enregistré"
+msgstr "Rachat enregistré"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__amount_total_trigger_so
+msgid "Panier déclenchement"
+msgstr "Panier déclenchement"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__amount_total_renewal_avg
+msgid "Panier renouvellement moyen"
+msgstr "Panier renouvellement moyen"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__contact_rate_30d_display
+msgid "Taux de contact 30 j"
+msgstr "Taux de contact 30 j"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_schedule__email_open_rate_30d_display
+msgid "Taux ouverture email 30 j"
+msgstr "Taux ouverture email 30 j"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_plan__fast_unsubscribe_rate_30d_display
+msgid "Taux désabonnement 30 j"
+msgstr "Taux désabonnement 30 j"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_sale_order__followup_activated
+msgid "Suivi activé"
+msgstr "Suivi activé"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_res_partner__optical_referent_user_id
+msgid "Référent effectif"
+msgstr "Référent effectif"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_contact_rate_search
+msgid "7 derniers jours"
+msgstr "7 derniers jours"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_contact_rate_search
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_activation_rate_search
+msgid "30 derniers jours"
+msgstr "30 derniers jours"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_contact_rate_search
+msgid "90 derniers jours"
+msgstr "90 derniers jours"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_contact_rate_search
+msgid "Injoignables"
+msgstr "Injoignables"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_activation_rate_search
+msgid "Sans consentement (à rattraper)"
+msgstr "Sans consentement (à rattraper)"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_activation_rate_search
+msgid "Confirmées / Livrées"
+msgstr "Confirmées / Livrées"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_renewal_basket_search
+msgid "Aboutis avec rachat"
+msgstr "Aboutis avec rachat"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_renewal_basket_search
+msgid "Aboutis (tous)"
+msgstr "Aboutis (tous)"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_schedule_state_search
+msgid "Pause SAV"
+msgstr "Pause SAV"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_schedule_state_search
+msgid "Pause majorité"
+msgstr "Pause majorité"
+
+#. module: optical_crm_followup
+#: model_terms:ir.ui.view,arch_db:optical_crm_followup.view_optical_followup_kpi_schedule_state_search
+msgid "Pause manuelle"
+msgstr "Pause manuelle"
+
+#. module: optical_crm_followup
+#: model:ir.actions.act_window,name:optical_crm_followup.action_optical_followup_assign_referent_wizard
+msgid "Assigner un référent"
+msgstr "Assigner un référent"
+
+#. module: optical_crm_followup
+#: model:ir.model,name:optical_crm_followup.model_optical_followup_assign_referent_wizard
+msgid "Assigner un référent en masse à des clients sans référent"
+msgstr "Assigner un référent en masse à des clients sans référent"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_assign_referent_wizard__target_user_id
+msgid "Référent cible"
+msgstr "Référent cible"
+
+#. module: optical_crm_followup
+#: model:ir.model.fields,field_description:optical_crm_followup.field_optical_followup_assign_referent_wizard__partner_count
+msgid "Nombre de partenaires"
+msgstr "Nombre de partenaires"
+
+#. module: optical_crm_followup
+#: code:addons/optical_crm_followup/wizards/optical_followup_assign_referent_wizard.py:0
+#, python-format
+msgid "Référent assigné à %(user)s par %(manager)s (action de masse)."
+msgstr "Référent assigné à %(user)s par %(manager)s (action de masse)."

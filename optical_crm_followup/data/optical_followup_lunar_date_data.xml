@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Table lunaire hégirienne 2026-2030 — 20 records (4 événements × 5 années).
+
+            Sources :
+              - Ramadan / Aïd al-Fitr / Aïd al-Adha : MoonSighting.com (dates
+                astronomiques) — à valider annuellement par l'atelier PO
+                avant chaque Ramadan (audit `verified` P3 rétro 15 § 6.6).
+              - Grand Magal de Touba : Comité Khalifal (Sénégal).
+
+            ⚠️ Ces dates sont des approximations à la rédaction (juillet 2026).
+            Le PO doit les confirmer annuellement (chantier maintenance).
+            Précision requise NFR-13 : ± 1 jour.
+
+            noupdate="1" — les responsables peuvent corriger post-install.
+        -->
+
+        <!-- ============================= 2026 ============================= -->
+
+        <record id="lunar_date_ramadan_2026" model="optical.followup.lunar.date">
+            <field name="name">Ramadan 2026</field>
+            <field name="year">2026</field>
+            <field name="event">ramadan_start</field>
+            <field name="date_gregorian_start" eval="'2026-02-18'"/>
+            <field name="date_gregorian_end" eval="'2026-03-19'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_fitr_2026" model="optical.followup.lunar.date">
+            <field name="name">Aïd al-Fitr 2026</field>
+            <field name="year">2026</field>
+            <field name="event">aid_fitr</field>
+            <field name="date_gregorian_start" eval="'2026-03-20'"/>
+            <field name="date_gregorian_end" eval="'2026-03-21'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_adha_2026" model="optical.followup.lunar.date">
+            <field name="name">Tabaski (Aïd al-Adha) 2026</field>
+            <field name="year">2026</field>
+            <field name="event">aid_adha</field>
+            <field name="date_gregorian_start" eval="'2026-05-27'"/>
+            <field name="date_gregorian_end" eval="'2026-05-29'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_magal_2026" model="optical.followup.lunar.date">
+            <field name="name">Grand Magal de Touba 2026</field>
+            <field name="year">2026</field>
+            <field name="event">magal</field>
+            <field name="date_gregorian_start" eval="'2026-08-15'"/>
+            <field name="date_gregorian_end" eval="'2026-08-16'"/>
+            <field name="source">Comité Khalifal — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <!-- ============================= 2027 ============================= -->
+
+        <record id="lunar_date_ramadan_2027" model="optical.followup.lunar.date">
+            <field name="name">Ramadan 2027</field>
+            <field name="year">2027</field>
+            <field name="event">ramadan_start</field>
+            <field name="date_gregorian_start" eval="'2027-02-08'"/>
+            <field name="date_gregorian_end" eval="'2027-03-09'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_fitr_2027" model="optical.followup.lunar.date">
+            <field name="name">Aïd al-Fitr 2027</field>
+            <field name="year">2027</field>
+            <field name="event">aid_fitr</field>
+            <field name="date_gregorian_start" eval="'2027-03-10'"/>
+            <field name="date_gregorian_end" eval="'2027-03-11'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_adha_2027" model="optical.followup.lunar.date">
+            <field name="name">Tabaski (Aïd al-Adha) 2027</field>
+            <field name="year">2027</field>
+            <field name="event">aid_adha</field>
+            <field name="date_gregorian_start" eval="'2027-05-17'"/>
+            <field name="date_gregorian_end" eval="'2027-05-19'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_magal_2027" model="optical.followup.lunar.date">
+            <field name="name">Grand Magal de Touba 2027</field>
+            <field name="year">2027</field>
+            <field name="event">magal</field>
+            <field name="date_gregorian_start" eval="'2027-08-05'"/>
+            <field name="date_gregorian_end" eval="'2027-08-06'"/>
+            <field name="source">Comité Khalifal — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <!-- ============================= 2028 ============================= -->
+
+        <record id="lunar_date_ramadan_2028" model="optical.followup.lunar.date">
+            <field name="name">Ramadan 2028</field>
+            <field name="year">2028</field>
+            <field name="event">ramadan_start</field>
+            <field name="date_gregorian_start" eval="'2028-01-28'"/>
+            <field name="date_gregorian_end" eval="'2028-02-26'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_fitr_2028" model="optical.followup.lunar.date">
+            <field name="name">Aïd al-Fitr 2028</field>
+            <field name="year">2028</field>
+            <field name="event">aid_fitr</field>
+            <field name="date_gregorian_start" eval="'2028-02-27'"/>
+            <field name="date_gregorian_end" eval="'2028-02-28'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_adha_2028" model="optical.followup.lunar.date">
+            <field name="name">Tabaski (Aïd al-Adha) 2028</field>
+            <field name="year">2028</field>
+            <field name="event">aid_adha</field>
+            <field name="date_gregorian_start" eval="'2028-05-05'"/>
+            <field name="date_gregorian_end" eval="'2028-05-07'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_magal_2028" model="optical.followup.lunar.date">
+            <field name="name">Grand Magal de Touba 2028</field>
+            <field name="year">2028</field>
+            <field name="event">magal</field>
+            <field name="date_gregorian_start" eval="'2028-07-24'"/>
+            <field name="date_gregorian_end" eval="'2028-07-25'"/>
+            <field name="source">Comité Khalifal — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <!-- ============================= 2029 ============================= -->
+
+        <record id="lunar_date_ramadan_2029" model="optical.followup.lunar.date">
+            <field name="name">Ramadan 2029</field>
+            <field name="year">2029</field>
+            <field name="event">ramadan_start</field>
+            <field name="date_gregorian_start" eval="'2029-01-16'"/>
+            <field name="date_gregorian_end" eval="'2029-02-14'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_fitr_2029" model="optical.followup.lunar.date">
+            <field name="name">Aïd al-Fitr 2029</field>
+            <field name="year">2029</field>
+            <field name="event">aid_fitr</field>
+            <field name="date_gregorian_start" eval="'2029-02-15'"/>
+            <field name="date_gregorian_end" eval="'2029-02-16'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_adha_2029" model="optical.followup.lunar.date">
+            <field name="name">Tabaski (Aïd al-Adha) 2029</field>
+            <field name="year">2029</field>
+            <field name="event">aid_adha</field>
+            <field name="date_gregorian_start" eval="'2029-04-24'"/>
+            <field name="date_gregorian_end" eval="'2029-04-26'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_magal_2029" model="optical.followup.lunar.date">
+            <field name="name">Grand Magal de Touba 2029</field>
+            <field name="year">2029</field>
+            <field name="event">magal</field>
+            <field name="date_gregorian_start" eval="'2029-07-13'"/>
+            <field name="date_gregorian_end" eval="'2029-07-14'"/>
+            <field name="source">Comité Khalifal — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <!-- ============================= 2030 ============================= -->
+
+        <record id="lunar_date_ramadan_2030" model="optical.followup.lunar.date">
+            <field name="name">Ramadan 2030</field>
+            <field name="year">2030</field>
+            <field name="event">ramadan_start</field>
+            <field name="date_gregorian_start" eval="'2030-01-05'"/>
+            <field name="date_gregorian_end" eval="'2030-02-03'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_fitr_2030" model="optical.followup.lunar.date">
+            <field name="name">Aïd al-Fitr 2030</field>
+            <field name="year">2030</field>
+            <field name="event">aid_fitr</field>
+            <field name="date_gregorian_start" eval="'2030-02-04'"/>
+            <field name="date_gregorian_end" eval="'2030-02-05'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_aid_adha_2030" model="optical.followup.lunar.date">
+            <field name="name">Tabaski (Aïd al-Adha) 2030</field>
+            <field name="year">2030</field>
+            <field name="event">aid_adha</field>
+            <field name="date_gregorian_start" eval="'2030-04-13'"/>
+            <field name="date_gregorian_end" eval="'2030-04-15'"/>
+            <field name="source">MoonSighting.com — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+        <record id="lunar_date_magal_2030" model="optical.followup.lunar.date">
+            <field name="name">Grand Magal de Touba 2030</field>
+            <field name="year">2030</field>
+            <field name="event">magal</field>
+            <field name="date_gregorian_start" eval="'2030-07-02'"/>
+            <field name="date_gregorian_end" eval="'2030-07-03'"/>
+            <field name="source">Comité Khalifal — approximation, à valider PO</field>
+            <field name="verified">True</field>
+        </record>
+
+    </data>
+</odoo>

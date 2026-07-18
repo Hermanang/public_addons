@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- WhatsApp — pas de type Odoo natif -->
+        <record id="mail_activity_type_whatsapp" model="mail.activity.type">
+            <field name="name">WhatsApp</field>
+            <field name="icon">fa-whatsapp</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Visite en boutique — équivalent local du Meeting Odoo natif -->
+        <record id="mail_activity_type_visite" model="mail.activity.type">
+            <field name="name">Visite en boutique</field>
+            <field name="icon">fa-shopping-bag</field>
+            <field name="sequence">21</field>
+        </record>
+
+        <!-- Le type "warning" natif Odoo est livré désactivé (active=False).
+             On le réactive ici pour l'alerte picking > 7 j (mitigation R1). -->
+        <record id="mail.mail_activity_data_warning" model="mail.activity.type">
+            <field name="active">True</field>
+        </record>
+
+    </data>
+</odoo>

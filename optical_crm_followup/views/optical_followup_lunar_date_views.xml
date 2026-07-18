@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_optical_followup_lunar_date_tree" model="ir.ui.view">
+        <field name="name">optical.followup.lunar.date.tree</field>
+        <field name="model">optical.followup.lunar.date</field>
+        <field name="arch" type="xml">
+            <list string="Table lunaire" default_order="year desc, date_gregorian_start desc">
+                <field name="year"/>
+                <field name="event"/>
+                <field name="name"/>
+                <field name="date_gregorian_start"/>
+                <field name="date_gregorian_end"/>
+                <field name="verified" widget="boolean_toggle"/>
+                <field name="source" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_lunar_date_form" model="ir.ui.view">
+        <field name="name">optical.followup.lunar.date.form</field>
+        <field name="model">optical.followup.lunar.date</field>
+        <field name="arch" type="xml">
+            <form string="Date lunaire">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Ex. Ramadan 2027"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year"/>
+                            <field name="event"/>
+                            <field name="verified"/>
+                        </group>
+                        <group>
+                            <field name="date_gregorian_start"/>
+                            <field name="date_gregorian_end"/>
+                        </group>
+                    </group>
+                    <group string="Source">
+                        <field name="source" nolabel="1"
+                               placeholder="Ex. MoonSighting.com — validation manuelle 2026-07-15"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_lunar_date" model="ir.actions.act_window">
+        <field name="name">Table lunaire</field>
+        <field name="res_model">optical.followup.lunar.date</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

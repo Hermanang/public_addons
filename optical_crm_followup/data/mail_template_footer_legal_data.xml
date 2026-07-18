@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+      Template QWeb du pied de mail légal (FR-16, MINEUR-2, story 15.1 § AC5).
+      Appelé par les templates mail livrés par les stories 15.2 / 16.1 / 17.1
+      via <t t-call="optical_crm_followup.mail_footer_legal"/>.
+    -->
+    <template id="mail_footer_legal" name="Pied de mail légal — Loi 2008-12">
+        <div style="font-size: 11px; color: #666; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px;">
+            Conformément à la Loi n° 2008-12 sur la protection des données à
+            caractère personnel, vous disposez d'un droit d'accès, de
+            rectification et d'opposition sur vos données. Pour l'exercer,
+            contactez [contact CDP Luxe Optique].
+        </div>
+    </template>
+
+</odoo>

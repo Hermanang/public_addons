@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Héritage QWeb du bon de commande / devis sale.order.
+      Ajoute la case pré-imprimée de consentement au suivi client
+      (FR-16, MINEUR-2, story 15.1 § AC4).
+    -->
+    <template id="report_saleorder_document_inherit_consent"
+              inherit_id="sale.report_saleorder_document"
+              name="Bon de commande — Consentement suivi optique">
+        <xpath expr="//div[@id='total']" position="after">
+            <div class="mt-4" name="optical_followup_consent_block">
+                <div style="border: 1px solid #333; padding: 8px; margin-top: 10px;">
+                    <p style="margin: 0 0 6px 0;">
+                        <span style="font-size: 14px;">☐</span>
+                        J'accepte de recevoir des messages de suivi (bilan de
+                        confort, entretien, renouvellement) par email, SMS ou
+                        WhatsApp. Je peux m'y opposer à tout moment sur simple
+                        demande.
+                    </p>
+                    <p style="margin: 10px 0 4px 0;">
+                        Signature du client : ________________________________________
+                    </p>
+                    <p style="margin: 6px 0 0 0; font-size: 10px; color: #555;">
+                        Pour un client mineur, signature obligatoire du parent
+                        ou représentant légal. Le mineur peut co-signer
+                        (recommandé).
+                    </p>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

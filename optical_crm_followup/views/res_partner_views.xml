@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+      Extension du formulaire partner : section "Fidélisation & consentement"
+      Insérée après le groupe optique livré par le module optical.
+    -->
+    <record id="res_partner_view_form_followup" model="ir.ui.view">
+        <field name="name">res.partner.form.followup</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="optical.res_partner_view_form_optical"/>
+        <field name="arch" type="xml">
+            <!-- Story 17-3 AC-A.3 : bouton header manager -->
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button name="action_optical_followup_confirm_majority"
+                            type="object"
+                            string="Confirmer consentement majeur"
+                            class="oe_highlight"
+                            groups="optical.group_optical_manager"
+                            invisible="not optical_followup_majority_request_date or not optical_followup_consent_by_legal_rep or optical_anonymized"
+                            icon="fa-birthday-cake"/>
+                    <button name="action_optical_followup_data_export"
+                            type="object"
+                            string="Générer extrait droit d'accès"
+                            groups="optical.group_optical_manager"
+                            invisible="is_company"
+                            icon="fa-file-text-o"/>
+                </header>
+            </xpath>
+            <xpath expr="//group[@name='optical']" position="after">
+                <group string="Fidélisation &amp; consentement" name="optical_followup">
+                    <field name="optical_followup_state" widget="badge"
+                           decoration-success="optical_followup_state == 'active'"
+                           decoration-info="optical_followup_state == 'done'"
+                           decoration-warning="optical_followup_state == 'paused'"
+                           decoration-danger="optical_followup_state == 'optout'"
+                           decoration-muted="optical_followup_state == 'never'"/>
+                    <field name="optical_followup_consent"/>
+                    <field name="optical_followup_consent_date"
+                           invisible="not optical_followup_consent"/>
+                    <field name="optical_followup_consent_by_id"
+                           invisible="not optical_followup_consent"/>
+                    <field name="optical_followup_consent_by_legal_rep"
+                           invisible="not optical_followup_consent"/>
+                    <field name="optical_followup_optout"/>
+                    <field name="optical_followup_optout_date"
+                           invisible="not optical_followup_optout"/>
+                    <field name="optical_followup_optout_reason"
+                           invisible="not optical_followup_optout"/>
+                    <!-- Story 17-3 : traces continuité RH + majorité + anonymisation -->
+                    <field name="optical_followup_majority_request_date"
+                           invisible="not optical_followup_majority_request_date"/>
+                    <field name="optical_followup_previous_referent_user_id"
+                           invisible="not optical_followup_previous_referent_user_id"/>
+                    <!-- Story 17-2 AC-5.1 : référent effectif (compute stored) -->
+                    <field name="optical_referent_user_id"
+                           groups="optical.group_optical_manager"/>
+                    <field name="optical_anonymized"
+                           invisible="not optical_anonymized"/>
+                    <field name="optical_anonymized_date"
+                           invisible="not optical_anonymized"/>
+                    <!-- Story 18-1 : tier client configurable + override manager -->
+                    <field name="optical_customer_tier_override_id"
+                           groups="optical.group_optical_manager"
+                           options="{'no_create': True}"/>
+                    <field name="optical_customer_tier_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

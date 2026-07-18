@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Plan "Étapes VIP additionnelles" — 2 étapes injectées en plus du
+            plan principal quand le partner atteint le tier VIP. Story 17-1
+            AC-4/AC-5, refondu Story 18-1 (réservation par tier_id).
+
+            NOTE architecturale (Story 18-1 AC-4.2) : ce plan porte un
+            ``tier_id`` (tier_vip) ⇒ il n'est JAMAIS retenu par
+            _select_for_sale_order (domaine tier_id = False). Ses étapes sont
+            injectées en supplément par _inject_tier_steps pour tout client
+            dont le tier a une séquence >= celle de tier_vip (sémantique
+            cumulative). L'ancien couplage par XML ID (_VIP_PLAN_XML_ID) et le
+            flag vip_only sur les étapes sont supprimés.
+
+            noupdate="1" garantit qu'un responsable peut désactiver le plan
+            (active=False) sans qu'un upgrade module ne le ré-active.
+        -->
+
+        <record id="plan_vip_extra" model="optical.followup.plan">
+            <field name="name">Étapes VIP additionnelles</field>
+            <field name="active">True</field>
+            <field name="sequence">100</field>
+            <field name="duration_months">12</field>
+            <field name="optical_type_trigger">any</field>
+            <field name="tier_id" ref="tier_vip"/>
+        </record>
+
+        <!--
+            Étape 1 : Attention anniversaire (Appel).
+            offset_days=0 : valeur symbolique — la date effective est calculée
+            dynamiquement dans _inject_tier_steps via _next_birthday_occurrence
+            (prochaine occurrence de partner.birthdate strictement après
+            delivered_date, avec repli 28-02 pour un anniversaire 29-02).
+        -->
+        <record id="plan_vip_extra_step_birthday" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_vip_extra"/>
+            <field name="sequence">10</field>
+            <field name="name">Attention anniversaire</field>
+            <field name="offset_days">0</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="suggested_channel">call</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Attention anniversaire</field>
+            <field name="description">Appel personnalisé à la prochaine occurrence de l'anniversaire du client VIP (attention premium, voeux, offre commerciale ponctuelle si opportun).</field>
+            <field name="birthday_step">True</field>
+        </record>
+
+        <!--
+            Étape 2 : Bilan personnalisé M+12 (Email).
+            offset_days=365 : date_planned = delivered_date + 365 j.
+        -->
+        <record id="plan_vip_extra_step_m12" model="optical.followup.plan.step">
+            <field name="plan_id" ref="plan_vip_extra"/>
+            <field name="sequence">20</field>
+            <field name="name">M+12 — Bilan personnalisé</field>
+            <field name="offset_days">365</field>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="suggested_channel">email</field>
+            <field name="suggested_role">advisor</field>
+            <field name="objective">Bilan personnalisé annuel</field>
+            <field name="description">Bilan personnalisé approfondi pour client VIP : historique équipement, préférences, propositions premium (nouvelle collection, verres haut de gamme, forfait entretien).</field>
+            <field name="birthday_step">False</field>
+        </record>
+
+    </data>
+</odoo>

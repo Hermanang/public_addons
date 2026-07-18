@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Story 17-3 AC-E — Vues du modèle optical.followup.user.leave
+        =============================================================
+        list + form + calendar (mode month) + search.
+        Menu supervision "Absences programmées" (manager uniquement).
+    -->
+
+    <record id="view_optical_followup_user_leave_list" model="ir.ui.view">
+        <field name="name">optical.followup.user.leave.list</field>
+        <field name="model">optical.followup.user.leave</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'planned'"
+                  decoration-success="state == 'active'"
+                  decoration-muted="state == 'ended'">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="substitute_user_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="reason" optional="show"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_user_leave_form" model="ir.ui.view">
+        <field name="name">optical.followup.user.leave.form</field>
+        <field name="model">optical.followup.user.leave</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_optical_followup_leave_activate"
+                            type="object"
+                            string="Activer maintenant"
+                            invisible="state != 'planned'"
+                            class="oe_highlight"
+                            groups="optical.group_optical_manager"/>
+                    <button name="action_optical_followup_leave_end_now"
+                            type="object"
+                            string="Terminer maintenant"
+                            invisible="state != 'active'"
+                            groups="optical.group_optical_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="planned,active,ended"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id"/>
+                            <field name="substitute_user_id"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="reason"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_user_leave_calendar" model="ir.ui.view">
+        <field name="name">optical.followup.user.leave.calendar</field>
+        <field name="model">optical.followup.user.leave</field>
+        <field name="arch" type="xml">
+            <calendar string="Absences programmées"
+                      date_start="date_start"
+                      date_stop="date_end"
+                      color="user_id"
+                      mode="month">
+                <field name="user_id"/>
+                <field name="substitute_user_id"/>
+                <field name="reason"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_optical_followup_user_leave_search" model="ir.ui.view">
+        <field name="name">optical.followup.user.leave.search</field>
+        <field name="model">optical.followup.user.leave</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="user_id"/>
+                <field name="substitute_user_id"/>
+                <filter name="filter_planned" string="Planifiées"
+                        domain="[('state', '=', 'planned')]"/>
+                <filter name="filter_active" string="En cours"
+                        domain="[('state', '=', 'active')]"/>
+                <filter name="filter_ended" string="Terminées"
+                        domain="[('state', '=', 'ended')]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter name="group_by_user" string="Titulaire"
+                            context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_state" string="État"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_optical_followup_user_leave" model="ir.actions.act_window">
+        <field name="name">Absences programmées</field>
+        <field name="res_model">optical.followup.user.leave</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="search_view_id" ref="view_optical_followup_user_leave_search"/>
+        <field name="context">{'search_default_filter_active': 1, 'search_default_filter_planned': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Aucune absence programmée</p>
+            <p>
+                Créez une absence programmée pour rediriger temporairement
+                les activités de fidélisation d'un référent vers un suppléant
+                (congé maternité, sabbatique, arrêt long, formation…).
+            </p>
+            <p>
+                À la date de début, le cron RH quotidien (06 h 00) bascule
+                automatiquement la leave en « En cours » et redistribue les
+                activités. À la date de fin, elle revient au titulaire.
+            </p>
+        </field>
+    </record>
+
+</odoo>

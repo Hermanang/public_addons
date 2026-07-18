@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!--
+            Story 17-3 AC-A + AC-E — Cron quotidien RH (06 h 00 UTC)
+            =========================================================
+            Passe unique fusionnant les bascules RH quotidiennes :
+              1. Bascule leaves planned → active (date_start <= today)
+              2. Bascule leaves active → ended (date_end < today)
+              3. Envoi mail renouvellement consentement à J+18 ans
+              4. Pause auto schedules majority_pending à J+90 j
+            Chaque passe est isolée en savepoint (résilience).
+        -->
+        <record id="ir_cron_optical_followup_daily_rh" model="ir.cron">
+            <field name="name">Optical fidélisation — cron RH quotidien (leaves + majority)</field>
+            <field name="model_id" ref="model_optical_followup_schedule"/>
+            <field name="state">code</field>
+            <field name="code">model._run_daily_rh_cron()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.utcnow().replace(hour=6, minute=0, second=0, microsecond=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="active">True</field>
+        </record>
+
+        <!--
+            Story 17-3 AC-B — Cron mensuel anonymisation cyclique
+            =======================================================
+            LIVRÉ ``active=False`` — Défaut D-COMPLIANCE-CRON-DRYRUN.
+            L'administrateur doit exécuter d'abord :
+              env['res.partner']._anonymize_dry_run()
+            pour valider le périmètre avant d'activer manuellement le cron.
+        -->
+        <record id="ir_cron_optical_followup_monthly_anonymize" model="ir.cron">
+            <field name="name">Optical fidélisation — anonymisation mensuelle (DRY-RUN par défaut, à activer)</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model._run_monthly_anonymize()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">months</field>
+            <field name="nextcall" eval="(DateTime.utcnow().replace(day=1, hour=3, minute=0, second=0, microsecond=0) + relativedelta(months=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="active">False</field>
+        </record>
+
+    </data>
+</odoo>

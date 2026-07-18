@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tier client — liste (Story 18-1 AC-1.2) -->
+    <record id="view_optical_customer_tier_tree" model="ir.ui.view">
+        <field name="name">optical.customer.tier.tree</field>
+        <field name="model">optical.customer.tier</field>
+        <field name="arch" type="xml">
+            <list string="Tiers clients" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code" optional="show"/>
+                <field name="threshold_fcfa"/>
+                <!-- Défaut en lecture seule : la bascule passe par le bouton
+                     dédié (basculement atomique — contrainte stricte AC-1.3). -->
+                <field name="is_default" readonly="1"/>
+                <button name="action_set_as_default" type="object"
+                        icon="fa-star-o" title="Définir comme tier par défaut"
+                        invisible="is_default"/>
+                <field name="color" widget="color_picker" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Tier client — formulaire -->
+    <record id="view_optical_customer_tier_form" model="ir.ui.view">
+        <field name="name">optical.customer.tier.form</field>
+        <field name="model">optical.customer.tier</field>
+        <field name="arch" type="xml">
+            <form string="Tier client">
+                <header>
+                    <button name="action_set_as_default" type="object"
+                            string="Définir comme tier par défaut"
+                            invisible="is_default"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivé" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="threshold_fcfa"
+                                   invisible="is_default"/>
+                            <field name="is_default"/>
+                            <field name="color" widget="color_picker"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <p class="text-muted">
+                        Le tier « par défaut » s'applique aux clients n'atteignant
+                        aucun seuil (son seuil est ignoré). Le rang détermine la
+                        priorité : un tier supérieur hérite des étapes de suivi
+                        réservées aux tiers inférieurs.
+                    </p>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_optical_customer_tier" model="ir.actions.act_window">
+        <field name="name">Tiers clients</field>
+        <field name="res_model">optical.customer.tier</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre premier tier client
+            </p>
+            <p>
+                Définissez vos paliers de fidélisation (nom, seuil de CA,
+                étapes de suivi réservées). La bascule d'un client vers un
+                tier est automatique dès que son CA cumulé atteint le seuil.
+            </p>
+        </field>
+    </record>
+
+</odoo>
