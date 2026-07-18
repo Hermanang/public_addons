@@ -10,9 +10,12 @@
           clients sans référent) livré par 16.2 / 17-3 / 17-2.
     -->
 
-    <!-- Menu top-level : visible par tous les utilisateurs optiques -->
+    <!-- Menu top-level : visible par tous les utilisateurs optiques.
+         web_icon = icône affichée dans le lanceur d'apps et la barre MuK
+         (la liste des Apps utilise static/description/icon.png séparément). -->
     <menuitem id="menu_optical_followup_root"
               name="Fidélisation"
+              web_icon="optical_crm_followup,static/description/icon.png"
               sequence="60"
               groups="optical.group_optical_user"/>
 
