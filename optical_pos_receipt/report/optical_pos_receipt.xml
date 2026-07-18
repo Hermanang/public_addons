@@ -308,14 +308,17 @@
             <div class="lo-rcpt-dash">--------------------------------</div>
 
             <!-- ====================================================== -->
-            <!-- MONTURE ACHETÉE                                         -->
+            <!-- ÉQUIPEMENT ACHETÉ                                       -->
+            <!-- Titre "MONTURE ACHETÉE" si une monture est vendue,      -->
+            <!-- sinon "ÉQUIPEMENT ACHETÉ" (cas verres seuls : le client -->
+            <!-- apporte sa propre monture).                             -->
             <!-- ====================================================== -->
-            <div class="lo-rcpt-section">MONTURE ACHETÉE</div>
+            <div class="lo-rcpt-section" t-out="'MONTURE ACHETÉE' if frame_paid else 'ÉQUIPEMENT ACHETÉ'"/>
             <div class="lo-rcpt-line" t-if="frame_paid">
                 <span class="lbl">Monture : </span>
                 <t t-out="frame_paid[:1].product_id.display_name or ''"/>
             </div>
-            <div class="lo-rcpt-line">
+            <div class="lo-rcpt-line" t-if="doc.prescription_vision_type or lens_paid">
                 <span class="lbl">Type de verres : </span>
                 <t t-if="doc.prescription_vision_type">
                     <span t-field="doc.prescription_vision_type"/>
