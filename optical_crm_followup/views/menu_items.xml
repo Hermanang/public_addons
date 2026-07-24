@@ -24,7 +24,7 @@
          contrairement à la page Apps (admin only + CSS retiré au rendu). -->
     <record id="action_optical_followup_guide" model="ir.actions.act_url">
         <field name="name">Guide utilisateur — Fidélisation</field>
-        <field name="url">/optical_crm_followup/static/description/index.html</field>
+        <field name="url">/optical_crm_followup/guide</field>
         <field name="target">new</field>
     </record>
 
