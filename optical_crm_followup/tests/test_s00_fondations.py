@@ -365,9 +365,15 @@ class TestFondations(TransactionCase):
         expected_manager_only = [
             'optical_crm_followup.menu_optical_followup_configuration',
             'optical_crm_followup.menu_optical_followup_plans',
+        ]
+        # Menus masqués aux managers optiques V1 (2026-07-25) — restreints à
+        # base.group_system tant que la fonctionnalité n'est pas demandée par
+        # le client. Lors de la restitution : déplacer dans expected_manager_only.
+        expected_system_only = [
             'optical_crm_followup.menu_optical_followup_holiday_windows',
             'optical_crm_followup.menu_optical_followup_lunar_dates',
         ]
+        group_system = self.env.ref('base.group_system')
         for xml_id in expected_user:
             menu = self.env.ref(xml_id)
             self.assertIn(
@@ -383,6 +389,17 @@ class TestFondations(TransactionCase):
             self.assertNotIn(
                 self.group_optical_user, menu.groups_id,
                 "Menu %s ne doit PAS être ouvert à group_optical_user" % xml_id,
+            )
+        for xml_id in expected_system_only:
+            menu = self.env.ref(xml_id)
+            self.assertIn(
+                group_system, menu.groups_id,
+                "Menu %s devrait être restreint à base.group_system" % xml_id,
+            )
+            self.assertNotIn(
+                self.group_optical_manager, menu.groups_id,
+                "Menu %s ne doit PAS être ouvert au manager optique tant "
+                "que la fonctionnalité n'est pas restituée" % xml_id,
             )
 
     # ------------------------------------------------------------------

@@ -67,40 +67,47 @@
         Manager uniquement. Sequence 60 (entre daily=25 et supervision=80,
         archi V1.1 § 8.4). Chaque sous-menu pointe vers son action pivot /
         list / graph selon le KPI.
+
+        NOTE 2026-07-25 : fonctionnalité non demandée par le client au moment
+        du déploiement V1. Menus restreints à `base.group_system` (admin
+        système) pour rester invisibles aux managers optiques. Pour restituer
+        aux managers : remplacer `base.group_system` par
+        `optical.group_optical_manager` sur les 5 menuitems ci-dessous puis
+        `-u optical_crm_followup`.
     -->
     <menuitem id="menu_optical_followup_dashboard"
               name="Tableau de bord direction"
               parent="menu_optical_followup_root"
               sequence="60"
-              groups="optical.group_optical_manager"/>
+              groups="base.group_system"/>
 
     <menuitem id="menu_optical_followup_kpi_contact_rate"
               name="KPI 1 - Taux de contact"
               parent="menu_optical_followup_dashboard"
               action="action_optical_followup_kpi_contact_rate"
               sequence="10"
-              groups="optical.group_optical_manager"/>
+              groups="base.group_system"/>
 
     <menuitem id="menu_optical_followup_kpi_schedule_state"
               name="KPI 2 - État des calendriers"
               parent="menu_optical_followup_dashboard"
               action="action_optical_followup_kpi_schedule_state"
               sequence="20"
-              groups="optical.group_optical_manager"/>
+              groups="base.group_system"/>
 
     <menuitem id="menu_optical_followup_kpi_renewal_basket"
               name="KPI 3 - Panier moyen renouvellement"
               parent="menu_optical_followup_dashboard"
               action="action_optical_followup_kpi_renewal_basket"
               sequence="30"
-              groups="optical.group_optical_manager"/>
+              groups="base.group_system"/>
 
     <menuitem id="menu_optical_followup_kpi_activation_rate"
               name="KPI 4 - Taux d'activation"
               parent="menu_optical_followup_dashboard"
               action="action_optical_followup_kpi_activation_rate"
               sequence="40"
-              groups="optical.group_optical_manager"/>
+              groups="base.group_system"/>
 
     <!-- Vues de supervision : responsables uniquement (Story 16.2 — R4 archi) -->
     <menuitem id="menu_optical_followup_supervision"
@@ -162,18 +169,24 @@
               sequence="15"
               groups="optical.group_optical_manager"/>
 
+    <!--
+        NOTE 2026-07-25 : les deux menus ci-dessous ("Fenêtres de vigilance"
+        et "Table lunaire") sont restreints à `base.group_system` — non
+        demandés par le client V1. Pour restituer aux managers optiques :
+        remplacer `base.group_system` par `optical.group_optical_manager`.
+    -->
     <menuitem id="menu_optical_followup_holiday_windows"
               name="Fenêtres de vigilance"
               parent="menu_optical_followup_configuration"
               action="action_optical_followup_holiday_window"
               sequence="20"
-              groups="optical.group_optical_manager"/>
+              groups="base.group_system"/>
 
     <menuitem id="menu_optical_followup_lunar_dates"
               name="Table lunaire"
               parent="menu_optical_followup_configuration"
               action="action_optical_followup_lunar_date"
               sequence="30"
-              groups="optical.group_optical_manager"/>
+              groups="base.group_system"/>
 
 </odoo>
