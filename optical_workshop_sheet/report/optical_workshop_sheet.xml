@@ -34,11 +34,14 @@
     <!-- Variables attendues : frame_line, lens_line, presc              -->
     <!-- ============================================================== -->
     <template id="report_optical_workshop_sheet_monture_block">
-        <!-- Traitements du produit verres (matching insensible à la casse) -->
-        <t t-set="lens_treatments"
-           t-value="[t.lower().strip() for t in (lens_line[:1].product_id.lens_treatment_ids.mapped('name') if lens_line else [])]"/>
+        <!-- Traitements REELLEMENT commandés sur le verre (snapshot S19-5) —
+             base + complément fusionnés. On ne lit PAS `product_id.lens_treatment_ids`
+             car le template produit peut évoluer après la vente ; le snapshot
+             fige la vraie composition au moment de la commande. -->
+        <t t-set="ordered_treatment_ids"
+           t-value="(lens_line[:1].lens_base_treatment_ordered_ids | lens_line[:1].lens_extra_treatment_ordered_ids).ids if lens_line else []"/>
 
-        <!-- Ligne : Marque / Référence -->
+        <!-- Ligne : Marque / Référence (default_code, fallback [N/A]) -->
         <table class="lo-ws-line-tbl">
             <tr>
                 <td class="lo-ws-title-red" style="width: 50%;">
@@ -47,7 +50,7 @@
                 </td>
                 <td class="lo-ws-title-red" style="width: 50%; text-align: left;">
                     <strong>Référence : </strong>
-                    <t t-if="frame_line" t-out="(frame_line[:1].product_id.display_name or '').title()"/>
+                    <t t-if="frame_line" t-out="frame_line[:1].product_id.default_code or '[N/A]'"/>
                 </td>
             </tr>
         </table>
@@ -66,49 +69,37 @@
             </span>
         </div>
 
-        <!-- Traitement des verres (8 checkboxes fixes en 3 colonnes comme PDF) -->
+        <!-- Traitement des verres (checkboxes générées depuis le référentiel
+             optical.lens.treatment, 3 colonnes, ordre séquence puis nom).
+             Chaque case est cochée si le traitement est dans le snapshot du
+             verre commandé (base OU complément). Ajouter un traitement au
+             catalogue = nouvelle case sur la fiche automatiquement.
+             Fin des libellés hardcodés & fragile matching de strings. -->
         <div class="lo-ws-treatments">
             <strong>Traitement des verres :</strong>
+            <t t-set="all_treatments"
+               t-value="doc.env['optical.lens.treatment'].sudo().search([], order='sequence, name')"/>
+            <t t-set="cols_per_row" t-value="3"/>
+            <t t-set="rows_needed"
+               t-value="(len(all_treatments) + cols_per_row - 1) // cols_per_row"/>
             <table class="lo-ws-treat-tbl">
-                <tr>
-                    <td>&#160;</td>
-                    <td>
-                        <span t-out="'☒' if 'photogray anti reflet' in lens_treatments else '☐'"/>
-                        Photogray anti reflet
-                    </td>
-                    <td>
-                        <span t-out="'☒' if 'photogray anti reflet blue-cut' in lens_treatments else '☐'"/>
-                        Photogray anti reflet blue-cut
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span t-out="'☒' if 'photogray anti reflet bleu' in lens_treatments else '☐'"/>
-                        Photogray anti reflet bleu
-                    </td>
-                    <td>
-                        <span t-out="'☒' if 'blanc anti reflet' in lens_treatments else '☐'"/>
-                        Blanc anti reflet
-                    </td>
-                    <td>
-                        <span t-out="'☒' if 'photogray anti reflet aminci' in lens_treatments else '☐'"/>
-                        photogray anti reflet aminci
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span t-out="'☒' if 'blanc aminci' in lens_treatments else '☐'"/>
-                        Blanc aminci
-                    </td>
-                    <td>
-                        <span t-out="'☒' if 'photogray anti reflet teinté' in lens_treatments else '☐'"/>
-                        Photogray anti reflet teinté
-                    </td>
-                    <td>
-                        <span t-out="'☒' if 'blanc anti reflet bleu' in lens_treatments else '☐'"/>
-                        blanc anti reflet bleu
-                    </td>
-                </tr>
+                <t t-foreach="range(rows_needed)" t-as="row_idx">
+                    <tr>
+                        <t t-foreach="range(cols_per_row)" t-as="col_idx">
+                            <t t-set="treat_idx" t-value="row_idx * cols_per_row + col_idx"/>
+                            <t t-if="treat_idx &lt; len(all_treatments)">
+                                <t t-set="treat" t-value="all_treatments[treat_idx]"/>
+                                <td>
+                                    <span t-out="'☒' if treat.id in ordered_treatment_ids else '☐'"/>
+                                    <t t-out="treat.name"/>
+                                </td>
+                            </t>
+                            <t t-else="">
+                                <td>&#160;</td>
+                            </t>
+                        </t>
+                    </tr>
+                </t>
             </table>
         </div>
 
@@ -159,7 +150,11 @@
             </tbody>
         </table>
 
-        <!-- Tableau technique monture (cases vides, remplies à la main atelier) -->
+        <!-- Tableau technique monture — HBOX + DBL auto-remplis depuis la
+             fiche monture (lens_width / bridge_width en mm) ; les 5 autres
+             cellules (VBOX / FH / PANTO / VERTEX / Base Curve) restent vides,
+             remplies à la main à l'atelier (mesures fitting client ou specs
+             non stockées côté produit). -->
         <table class="lo-ws-frame-tech">
             <thead>
                 <tr>
@@ -174,9 +169,15 @@
             </thead>
             <tbody>
                 <tr>
+                    <td>
+                        <t t-if="frame_line and frame_line[:1].product_id.lens_width"
+                           t-out="frame_line[:1].product_id.lens_width"/>
+                    </td>
                     <td>&#160;</td>
-                    <td>&#160;</td>
-                    <td>&#160;</td>
+                    <td>
+                        <t t-if="frame_line and frame_line[:1].product_id.bridge_width"
+                           t-out="frame_line[:1].product_id.bridge_width"/>
+                    </td>
                     <td>&#160;</td>
                     <td>&#160;</td>
                     <td>&#160;</td>

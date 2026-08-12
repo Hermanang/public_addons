@@ -1,6 +1,6 @@
 {
     'name': 'Optique - Fiche de montage',
-    'version': '18.0.1.0.0',
+    'version': '18.0.3.0.0',
     'category': 'Optique/Bridge',
     'summary': "Fiche de montage A4 pour l'atelier (devis d'optique)",
     'description': """
@@ -15,11 +15,13 @@ au format A4, destinée à l'atelier de montage :
 * Meta : Dossier, Date commande, Date livraison, Vendeur, Boutique
 * Section Monture achetée :
   - Marque + Référence
-  - Type de verres (3 cases : loin/près/progressifs)
-  - Traitement des verres (8 cases fixes cochées par matching nom)
+  - Type de verres (3 cases : loin/près/progressifs) — depuis prescription.vision_type
+  - Traitement des verres (checkboxes dynamiques depuis référentiel
+    optical.lens.treatment, cochées si présent sur snapshot verre S19-5)
   - EP / EP OD / EP OG (écart pupillaire)
   - Tableau OD/OG × SPH/CYCL/AXE/ADD/PRISME/BASE
-  - Tableau HBOX/VBOX/DBL/FH/PANTO/VERTEX/Base Curve (cases vides, remplies à la main)
+  - Tableau HBOX/VBOX/DBL/FH/PANTO/VERTEX/Base Curve — HBOX + DBL auto-remplis
+    depuis lens_width / bridge_width de la fiche monture, autres cases vides
 * Section Monture offerte (identique, si lignes is_gift)
 * Bloc paiements auto :
   - Prix (amount_total)
