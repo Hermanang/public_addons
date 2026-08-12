@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -82,6 +82,22 @@ class SaleOrder(models.Model):
         related='pec_id.state',
         string="État PEC",
     )
+    # Œil "en attente" posé quand le vendeur ouvre le wizard verre via
+    # + Verre OD / + Verre OG. Lu par `_update_order_line_info` au moment
+    # où le wizard demande la création de la SOL (le dispatch produit→SOL
+    # ne propage pas le contexte œil de l'action window). Le nom conserve
+    # le préfixe historique `catalog` pour éviter une migration de schéma.
+    optical_catalog_pending_eye_side = fields.Selection(
+        [('od', 'OD'), ('og', 'OG')],
+        string="Œil en cours (wizard verre)",
+        copy=False,
+        help=(
+            "Interne : œil (OD/OG) associé au prochain clic '+' dans le "
+            "wizard sélection verre. Écrit par les contrôles + Verre OD/OG "
+            "et consommé par `_update_order_line_info` pour recopier "
+            "`eye_side` + snapshot S19-5 sur la ligne créée."
+        ),
+    )
 
     @api.depends('policy_id')
     def _compute_has_insurance(self):
@@ -127,6 +143,168 @@ class SaleOrder(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    # ==================================================================
+    # Sélection verre correcteur — wizard modale (Story 19-7 + S19-9)
+    # ==================================================================
+    # Le vendeur clique « + Verre OD » ou « + Verre OG » dans le footer des
+    # lignes de commande → wizard `optical.lens.wizard` s'ouvre en modale
+    # avec sidebar filtres à gauche + cards candidats à droite. Clic « + »
+    # sur une card → SOL créée avec eye_side + snapshot 10 champs (S19-5)
+    # via `_update_order_line_info`.
+    #
+    # Historique : S19-7 avait tenté le catalogue Odoo natif
+    # (ProductCatalogMixin + product_view_kanban_catalog) — abandonné en
+    # S19-9 après retour utilisateur (UX peu adaptée aux critères optiques
+    # multi-facettes ; le wizard offre un contrôle plus fin).
+
+    def action_add_lens_od(self):
+        """Contrôle footer order_line : ajouter un verre pour l'œil droit."""
+        return self._action_add_lens_side('od')
+
+    def action_add_lens_og(self):
+        """Contrôle footer order_line : ajouter un verre pour l'œil gauche."""
+        return self._action_add_lens_side('og')
+
+    def _action_add_lens_side(self, side):
+        """Ouvre le wizard `optical.lens.wizard` en modale pour un œil donné.
+
+        Effets de bord :
+        - Écrit `optical_catalog_pending_eye_side` sur la SO pour que
+          `_update_order_line_info` retrouve l'œil au clic « + » sur une card.
+        - Cherche le dernier wizard de cette SO et propage son ID en context
+          (`default_carryover_from_wizard_id`) : la paire OD/OG partage les
+          mêmes caractéristiques de verre dans >95% des cas (S19-9 P1 métier),
+          seule la prescription varie — pas de re-saisie des filtres.
+
+        Refuse l'ouverture sur SO annulée (cohérence verrou S19-5).
+        """
+        self.ensure_one()
+        if self.state == 'cancel':
+            raise UserError(_(
+                "Impossible d'ajouter un verre sur une commande annulée."
+            ))
+        self.optical_catalog_pending_eye_side = side
+        side_label = dict(
+            self.env['sale.order.line']._fields['eye_side']._description_selection(self.env)
+        ).get(side, side.upper())
+        prev_wizard = self.env['optical.lens.wizard'].search(
+            [('order_id', '=', self.id)],
+            order='id desc', limit=1,
+        )
+        ctx = dict(self.env.context, dialog_size='extra-large')
+        if prev_wizard:
+            ctx['default_carryover_from_wizard_id'] = prev_wizard.id
+        wizard = self.env['optical.lens.wizard'].with_context(ctx).create({
+            'order_id': self.id,
+            'eye_side': side,
+        })
+        ctx['optical_wizard_id'] = wizard.id
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _("Ajouter un verre — Œil %s", side_label),
+            'res_model': 'optical.lens.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': ctx,
+        }
+
+    def _update_order_line_info(self, product_id, quantity, **kwargs):
+        """Override : gère eye_side + snapshot 10 champs pour verres correcteurs.
+
+        Le flow lens s'active si :
+        - Le produit est un verre correcteur (product_tmpl_id.optical_type='lens')
+        - ET le vendeur a ouvert le wizard verre via + Verre OD/OG
+          (marqueur `optical_catalog_pending_eye_side` sur la SO)
+
+        Sinon (produit non-lens OU dispatch depuis un flow standard),
+        comportement natif Odoo.
+
+        Différences vs super :
+        - Filtre les SOL existantes par `product_id + eye_side` (un même produit
+          peut être ajouté 2× : une fois OD, une fois OG — lignes distinctes)
+        - Sur create, recopie les 10 snapshot fields depuis product.template
+          (S19-5) + eye_side, sinon la contrainte
+          `_check_eye_side_required_for_lens` (S19-5 AC-2) rejette
+        - Sur update qty, préserve le snapshot existant (S19-5 lock write)
+        """
+        product = self.env['product.product'].browse(product_id)
+        eye_side = self.optical_catalog_pending_eye_side
+        is_lens = product.product_tmpl_id.optical_type == 'lens'
+
+        if not (is_lens and eye_side):
+            # Produit standard OU catalogue ouvert sans mode lens → flow natif
+            return super()._update_order_line_info(product_id, quantity, **kwargs)
+
+        SOL = self.env['sale.order.line']
+        sol = self.order_line.filtered(
+            lambda line: line.product_id.id == product_id and line.eye_side == eye_side
+        )
+        if sol:
+            # Ligne existante pour ce produit+œil : ajuste qty (respecte lock S19-5
+            # qui autorise `product_uom_qty` — cf. _LOCK_FIELDS exclusif snapshot)
+            if quantity > 0:
+                sol.product_uom_qty = quantity
+            elif self.state in ('draft', 'sent'):
+                price_unit = self.pricelist_id._get_product_price(
+                    product=sol.product_id,
+                    quantity=1.0,
+                    currency=self.currency_id,
+                    date=self.date_order,
+                    **kwargs,
+                )
+                sol.unlink()
+                return price_unit
+            else:
+                # Post-confirmation : refuser le zéroage silencieux via le
+                # wizard — cohérent avec l'esprit du verrou S19-5. Le
+                # manager doit intervenir sur la SOL directement.
+                raise UserError(_(
+                    "Impossible de retirer une ligne verre confirmée depuis "
+                    "le wizard. Contacter un responsable pour modifier "
+                    "la ligne directement."
+                ))
+        elif quantity > 0:
+            tmpl = product.product_tmpl_id
+            SOL.create({
+                'order_id': self.id,
+                'product_id': product.id,
+                'product_uom_qty': quantity,
+                'sequence': (self.order_line[-1].sequence + 1) if self.order_line else 10,
+                'eye_side': eye_side,
+                # Description Format 1 (S19-9) — bloc structuré à puces avec
+                # œil, design, matériau, indice, traitements, teinte, épaisseur,
+                # marque. Remplace le simple nom produit sur devis / facture PDF.
+                'name': tmpl._get_lens_default_description(eye_side=eye_side),
+                'lens_design_ordered': tmpl.lens_design or False,
+                'lens_material_ordered': tmpl.lens_material or False,
+                'lens_index_ordered_id': tmpl.lens_index_id.id or False,
+                'lens_base_treatment_ordered_ids': [Command.set(
+                    tmpl.lens_treatment_ids.filtered(
+                        lambda t: t.treatment_type == 'base'
+                    ).ids
+                )],
+                'lens_extra_treatment_ordered_ids': [Command.set(
+                    tmpl.lens_treatment_ids.filtered(
+                        lambda t: t.treatment_type == 'complement'
+                    ).ids
+                )],
+                'lens_tint_ordered_ids': [Command.set(tmpl.lens_tint_ids.ids)],
+                'lens_thickness_ordered_id': tmpl.lens_thickness_id.id or False,
+                'lens_brand_ordered_id': tmpl.product_brand_id.id or False,
+            })
+        else:
+            # quantity=0 sans ligne existante : renvoie prix catalogue
+            return self.pricelist_id._get_product_price(
+                product=product,
+                quantity=1.0,
+                currency=self.currency_id,
+                date=self.date_order,
+                **kwargs,
+            )
+
+        return sol._get_discounted_price() if sol else 0.0
 
     def action_view_pec(self):
         """Ouvrir la PEC liée depuis le smart button."""

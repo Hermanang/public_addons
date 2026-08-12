@@ -34,6 +34,10 @@ def pre_init_hook(env):
     else:
         _logger.info("optical pre_init_hook: pas de relations partenaires détectées (skip)")
 
+    # Story 19-2 : migration lens_index Float → M2O (idempotente)
+    from .migrations.migrate_lens_index import pre_migrate_lens_index_float_to_m2o
+    pre_migrate_lens_index_float_to_m2o(cr)
+
 
 # ---------------------------------------------------------------------------
 

@@ -24,3 +24,7 @@ from . import test_s08_claim_sheet
 from . import test_s08_cancel_claim_sheet
 from . import test_s09_reporting
 from . import test_s11_migration
+from . import test_optical_index
+from . import test_lens_index_migration
+from . import test_s19_5_sale_order_line_snapshot
+from . import test_s19_7_lens_catalog

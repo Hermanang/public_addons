@@ -145,6 +145,25 @@
                        readonly="not parent.has_insurance or parent.state == 'cancel'"/>
                 <field name="is_insurance_manual" column_invisible="True"/>
             </xpath>
+
+            <!-- Contrôles + Verre OD / + Verre OG dans le footer natif de
+                 order_line (pattern Odoo `<control>` — même bloc que « Add
+                 product », « Add section »). Ouvrent le wizard
+                 `optical.lens.wizard` filtré sur les verres correcteurs
+                 avec eye_side pré-réglé + reprise auto des critères de la
+                 paire (S19-9). -->
+            <xpath expr="//field[@name='order_line']//list//control" position="inside">
+                <button name="action_add_lens_od"
+                        string="+ Verre OD"
+                        type="object"
+                        class="px-4 btn-link"
+                        context="{'order_id': parent.id}"/>
+                <button name="action_add_lens_og"
+                        string="+ Verre OG"
+                        type="object"
+                        class="px-4 btn-link"
+                        context="{'order_id': parent.id}"/>
+            </xpath>
         </field>
     </record>
 

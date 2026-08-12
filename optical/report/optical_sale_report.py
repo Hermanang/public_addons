@@ -114,7 +114,7 @@ class OpticalSaleReport(models.Model):
                     pt.lens_design AS lens_design,
                     pt.lens_material AS lens_material,
                     pt.lens_surface AS lens_surface,
-                    ROUND(pt.lens_index::numeric, 2)::text AS lens_index,
+                    oli.name AS lens_index,
                     (SELECT string_agg(attr.name, ', ' ORDER BY attr.name)
                      FROM optical_frame_material_product_template_rel rel
                      JOIN optical_frame_material attr ON attr.id = rel.optical_frame_material_id
@@ -153,6 +153,7 @@ class OpticalSaleReport(models.Model):
                 JOIN account_move am ON am.id = aml.move_id
                 JOIN product_product pp ON pp.id = aml.product_id
                 JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                LEFT JOIN optical_lens_index oli ON oli.id = pt.lens_index_id
                 LEFT JOIN optical_pec op ON op.id = am.pec_id
                 LEFT JOIN optical_policy opol ON opol.id = op.policy_id
                 LEFT JOIN optical_prescription oprescr ON oprescr.id = op.prescription_id

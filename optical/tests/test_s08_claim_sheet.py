@@ -346,6 +346,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
                 'product_id': product_verre_notax.id,
                 'product_uom_qty': 1,
                 'price_unit': 30000.0,
+                'eye_side': 'od',  # Story 19-5 : requis pour un verre
             }),
         ])
 
@@ -454,6 +455,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
                 'product_id': self.product_verre.id,
                 'product_uom_qty': 1,
                 'price_unit': 30000.0,
+                'eye_side': 'od',  # Story 19-5 : requis pour un verre
             }),
         ])
 
@@ -506,6 +508,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
                 'product_id': self.product_verre.id,
                 'product_uom_qty': 1,
                 'price_unit': 25000.0,
+                'eye_side': 'od',  # Story 19-5 : requis pour un verre
             }),
         ])
 
@@ -830,6 +833,7 @@ class TestClaimSheetWizard(OpticalTestCommon):
                 'product_id': product_exempt.id,
                 'product_uom_qty': 1,
                 'price_unit': 125000.0,
+                'eye_side': 'od',  # Story 19-5 : requis pour un verre
             }),
         ])
 

@@ -1,0 +1,148 @@
+/*
+ * Styles pour le wizard TransientModel `optical.lens.wizard`.
+ * Cible uniquement `.o_optical_lens_wizard` (pas d'impact hors modale).
+ *
+ * S19-9 : filtres label au-dessus (P2), cards compactes (P3),
+ * bandeau filtres actifs (T4), empty state avec CTA (P4).
+ */
+
+.modal-body .o_optical_lens_wizard,
+.o_optical_lens_wizard {
+    .o_form_sheet_bg,
+    .o_form_sheet {
+        background: var(--o-view-background-color, #f8f9fa);
+    }
+
+    .o_lens_wizard_header {
+        background: white;
+        border-radius: 6px;
+        padding: 12px 16px;
+        border: 1px solid var(--border-color, #dee2e6);
+    }
+
+    /* === Sidebar filtres — labels AU-DESSUS des inputs (P2) === */
+    .o_lens_wizard_sidebar {
+        background: white;
+        border-radius: 6px 0 0 6px;
+        padding: 12px;
+        max-height: 70vh;
+        overflow-y: auto;
+
+        .o_lens_filter {
+            margin-bottom: 10px;
+
+            .o_lens_filter_label {
+                display: block;
+                font-size: 0.78rem;
+                font-weight: 600;
+                color: #6c757d;
+                margin-bottom: 3px;
+                text-transform: none;
+                letter-spacing: 0;
+            }
+
+            /* Input plein largeur, plus d'aération verticale */
+            .o_field_widget {
+                width: 100%;
+                font-size: 0.88rem;
+            }
+
+            /* Selection / M2O : input pleine largeur */
+            .o_field_selection,
+            .o_field_many2one {
+                display: block;
+                width: 100%;
+
+                input,
+                select {
+                    width: 100%;
+                }
+            }
+
+            /* M2M tags : chips lisibles avec retour à la ligne */
+            .o_field_many2many_tags {
+                width: 100%;
+
+                .o_input_dropdown {
+                    width: 100%;
+                }
+
+                .o_tag {
+                    max-width: 100%;
+                    white-space: normal;
+                }
+            }
+        }
+    }
+
+    /* === Zone résultats === */
+    .o_lens_wizard_grid {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-left: 12px !important;
+
+        .o_kanban_view,
+        .o_kanban_renderer {
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Bandeau filtres actifs (T4) */
+        .o_lens_wizard_active_filters {
+            background-color: #f4f0f5 !important;
+            border-color: #d9c9d5 !important;
+            font-size: 0.85rem;
+        }
+
+        /* Empty state (P4) */
+        .o_lens_wizard_empty {
+            background: white;
+            border: 1px dashed var(--border-color, #dee2e6);
+            border-radius: 8px;
+
+            .fa-search {
+                opacity: 0.4;
+            }
+        }
+
+        /* === Cards compactes (P3) === */
+        .o_kanban_record {
+            background: white;
+            border: 1px solid var(--border-color, #dee2e6);
+            border-radius: 6px;
+            margin: 0 6px 8px 6px !important;
+            transition: box-shadow 0.15s ease, border-color 0.15s ease;
+            min-height: 0;  /* on retire le min-height 130px précédent */
+
+            &:hover {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+                border-color: #714b67;
+            }
+        }
+
+        .o_lens_wiz_card {
+            min-height: 0;
+
+            .badge {
+                font-size: 0.72rem;
+                padding: 0.25em 0.5em;
+            }
+
+            .fw-bold {
+                font-size: 0.92rem;
+                line-height: 1.25;
+            }
+
+            button.btn-primary {
+                background-color: #714b67;
+                border-color: #714b67;
+                white-space: nowrap;
+            }
+
+            button.btn-primary:hover {
+                background-color: #5c3d54;
+                border-color: #5c3d54;
+            }
+        }
+    }
+}

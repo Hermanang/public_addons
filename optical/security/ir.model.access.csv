@@ -5,8 +5,12 @@ access_optical_prescription_user,optical.prescription.user,model_optical_prescri
 access_optical_prescription_manager,optical.prescription.manager,model_optical_prescription,group_optical_manager,1,1,1,1
 access_optical_lens_treatment_user,optical.lens.treatment.user,model_optical_lens_treatment,group_optical_user,1,0,0,0
 access_optical_lens_treatment_manager,optical.lens.treatment.manager,model_optical_lens_treatment,group_optical_manager,1,1,1,1
+access_optical_lens_index_user,optical.lens.index.user,model_optical_lens_index,group_optical_user,1,0,0,0
+access_optical_lens_index_manager,optical.lens.index.manager,model_optical_lens_index,group_optical_manager,1,1,1,1
 access_optical_lens_tint_user,optical.lens.tint.user,model_optical_lens_tint,group_optical_user,1,0,0,0
 access_optical_lens_tint_manager,optical.lens.tint.manager,model_optical_lens_tint,group_optical_manager,1,1,1,1
+access_optical_lens_thickness_user,optical.lens.thickness.user,model_optical_lens_thickness,group_optical_user,1,0,0,0
+access_optical_lens_thickness_manager,optical.lens.thickness.manager,model_optical_lens_thickness,group_optical_manager,1,1,1,1
 access_optical_frame_material_user,optical.frame.material.user,model_optical_frame_material,group_optical_user,1,0,0,0
 access_optical_frame_material_manager,optical.frame.material.manager,model_optical_frame_material,group_optical_manager,1,1,1,1
 access_optical_frame_color_user,optical.frame.color.user,model_optical_frame_color,group_optical_user,1,0,0,0
@@ -25,3 +29,5 @@ access_optical_claim_sheet_user,optical.claim.sheet.user,model_optical_claim_she
 access_optical_claim_sheet_manager,optical.claim.sheet.manager,model_optical_claim_sheet,group_optical_manager,1,1,1,0
 access_optical_sale_report_user,optical.sale.report.user,model_optical_sale_report,group_optical_user,1,0,0,0
 access_optical_sale_report_manager,optical.sale.report.manager,model_optical_sale_report,group_optical_manager,1,0,0,0
+access_optical_lens_wizard_user,optical.lens.wizard.user,model_optical_lens_wizard,group_optical_user,1,1,1,0
+access_optical_lens_wizard_manager,optical.lens.wizard.manager,model_optical_lens_wizard,group_optical_manager,1,1,1,1

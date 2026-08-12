@@ -79,9 +79,13 @@ MODEL_MAPPING = [
     ('product.frame.usage', 'optical.frame.usage'),
     ('product.lens.treatment', 'optical.lens.treatment'),
     ('product.lens.tint', 'optical.lens.tint'),
-    # product.lens.type et product.lens.thickness ne sont PAS renommés :
-    # ces modèles n'existent pas comme optical.lens.* dans le code Python.
-    # Ils sont nettoyés dans cleanup_orphan_tables() à la place.
+    # product.lens.type n'est PAS renommé : ce modèle n'existe pas comme
+    # optical.lens.* dans le code Python.
+    # product.lens.thickness : le modèle cible optical.lens.thickness existe
+    # depuis Story 19-1, mais on ne renomme PAS la table legacy — les données
+    # sont volontairement abandonnées (perte acceptable validée en Story 11-1).
+    # Les tables et ir_model_data legacy sont nettoyés dans cleanup_orphan_tables()
+    # et le modèle optical.lens.thickness est créé vide par Odoo à l'install/upgrade.
 ]
 
 

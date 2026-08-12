@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from psycopg2 import IntegrityError
+
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 
@@ -9,18 +11,29 @@ from .common import OpticalTestCommon
 
 @tagged('post_install', '-at_install')
 class TestOpticalAttributes(OpticalTestCommon):
-    """Tests Story 4.1 — Modèles attributs optiques et configuration."""
+    """Tests Story 4.1 — Modèles attributs optiques et configuration.
+
+    Story 19-1 (2026-07-23) : ajout du modèle optical.lens.thickness au sein
+    de la famille des attributs — reprend l'ensemble des tests génériques
+    via ATTRIBUTE_MODELS + 2 tests dédiés (unicité SQL, cycle manager).
+
+    Story 19-3 (2026-07-23) : ajout du champ Selection `treatment_type` sur
+    optical.lens.treatment — 3 tests dédiés en fin de classe (définition
+    du champ, filtrage par domain base/complement/False, ACL vendeur R
+    et manager RW).
+    """
 
     ATTRIBUTE_MODELS = [
         'optical.lens.treatment',
         'optical.lens.tint',
+        'optical.lens.thickness',
         'optical.frame.material',
         'optical.frame.color',
         'optical.frame.usage',
     ]
 
     def test_create_all_attributes(self):
-        """AC #1, #3 : Création d'un attribut dans chacun des 5 modèles."""
+        """AC #1, #3 : Création d'un attribut dans chacun des 6 modèles."""
         for model_name in self.ATTRIBUTE_MODELS:
             with self.subTest(model=model_name):
                 record = self.env[model_name].create({'name': 'Test Attribut'})
@@ -146,10 +159,12 @@ class TestOpticalAttributes(OpticalTestCommon):
         )
         self.assertFalse(visible, "Le vendeur ne doit pas voir le menu Attributs")
 
-        # Vérifier aussi les 5 sous-menus enfants
+        # Vérifier aussi les 7 sous-menus enfants (Story 19-1 : épaisseurs, Story 19-2 : indices)
         sub_menu_refs = [
             'optical.menu_optical_config_attr_treatments',
+            'optical.menu_optical_config_attr_indices',
             'optical.menu_optical_config_attr_tints',
+            'optical.menu_optical_config_attr_thicknesses',
             'optical.menu_optical_config_attr_materials',
             'optical.menu_optical_config_attr_colors',
             'optical.menu_optical_config_attr_usages',
@@ -161,3 +176,90 @@ class TestOpticalAttributes(OpticalTestCommon):
                     [('id', '=', menu.id)]
                 )
                 self.assertFalse(visible, f"Le vendeur ne doit pas voir le menu {ref}")
+
+    # ------------------------------------------------------------------
+    # Story 19-1 — Tests dédiés `optical.lens.thickness`
+    # ------------------------------------------------------------------
+
+    def test_thickness_name_uniqueness(self):
+        """Story 19-1 AC-1.2 : contrainte SQL unique sur name."""
+        Model = self.env['optical.lens.thickness']
+        Model.create({'name': 'Aminci'})
+        with self.assertRaises(IntegrityError), self.env.cr.savepoint():
+            Model.create({'name': 'Aminci'})
+
+    def test_thickness_manager_can_deactivate(self):
+        """Story 19-1 AC-4.3 : le responsable peut créer puis désactiver."""
+        Model = self.env['optical.lens.thickness'].with_user(self.user_responsable)
+        record = Model.create({'name': 'Super Aminci', 'sequence': 30})
+        self.assertTrue(record.active)
+        record.write({'active': False})
+        self.assertFalse(record.active)
+        # Recherche par défaut filtre active=True → l'enregistrement disparaît
+        visible = Model.search([('name', '=', 'Super Aminci')])
+        self.assertFalse(visible)
+
+    def test_thickness_acl_non_optical_user_denied(self):
+        """Story 19-1 AC-3.3 : utilisateur sans groupe optique → AccessError en lecture."""
+        record = self.env['optical.lens.thickness'].create({'name': 'Test Refus Lecture'})
+        with self.assertRaises(AccessError):
+            record.with_user(self.user_sans_groupe).read(['name'])
+
+    # ------------------------------------------------------------------
+    # Story 19-3 — Tests dédiés `treatment_type` sur `optical.lens.treatment`
+    # ------------------------------------------------------------------
+
+    def test_treatment_type_field_definition(self):
+        """Story 19-3 AC-1.1 : le champ treatment_type est Selection avec 2 valeurs, optionnel."""
+        field = self.env['optical.lens.treatment']._fields.get('treatment_type')
+        self.assertIsNotNone(field, "Le champ treatment_type doit exister")
+        self.assertEqual(field.type, 'selection')
+        # Odoo 18 : selection peut être callable — utiliser _description_selection
+        selection = field._description_selection(self.env)
+        keys = [k for k, _ in selection]
+        self.assertIn('base', keys)
+        self.assertIn('complement', keys)
+        self.assertFalse(field.required, "treatment_type doit être required=False (cadrage Q24)")
+
+    def test_treatment_type_domain_filtering(self):
+        """Story 19-3 AC-3 : filtrage par domain base/complement/False fonctionne."""
+        Model = self.env['optical.lens.treatment']
+        t_base = Model.create({'name': 'Photochromique Test', 'treatment_type': 'base'})
+        t_complement = Model.create({'name': 'Antireflet Test S19-3', 'treatment_type': 'complement'})
+        t_none = Model.create({'name': 'Traitement Non Catégorisé Test', 'treatment_type': False})
+        # AC-3.1 — base
+        result_base = Model.search([('treatment_type', '=', 'base')])
+        self.assertIn(t_base, result_base)
+        self.assertNotIn(t_complement, result_base)
+        self.assertNotIn(t_none, result_base)
+        # AC-3.2 — complement
+        result_comp = Model.search([('treatment_type', '=', 'complement')])
+        self.assertIn(t_complement, result_comp)
+        self.assertNotIn(t_base, result_comp)
+        self.assertNotIn(t_none, result_comp)
+        # AC-3.3 — non catégorisé (t_none doit remonter — d'autres fixtures peuvent
+        # aussi être non-catégorisées, on n'assert que la présence de t_none).
+        # En revanche t_base et t_complement (treatment_type != False) doivent
+        # être exclus — garde-fou contre un bug type « domaine False = tout ».
+        result_none = Model.search([('treatment_type', '=', False)])
+        self.assertIn(t_none, result_none)
+        self.assertNotIn(t_base, result_none)
+        self.assertNotIn(t_complement, result_none)
+
+    def test_treatment_type_vendor_readonly(self):
+        """Story 19-3 AC-1.3 + AC-1.4 : le manager crée+modifie, le vendeur lit seulement."""
+        # AC-1.3 : le manager crée avec treatment_type puis bascule complement → base
+        Model = self.env['optical.lens.treatment'].with_user(self.user_responsable)
+        record = Model.create({
+            'name': 'Traitement Test Vendeur',
+            'treatment_type': 'complement',
+        })
+        self.assertEqual(record.treatment_type, 'complement')
+        record.write({'treatment_type': 'base'})
+        self.assertEqual(record.treatment_type, 'base')
+        # AC-1.4 : lecture vendeur autorisée (ACL user = read only)
+        data = record.with_user(self.user_vendeur).read(['treatment_type'])
+        self.assertEqual(data[0]['treatment_type'], 'base')
+        # AC-1.4 : écriture vendeur refusée (ACL générique — pas de règle par champ)
+        with self.assertRaises(AccessError):
+            record.with_user(self.user_vendeur).write({'treatment_type': 'complement'})

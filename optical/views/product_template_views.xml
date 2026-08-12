@@ -91,8 +91,10 @@
                             <field name="lens_design"/>
                             <field name="lens_surface"/>
                             <field name="lens_material"/>
-                            <field name="lens_index"/>
+                            <field name="lens_index_id"/>
                             <field name="lens_diameter"/>
+                            <field name="lens_thickness_id"/>
+                            <field name="product_brand_id"/>
                         </group>
                     </group>
                     <group string="Traitements et teintes">

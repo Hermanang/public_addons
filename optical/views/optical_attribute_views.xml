@@ -12,6 +12,7 @@
             <list string="Traitements verres" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name="treatment_type"/>
                 <field name="color" widget="color_picker"/>
             </list>
         </field>
@@ -27,6 +28,7 @@
                         <h1><field name="name" placeholder="Nom du traitement"/></h1>
                     </div>
                     <group>
+                        <field name="treatment_type"/>
                         <field name="sequence"/>
                         <field name="color" widget="color_picker"/>
                         <field name="active"/>
@@ -43,6 +45,55 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Créer un traitement de verre
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Indice de réfraction (optical.lens.index)                    -->
+    <!-- Divergence pattern : _order='value' croissant, pas de color  -->
+    <!-- ============================================================ -->
+
+    <record id="optical_lens_index_view_list" model="ir.ui.view">
+        <field name="name">optical.lens.index.list</field>
+        <field name="model">optical.lens.index</field>
+        <field name="arch" type="xml">
+            <!-- Pas de widget="handle" sur sequence : _order='value' → drag&drop
+                 n'aurait aucun effet sur l'ordre affiché (tri numérique fixe). -->
+            <list string="Indices verres" editable="bottom">
+                <field name="name"/>
+                <field name="value"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="optical_lens_index_view_form" model="ir.ui.view">
+        <field name="name">optical.lens.index.form</field>
+        <field name="model">optical.lens.index</field>
+        <field name="arch" type="xml">
+            <form string="Indice de réfraction">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom de l'indice (ex. 1.60)"/></h1>
+                    </div>
+                    <group>
+                        <field name="value"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_lens_index_action" model="ir.actions.act_window">
+        <field name="name">Indices verres</field>
+        <field name="res_model">optical.lens.index</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un indice de réfraction
             </p>
         </field>
     </record>
@@ -89,6 +140,52 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Créer une teinte de verre
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Épaisseur de verre (optical.lens.thickness)                  -->
+    <!-- ============================================================ -->
+
+    <record id="optical_lens_thickness_view_list" model="ir.ui.view">
+        <field name="name">optical.lens.thickness.list</field>
+        <field name="model">optical.lens.thickness</field>
+        <field name="arch" type="xml">
+            <list string="Épaisseurs verres" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="optical_lens_thickness_view_form" model="ir.ui.view">
+        <field name="name">optical.lens.thickness.form</field>
+        <field name="model">optical.lens.thickness</field>
+        <field name="arch" type="xml">
+            <form string="Épaisseur verre">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nom de l'épaisseur"/></h1>
+                    </div>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="color" widget="color_picker"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="optical_lens_thickness_action" model="ir.actions.act_window">
+        <field name="name">Épaisseurs verres</field>
+        <field name="res_model">optical.lens.thickness</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer une épaisseur de verre
             </p>
         </field>
     </record>

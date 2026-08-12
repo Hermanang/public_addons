@@ -322,6 +322,7 @@ class TestPecManualAmounts(OpticalTestCommon):
                 'product_id': verre_typed.id,
                 'product_uom_qty': 1,
                 'price_unit': 30000.0,
+                'eye_side': 'od',  # Story 19-5 : requis pour un verre
             }),
         ])
 

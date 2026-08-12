@@ -38,11 +38,13 @@ class TestOpticalSaleReport(OpticalTestCommon):
             {'name': 'Anti-reflet', 'sequence': 1})
         cls.lens_tint = cls.env['optical.lens.tint'].create(
             {'name': 'Photochromique', 'sequence': 1})
+        cls.lens_index_167 = cls.env['optical.lens.index'].create(
+            {'name': '1.67', 'value': 1.67})
         cls.product_verre.product_tmpl_id.write({
             'lens_design': 'progressive',
             'lens_material': 'organic',
             'lens_surface': 'aspherical',
-            'lens_index': 1.67,
+            'lens_index_id': cls.lens_index_167.id,
             'lens_treatment_ids': [Command.set([cls.lens_treatment.id])],
             'lens_tint_ids': [Command.set([cls.lens_tint.id])],
         })

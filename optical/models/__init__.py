@@ -5,11 +5,13 @@ from . import res_partner
 from . import optical_lens_attribute
 from . import optical_frame_attribute
 from . import product_template
+from . import product_product
 from . import optical_prescription
 from . import optical_insurer_plan
 from . import optical_coverage_rule
 from . import optical_policy
 from . import sale_order
+from . import sale_order_line
 from . import optical_pec
 from . import account_move
 from . import optical_claim_sheet

@@ -69,10 +69,21 @@ class TestNFR15NonIntrusion(OpticalTestCommon):
         )
 
     def test_standard_sale_no_optical_fields_interference(self):
-        """Les champs standard de sale.order ne sont pas modifies par le module optical."""
+        """Les champs standard de sale.order ne sont pas altérés — seuls des
+        champs optical dédiés à l'intégration catalogue optique sont tolérés."""
+        # Story 19-7 refactor : catalogue Odoo natif utilisé pour picker les verres.
+        # `optical_catalog_pending_eye_side` est nécessaire pour transporter l'œil
+        # entre le clic '+ Verre OD/OG' et le RPC endpoint natif du catalogue
+        # (voir _update_order_line_info). Ce champ ne modifie AUCUN workflow standard.
+        ALLOWED_OPTICAL_FIELDS = {'optical_catalog_pending_eye_side'}
         sale_fields = self.env['sale.order'].fields_get()
-        optical_fields = [f for f in sale_fields if f.startswith('optical_') or f.startswith('x_optical_')]
-        self.assertEqual(
-            len(optical_fields), 0,
-            "Aucun champ optical ne doit etre ajoute a sale.order dans cette story"
+        optical_fields = {
+            f for f in sale_fields
+            if f.startswith('optical_') or f.startswith('x_optical_')
+        }
+        unexpected = optical_fields - ALLOWED_OPTICAL_FIELDS
+        self.assertFalse(
+            unexpected,
+            f"Champs optical inattendus sur sale.order : {unexpected}. "
+            f"Si intentionnels, ajouter à ALLOWED_OPTICAL_FIELDS avec justification."
         )
