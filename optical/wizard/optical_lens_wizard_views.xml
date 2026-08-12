@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vue form du wizard sélection verre (modale) — 2 colonnes :
+         sidebar filtres à gauche (labels au-dessus des inputs, S19-9 P2) +
+         KANBAN CARDS compactes à droite (S19-9 P3).
+         Bandeau filtres actifs (S19-9 T4) + état vide avec CTA « Créer un
+         nouveau verre » (S19-9 P4) au-dessus/à la place de la grille.
+
+         L'action window est produite par sale.order._action_add_lens_side
+         (dict inline). Le wrapping .o_optical_lens_wizard permet le CSS custom. -->
+    <record id="view_optical_lens_wizard_form" model="ir.ui.view">
+        <field name="name">optical.lens.wizard.form</field>
+        <field name="model">optical.lens.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sélection verre correcteur" class="o_optical_lens_wizard">
+                <sheet>
+                    <!-- Bandeau haut : contexte SO + œil + recherche + compteur -->
+                    <div class="o_lens_wizard_header d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center">
+                            <field name="order_id" invisible="1"/>
+                            <field name="active_filter_summary" invisible="1"/>
+                            <div>
+                                <div class="text-muted small">Ajouter un verre pour</div>
+                                <div class="fw-bold">
+                                    <field name="partner_display" readonly="1" nolabel="1" class="oe_inline"/>
+                                    · Œil
+                                    <field name="eye_side" widget="radio" options="{'horizontal': true}"
+                                           nolabel="1" class="oe_inline ms-2"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge text-bg-primary me-3">
+                                <field name="candidate_count" readonly="1" nolabel="1"/> verre(s)
+                            </span>
+                            <field name="search_text" placeholder="🔍 Nom, réf…"
+                                   nolabel="1" class="oe_inline" style="width: 220px;"/>
+                        </div>
+                    </div>
+
+                    <!-- Récap verres déjà sur la commande (S19-9f) — visible
+                         dès qu'au moins une SOL verre existe, groupée OD/OG.
+                         Le vendeur voit d'un coup d'œil ce qui est déjà là
+                         sans devoir fermer la modale. -->
+                    <div class="o_lens_wizard_recap alert alert-success mb-2 py-2 px-3 d-flex align-items-center flex-wrap"
+                         invisible="not existing_lens_lines_summary">
+                        <i class="fa fa-check-circle text-success me-2"/>
+                        <span class="fw-bold me-2">
+                            <field name="existing_lens_lines_count" readonly="1" nolabel="1" class="oe_inline"/> verre(s) sur la commande :
+                        </span>
+                        <span class="text-body">
+                            <field name="existing_lens_lines_summary" readonly="1" nolabel="1" class="oe_inline"/>
+                        </span>
+                    </div>
+
+                    <!-- Body 2 colonnes : sidebar filtres + zone résultats -->
+                    <div class="o_lens_wizard_body row g-0">
+                        <!-- Sidebar critères (col-4) — labels AU-DESSUS des inputs (S19-9 P2) -->
+                        <aside class="o_lens_wizard_sidebar col-4 pe-3 border-end">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="fw-bold text-uppercase small text-muted">
+                                    <i class="fa fa-filter me-1"/> Critères
+                                </div>
+                                <button name="action_reset_filters" type="object"
+                                        class="btn btn-sm btn-link p-0 text-decoration-none"
+                                        invisible="not active_filter_summary">
+                                    <i class="fa fa-times me-1"/>Effacer
+                                </button>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="lens_design" class="o_lens_filter_label">Design</label>
+                                <field name="lens_design" nolabel="1"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="lens_material" class="o_lens_filter_label">Matériau</label>
+                                <field name="lens_material" nolabel="1"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="lens_surface" class="o_lens_filter_label">Surface</label>
+                                <field name="lens_surface" nolabel="1"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="lens_index_id" class="o_lens_filter_label">Indice</label>
+                                <field name="lens_index_id" nolabel="1" options="{'no_create': True}"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="lens_thickness_id" class="o_lens_filter_label">Épaisseur</label>
+                                <field name="lens_thickness_id" nolabel="1" options="{'no_create': True}"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="product_brand_id" class="o_lens_filter_label">Marque</label>
+                                <field name="product_brand_id" nolabel="1" options="{'no_create': True}"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="lens_tint_ids" class="o_lens_filter_label">Teintes</label>
+                                <field name="lens_tint_ids" widget="many2many_tags"
+                                       nolabel="1" options="{'no_create': True}"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="base_treatment_ids" class="o_lens_filter_label">Traitement de base</label>
+                                <field name="base_treatment_ids" widget="many2many_tags"
+                                       nolabel="1" options="{'no_create': True}"/>
+                            </div>
+                            <div class="o_lens_filter">
+                                <label for="extra_treatment_ids" class="o_lens_filter_label">Traitement complémentaire</label>
+                                <field name="extra_treatment_ids" widget="many2many_tags"
+                                       nolabel="1" options="{'no_create': True}"/>
+                            </div>
+                        </aside>
+
+                        <!-- Zone résultats (col-8) : bandeau filtres actifs (T4) +
+                             empty state (P4) OU grille kanban compacte (P3) -->
+                        <main class="o_lens_wizard_grid col-8 ps-3">
+                            <!-- Bandeau filtres actifs (S19-9 T4) — visible dès qu'un critère est posé -->
+                            <div class="o_lens_wizard_active_filters alert alert-light border mb-2 py-2 px-3 d-flex align-items-center"
+                                 invisible="not active_filter_summary">
+                                <i class="fa fa-check-circle text-primary me-2"/>
+                                <span class="text-muted small me-1">Filtres :</span>
+                                <span class="fw-semibold small flex-grow-1"
+                                      style="word-break: break-word;">
+                                    <field name="active_filter_summary" nolabel="1" readonly="1" class="oe_inline"/>
+                                </span>
+                            </div>
+
+                            <!-- État vide (S19-9 P4) — remplace la grille quand 0 résultat -->
+                            <div class="o_lens_wizard_empty text-center py-5 px-3"
+                                 invisible="candidate_count &gt; 0">
+                                <i class="fa fa-search fa-3x text-muted mb-3 d-block"/>
+                                <div class="fw-bold mb-1">Aucun verre ne correspond à ces critères</div>
+                                <div class="text-muted small mb-4">
+                                    Ajuste tes filtres, ou crée un nouveau verre si ce modèle n'existe pas encore au catalogue.
+                                </div>
+                                <button name="action_reset_filters" type="object"
+                                        class="btn btn-outline-secondary me-2"
+                                        invisible="not active_filter_summary">
+                                    <i class="fa fa-refresh me-1"/>Réinitialiser les filtres
+                                </button>
+                                <button name="action_open_new_product" type="object"
+                                        class="btn btn-primary">
+                                    <i class="fa fa-plus me-1"/>Créer un nouveau verre
+                                </button>
+                            </div>
+
+                            <!-- Grille cards candidats — kanban embarqué compact (S19-9 P3) -->
+                            <field name="candidate_ids" nolabel="1"
+                                   context="{'optical_wizard_id': id}"
+                                   mode="kanban"
+                                   invisible="candidate_count == 0">
+                                <kanban class="o_lens_wizard_kanban" create="0" edit="0" delete="0">
+                                    <field name="id"/>
+                                    <field name="display_name"/>
+                                    <field name="product_brand_id"/>
+                                    <field name="lst_price"/>
+                                    <field name="currency_id"/>
+                                    <field name="optical_stock_badge_type"/>
+                                    <field name="optical_stock_badge_display"/>
+                                    <templates>
+                                        <t t-name="card">
+                                            <div class="o_lens_wiz_card p-2 d-flex align-items-center justify-content-between">
+                                                <div class="flex-grow-1 me-3 overflow-hidden">
+                                                    <div t-if="record.product_brand_id.value"
+                                                         class="text-muted small text-uppercase text-truncate">
+                                                        <t t-out="record.product_brand_id.value"/>
+                                                    </div>
+                                                    <div class="fw-bold text-truncate" t-out="record.display_name.value"/>
+                                                    <div class="mt-1 d-flex align-items-center flex-wrap">
+                                                        <span class="fw-bold me-2">
+                                                            <field name="lst_price" widget="monetary"/>
+                                                        </span>
+                                                        <span t-if="record.optical_stock_badge_type.raw_value === 'in_stock'"
+                                                              class="badge text-bg-success">
+                                                            <t t-out="record.optical_stock_badge_display.value"/>
+                                                        </span>
+                                                        <span t-elif="record.optical_stock_badge_type.raw_value === 'mto'"
+                                                              class="badge text-bg-warning">
+                                                            <t t-out="record.optical_stock_badge_display.value"/>
+                                                        </span>
+                                                        <span t-elif="record.optical_stock_badge_type.raw_value === 'stockout'"
+                                                              class="badge text-bg-danger">
+                                                            <t t-out="record.optical_stock_badge_display.value"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <button name="action_add_to_optical_wizard"
+                                                        type="object"
+                                                        class="btn btn-primary btn-sm flex-shrink-0">
+                                                    <i class="fa fa-plus me-1"/>Ajouter
+                                                </button>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </main>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_close" type="object" string="Fermer"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

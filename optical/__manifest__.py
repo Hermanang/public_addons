@@ -1,6 +1,6 @@
 {
     'name': 'Optique',
-    'version': '18.0.6.0.0',
+    'version': '18.0.23.0.0',
     'category': 'Optique/Core',
     'summary': 'Gestion optique avec facturation assurance',
     'description': """
@@ -20,6 +20,7 @@ Gestion complète d'un magasin d'optique :
         'contacts',
         'account',
         'product_brand',
+        'stock',
     ],
     'external_dependencies': {
         'python': ['num2words'],
@@ -46,12 +47,14 @@ Gestion complète d'un magasin d'optique :
         'report/optical_sale_report_views.xml',
         'views/optical_claim_sheet_views.xml',
         'wizard/claim_sheet_wizard_views.xml',
+        'wizard/optical_lens_wizard_views.xml',
         'views/optical_menus.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'optical/static/src/js/optical_diopter_widget.js',
             'optical/static/src/js/optical_diopter_widget.xml',
+            'optical/static/src/scss/lens_wizard.scss',
         ],
     },
     'installable': True,

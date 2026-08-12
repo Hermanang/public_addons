@@ -52,6 +52,22 @@
               web_icon="optical,static/description/icon.png"
               sequence="60"/>
 
+    <!-- Guide utilisateur : ouvre la page HTML illustrée (wizard verre + fiche
+         de montage) dans un nouvel onglet. Accessible à tous les utilisateurs
+         optiques. Pattern identique au guide optical_crm_followup. -->
+    <record id="action_optical_wizard_guide" model="ir.actions.act_url">
+        <field name="name">Guide — Prise de commande verres</field>
+        <field name="url">/optical/guide/prise-commande</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_optical_wizard_guide"
+              name="Guide utilisateur"
+              parent="menu_optical_main"
+              action="action_optical_wizard_guide"
+              groups="group_optical_user"
+              sequence="100"/>
+
     <!-- === Sections parents (regroupement logique Story 1-3) === -->
 
     <menuitem id="menu_optical_ventes"
@@ -236,12 +252,26 @@
               groups="group_optical_manager"
               sequence="10"/>
 
+    <menuitem id="menu_optical_config_attr_indices"
+              name="Indices verres"
+              parent="menu_optical_config_attributs"
+              action="optical_lens_index_action"
+              groups="group_optical_manager"
+              sequence="15"/>
+
     <menuitem id="menu_optical_config_attr_tints"
               name="Teintes verres"
               parent="menu_optical_config_attributs"
               action="optical_lens_tint_action"
               groups="group_optical_manager"
               sequence="20"/>
+
+    <menuitem id="menu_optical_config_attr_thicknesses"
+              name="Épaisseurs verres"
+              parent="menu_optical_config_attributs"
+              action="optical_lens_thickness_action"
+              groups="group_optical_manager"
+              sequence="25"/>
 
     <!-- Montures -->
     <menuitem id="menu_optical_config_attr_materials"
